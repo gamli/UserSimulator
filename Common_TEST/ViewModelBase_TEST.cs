@@ -10,7 +10,7 @@ namespace Common_TEST
       [TestMethod]
       public void Model_Property_TEST()
       {
-         using (var testModel = TestNotifyPropertyChanged.Create())
+         var testModel = TestNotifyPropertyChanged.Create();
          using (var testViewModel = TestViewModel.Create(testModel))
          {
             Assert.AreEqual(testViewModel.Model, testModel);

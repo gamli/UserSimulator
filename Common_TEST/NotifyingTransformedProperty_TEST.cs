@@ -9,7 +9,7 @@ namespace Common_TEST
       [TestMethod]
       public void Value_Property_TEST()
       {
-         using (var testModel = TestNotifyPropertyChanged.Create())
+         var testModel = TestNotifyPropertyChanged.Create();
          using (var testObject = TestWithNotifyingTransformedProperty.Create(testModel))
          {
             var isTestObjectsNameHugo = testObject.IsYourNameHugo;

@@ -10,49 +10,42 @@ namespace Common_TEST
       [TestMethod]
       public void RaisePropertyChanged_TEST()
       {
-         using(var testModel = TestNotifyPropertyChanged.Create())
-         {
-            var propertyName = "";
-            var eventCounter = 0;
-            testModel.PropertyChanged +=
-               (Sender, Args) =>
-               {
-                  Assert.AreEqual(Args.PropertyName, propertyName);
-                  eventCounter++;
-               };
-            propertyName = "Klaus";
-            testModel.RaisePropertyChanged_TEST(propertyName);
-            Assert.AreEqual(eventCounter, 1);
-            propertyName = "Helga";
-            testModel.RaisePropertyChanged_TEST(propertyName);
-            Assert.AreEqual(eventCounter, 2);
-            propertyName = null;
-            testModel.RaisePropertyChanged_TEST(propertyName);
-            Assert.AreEqual(eventCounter, 3);
-         }
+         var testModel = TestNotifyPropertyChanged.Create();
+         var propertyName = "";
+         var eventCounter = 0;
+         testModel.PropertyChanged +=
+            (Sender, Args) =>
+            {
+               Assert.AreEqual(Args.PropertyName, propertyName);
+               eventCounter++;
+            };
+         propertyName = "Klaus";
+         testModel.RaisePropertyChanged_TEST(propertyName);
+         Assert.AreEqual(eventCounter, 1);
+         propertyName = "Helga";
+         testModel.RaisePropertyChanged_TEST(propertyName);
+         Assert.AreEqual(eventCounter, 2);
+         propertyName = null;
+         testModel.RaisePropertyChanged_TEST(propertyName);
+         Assert.AreEqual(eventCounter, 3);
       }
 
       [TestMethod]
       public void SetPropertyValue_TEST()
       {
-         using (var testModel = TestNotifyPropertyChanged.Create())
-         {
-            var eventCounter = 0;
-            testModel.PropertyChanged +=
-               (Sender, Args) =>
-               {
-                  Assert.AreEqual(Args.PropertyName, "SomeProperty");
-                  eventCounter++;
-               };
-            Assert.AreEqual(eventCounter, 0);
-            testModel.SomeProperty = "Hugo";
-            Assert.AreEqual(eventCounter, 0);
-            testModel.SomeProperty = "Klaus";
-            Assert.AreEqual(eventCounter, 1);
-            testModel.Dispose();
-            testModel.Dispose();
-            testModel.Dispose();
-         }
+         var testModel = TestNotifyPropertyChanged.Create();
+         var eventCounter = 0;
+         testModel.PropertyChanged +=
+            (Sender, Args) =>
+            {
+               Assert.AreEqual(Args.PropertyName, "SomeProperty");
+               eventCounter++;
+            };
+         Assert.AreEqual(eventCounter, 0);
+         testModel.SomeProperty = "Hugo";
+         Assert.AreEqual(eventCounter, 0);
+         testModel.SomeProperty = "Klaus";
+         Assert.AreEqual(eventCounter, 1);
       }
    }
 }

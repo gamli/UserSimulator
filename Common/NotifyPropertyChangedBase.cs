@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-   public abstract class NotifyPropertyChangedBase : INotifyPropertyChanged, IDisposable
+   public abstract class NotifyPropertyChangedBase : INotifyPropertyChanged
    {
-      private bool _disposed;
-
       public event PropertyChangedEventHandler PropertyChanged;
 
       public void RaisePropertyChanged(string PropertyName)
@@ -32,20 +30,6 @@ namespace Common
             return true;
          }
          return false;
-      }
-
-      public void Dispose()
-      {
-         if (_disposed)
-            return;
-         Dispose(true);
-         _disposed = true;
-         GC.SuppressFinalize(this);
-      }
-
-      protected virtual void Dispose(bool Disposing)
-      {
-         // nothing to do
       }
    }
 }

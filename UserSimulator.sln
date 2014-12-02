@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common_TEST", "Common_TEST\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Macro_TEST", "Macro_TEST\Macro_TEST.csproj", "{90663534-0103-47DB-9063-A4A6C598E868}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacroViewModel_TEST", "MacroViewModel_TEST\MacroViewModel_TEST.csproj", "{FD4F2028-FC71-4DAC-874E-879D667F4261}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{90663534-0103-47DB-9063-A4A6C598E868}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90663534-0103-47DB-9063-A4A6C598E868}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90663534-0103-47DB-9063-A4A6C598E868}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD4F2028-FC71-4DAC-874E-879D667F4261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD4F2028-FC71-4DAC-874E-879D667F4261}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD4F2028-FC71-4DAC-874E-879D667F4261}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD4F2028-FC71-4DAC-874E-879D667F4261}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

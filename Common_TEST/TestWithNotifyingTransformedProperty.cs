@@ -7,8 +7,11 @@ using Common;
 
 namespace Common_TEST
 {
-   public class TestWithNotifyingTransformedProperty : NotifyPropertyChangedBase
+
+   class TestWithNotifyingTransformedProperty : NotifyPropertyChangedBase, IDisposable
    {
+      private bool _disposed;
+
       public static TestWithNotifyingTransformedProperty Create(TestNotifyPropertyChanged TestNotifyPropertyChanged)
       {
          return new TestWithNotifyingTransformedProperty(TestNotifyPropertyChanged);
@@ -26,9 +29,18 @@ namespace Common_TEST
                () => TestNotifyPropertyChanged.SomeProperty == "Hugo");
       }
 
-      protected override void Dispose(bool Disposing)
+      public void Dispose()
       {
-         _isYourNameHugo.Dispose();
+         if (_disposed)
+            return;
+         Dispose(true);
+         _disposed = true;
+         GC.SuppressFinalize(this);
+      }
+
+      protected virtual void Dispose(bool Disposing)
+      {
+         // nothing to do
       }
    }
 }

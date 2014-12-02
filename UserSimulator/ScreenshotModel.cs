@@ -10,8 +10,11 @@ using IO;
 
 namespace UserSimulator
 {
-   class ScreenshotModel : NotifyPropertyChangedBase
+   // to remove sealed, implement Disposable-Pattern properly
+   sealed class ScreenshotModel : NotifyPropertyChangedBase, IDisposable
    {
+      private bool _disposed;
+
       private Timer _timer;
 
       private object _lastScreenshotLocker = new object();
@@ -60,14 +63,14 @@ namespace UserSimulator
          LastScreenshot = Window.Capture(LastScreenshotWindow);
       }
 
-      protected override void Dispose(bool Disposing)
+      public void Dispose()
       {
-         if (Disposing)
-         {
-            _timer.Dispose();
-            if (_lastScreenshot != null)
-               _lastScreenshot.Dispose();
-         }
+         if (_disposed)
+            return;
+         _disposed = true;
+         _timer.Dispose();
+         if (_lastScreenshot != null)
+            _lastScreenshot.Dispose();
       }
    }
 }
