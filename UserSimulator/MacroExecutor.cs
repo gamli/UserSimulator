@@ -36,6 +36,11 @@ namespace UserSimulator
          // nothing to do
       }
 
+      public void VisitNoOp(NoOp NoOp)
+      {
+         // nothing to do
+      }
+
       public void VisitForLoop(ForLoop ForLoop)
       {
          for (var i = 0; i < ForLoop.RepetitionCount; i++)

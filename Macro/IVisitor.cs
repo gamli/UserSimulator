@@ -15,6 +15,7 @@ namespace Macro
       void BeginVisitProgram(Program Macro);
       void EndVisitProgram(Program Macro);
 
+      void VisitNoOp(NoOp NoOp);
       void VisitForLoop(ForLoop ForLoop);
 
       void VisitMove(Move Move);

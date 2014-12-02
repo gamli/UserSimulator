@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacroViewModel", "MacroView
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common_TEST", "Common_TEST\Common_TEST.csproj", "{4A202479-6C84-44A4-B3E1-7F007D3CEC6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Macro_TEST", "Macro_TEST\Macro_TEST.csproj", "{90663534-0103-47DB-9063-A4A6C598E868}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{4A202479-6C84-44A4-B3E1-7F007D3CEC6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A202479-6C84-44A4-B3E1-7F007D3CEC6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A202479-6C84-44A4-B3E1-7F007D3CEC6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90663534-0103-47DB-9063-A4A6C598E868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90663534-0103-47DB-9063-A4A6C598E868}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90663534-0103-47DB-9063-A4A6C598E868}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90663534-0103-47DB-9063-A4A6C598E868}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
