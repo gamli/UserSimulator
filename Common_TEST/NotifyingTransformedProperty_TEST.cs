@@ -12,11 +12,11 @@ namespace Common_TEST
          using (var testModel = TestNotifyPropertyChanged.Create())
          using (var testObject = TestWithNotifyingTransformedProperty.Create(testModel))
          {
-            var isTestObjectsNameHugo = false;
+            var isTestObjectsNameHugo = testObject.IsYourNameHugo;
             testObject.PropertyChanged +=
                (Sender, Args) =>
                {
-                  Assert.AreEqual(Args.PropertyName, "SomeProperty");
+                  Assert.AreEqual(Args.PropertyName, "IsYourNameHugo");
                   isTestObjectsNameHugo = testObject.IsYourNameHugo;
                };
             testModel.SomeProperty = "Hugo";

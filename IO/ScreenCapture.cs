@@ -1,5 +1,5 @@
 ﻿
-// downloaded from http://www.developerfusion.com/code/4630/capture-a-screen-shot/
+// stolen from http://www.developerfusion.com/code/4630/capture-a-screen-shot/
 
 using System;
 using System.Runtime.InteropServices;

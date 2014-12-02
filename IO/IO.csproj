@@ -44,7 +44,6 @@
     <Compile Include="Desktop.cs" />
     <Compile Include="Keyboard.cs" />
     <Compile Include="Mouse.cs" />
-    <Compile Include="MouseActions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="ScreenCapture.cs" />
