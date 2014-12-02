@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlockVM.cs" />
     <Compile Include="NoOpVM.cs" />
     <Compile Include="ProgramVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -39,9 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DisposableBase.cs" />
     <Compile Include="NotifyingTransformedProperty.cs" />
     <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransformedCollection.cs" />
     <Compile Include="TransformedProperty.cs" />
     <Compile Include="ViewModelBase.cs" />
   </ItemGroup>

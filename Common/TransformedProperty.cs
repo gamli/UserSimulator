@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-   public class TransformedProperty<T> : IDisposable
+   public class TransformedProperty<T> : DisposableBase
    {
       public TransformedProperty(
          string[] SourcePropertyNames, string TargetPropertyName,
@@ -58,18 +58,7 @@ namespace Common
          }
       }
 
-      private bool _disposed;
-
-      public void Dispose()
-      {
-         if (_disposed)
-            return;
-         Dispose(true);
-         _disposed = true;
-         GC.SuppressFinalize(this);
-      }
-
-      protected virtual void Dispose(bool Disposing)
+      protected override void Dispose(bool Disposing)
       {
          if (Disposing)
             _sourcePropertyOwner.PropertyChanged -= SourcePropertyOwnerPropertyChanged;

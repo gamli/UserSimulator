@@ -58,6 +58,7 @@
     <Compile Include="TestWithTransformedProperty.cs" />
     <Compile Include="TransformedProperty_TEST.cs" />
     <Compile Include="NotifyingTransformedProperty_TEST.cs" />
+    <Compile Include="TransformedCollection_TEST.cs" />
     <Compile Include="ViewModelBase_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
