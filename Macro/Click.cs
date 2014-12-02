@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class LeftClick : Base
+   public class LeftClick : MacroBase
    {
       public override void Accept(IVisitor Visitor)
       {

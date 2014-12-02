@@ -47,7 +47,7 @@
     <Compile Include="NoOp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="IVisitor.cs" />
-    <Compile Include="Base.cs" />
+    <Compile Include="MacroBase.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Pause.cs" />
     <Compile Include="Position.cs" />

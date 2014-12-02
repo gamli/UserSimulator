@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Block : Base
+   public class Block : MacroBase
    {
-      public ObservableCollection<Base> Items { get; private set; }
+      public ObservableCollection<MacroBase> Items { get; private set; }
       public Block()
       {
-         Items = new ObservableCollection<Base>();
+         Items = new ObservableCollection<MacroBase>();
       }
 
       public override void Accept(IVisitor Visitor)

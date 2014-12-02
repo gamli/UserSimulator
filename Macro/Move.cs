@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Move : Base
+   public class Move : MacroBase
    {
       private int _translationX;
       public int TranslationX { get { return _translationX; } set { SetPropertyValue(ref _translationX, value); } }

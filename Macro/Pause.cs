@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Pause : Base
+   public class Pause : MacroBase
    {
       private TimeSpan _duration;
       public TimeSpan Duration { get { return _duration; } set { SetPropertyValue(ref _duration, value); } }

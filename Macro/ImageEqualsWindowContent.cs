@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class ImageEqualsWindowContent : WithBodyBase
+   public class ImageEqualsWindowContent : MacroWithBodyBase
    {
       private Image _image;
       public Image Image { get { return _image; } set { SetPropertyValue(ref _image, value); } }

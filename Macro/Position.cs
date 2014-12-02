@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Position : Base
+   public class Position : MacroBase
    {
       private int _x;
       public int X { get { return _x; } set { SetPropertyValue(ref _x, value); } }

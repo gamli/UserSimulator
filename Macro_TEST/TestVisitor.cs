@@ -61,20 +61,20 @@ namespace Macro_TEST
          Visit(LeftClick);
       }
 
-      private void BeginVisit(Macro.Base MacroBase)
+      private void BeginVisit(MacroBase MacroBase)
       {
          var macroContainer = CreateAndAddMacroContainer(MacroBase);
          _macroContainerStack.Push(macroContainer);
       }
-      private void Visit(Macro.Base MacroBase)
+      private void Visit(MacroBase MacroBase)
       {
          CreateAndAddMacroContainer(MacroBase);
       }
-      private void EndVisit(Macro.Base MacroBase)
+      private void EndVisit(MacroBase MacroBase)
       {
          _macroContainerStack.Pop();
       }
-      private MacroContainer CreateAndAddMacroContainer(Macro.Base MacroBase)
+      private MacroContainer CreateAndAddMacroContainer(MacroBase MacroBase)
       {
          var macroContainer = new MacroContainer(MacroBase);
          if (_macroContainerStack.Count > 0)
@@ -90,8 +90,8 @@ namespace Macro_TEST
       {
          public List<MacroContainer> Children { get; private set; }
 
-         public Macro.Base Macro { get; private set; }
-         public MacroContainer(Macro.Base MacroBase)
+         public Macro.MacroBase Macro { get; private set; }
+         public MacroContainer(Macro.MacroBase MacroBase)
          {
             this.Macro = MacroBase;
             Children = new List<MacroContainer>();

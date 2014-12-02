@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class ForLoop : WithBodyBase
+   public class ForLoop : MacroWithBodyBase
    {
       private int _repetitionCount;
       public int RepetitionCount { get { return _repetitionCount; } set { SetPropertyValue(ref _repetitionCount, value); } }

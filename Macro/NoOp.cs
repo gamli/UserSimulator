@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class NoOp : Base
+   public class NoOp : MacroBase
    {
       public override void Accept(IVisitor Visitor)
       {

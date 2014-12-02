@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Program : Base
+   public class Program : MacroBase
    {
       private Block _block;
       public Block Block { get { return _block; } set { SetPropertyValue(ref _block, value); } }
