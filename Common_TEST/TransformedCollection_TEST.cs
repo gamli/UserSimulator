@@ -14,7 +14,7 @@ namespace Common_TEST
       {
          var testCollection = new ObservableCollection<object> { 0 };
          var releaseCounter = 0;
-         using (var transformedCollection = 
+         using (var transformedCollection =
             new TransformedCollection<object, object>(
                testCollection,
                BoxedIntValue => -((int)BoxedIntValue),
@@ -46,21 +46,6 @@ namespace Common_TEST
             Assert.AreEqual(12345678, transformedCollection.Transformed[1]);
          }
          Assert.AreEqual(5, releaseCounter);
-      }
-
-      [TestMethod]
-      [ExpectedException(typeof(ArgumentException))]
-      public void UnsupportedAction_TEST()
-      {
-         var testCollection = new ObservableCollection<object> { null, null };
-         using (var transformedCollection =
-            new TransformedCollection<object, object>(
-               testCollection,
-               null))
-         {
-            var collectionChangedRaiseMethod = testCollection.GetType().GetEvent("CollectionChanged").RaiseMethod;
-            collectionChangedRaiseMethod.Invoke(testCollection, new object[] { new NotifyCollectionChangedEventArgs((NotifyCollectionChangedAction)4711) });
-         }
       }
    }
 }
