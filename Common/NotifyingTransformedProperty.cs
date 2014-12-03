@@ -14,11 +14,13 @@ namespace Common
       public NotifyingTransformedProperty(
          string[] SourcePropertyNames, string TargetPropertyName,
          INotifyPropertyChanged SourcePropertyOwner, NotifyPropertyChangedBase TargetPropertyOwner,
-         Func<TTargetProperty> Transform)
+         Func<TTargetProperty> Transform,
+         Action<TTargetProperty> Release = null)
          : base(
             SourcePropertyNames, TargetPropertyName,
             SourcePropertyOwner,
-            Transform)
+            Transform,
+            Release)
       {
          _targetPropertyOwner = TargetPropertyOwner;
       }

@@ -14,12 +14,14 @@ namespace Common
       public TransformedProperty(
          string[] SourcePropertyNames, string TargetPropertyName,
          INotifyPropertyChanged SourcePropertyOwner,
-         Func<T> Transform)
+         Func<T> Transform, 
+         Action<T> Release = null)
       {
          _sourcePropertyNames = new HashSet<string>(SourcePropertyNames);
          _targetPropertyName = TargetPropertyName;
          _sourcePropertyOwner = SourcePropertyOwner;
          _transform = Transform;
+         _release = Release;
 
          _sourcePropertyOwner.PropertyChanged += SourcePropertyOwnerPropertyChanged;
          _value = SourceValue(); // don't use the property here to avoid virtual setter before subclass is initialized
@@ -33,6 +35,7 @@ namespace Common
       protected string _targetPropertyName;
       private readonly INotifyPropertyChanged _sourcePropertyOwner;
       private readonly Func<T> _transform;
+      private readonly Action<T> _release;
       private void SourcePropertyOwnerPropertyChanged(object Sender, PropertyChangedEventArgs Args)
       {
          Contract.Equals(Sender, _sourcePropertyOwner);
@@ -54,6 +57,8 @@ namespace Common
          }
          protected set
          {
+            if (_value != null && _release != null)
+               _release(_value);
             _value = value;
          }
       }
