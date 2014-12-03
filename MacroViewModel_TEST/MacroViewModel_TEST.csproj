@@ -52,6 +52,23 @@
   <ItemGroup>
     <Compile Include="ProgramVM_TEST.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MacroViewModelFactory_TEST.cs" />
+    <Compile Include="BlockVM_TEST.cs" />
+    <Compile Include="MacroBaseVM_TEST.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{13834f55-a326-4c25-9ca9-dc8c6282d3f5}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MacroViewModel\MacroViewModel.csproj">
+      <Project>{0cab8df3-0577-48bd-8fd8-84e1b848d99b}</Project>
+      <Name>MacroViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Macro\Macro.csproj">
+      <Project>{cc94e382-10da-4a49-9ecc-f3b185ec597a}</Project>
+      <Name>Macro</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
