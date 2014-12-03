@@ -56,7 +56,7 @@ namespace Common_TEST
          using (var transformedCollection =
             new TransformedCollection<object, object>(
                testCollection,
-               Object => Object))
+               null))
          {
             var collectionChangedRaiseMethod = testCollection.GetType().GetEvent("CollectionChanged").RaiseMethod;
             collectionChangedRaiseMethod.Invoke(testCollection, new object[] { new NotifyCollectionChangedEventArgs((NotifyCollectionChangedAction)4711) });
