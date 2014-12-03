@@ -10,22 +10,20 @@ namespace Common_TEST
       public void Value_Property_TEST()
       {
          var testModel = TestNotifyPropertyChanged.Create();
-         using (var testObject = TestWithNotifyingTransformedProperty.Create(testModel))
-         {
-            var isTestObjectsNameHugo = testObject.IsYourNameHugo;
-            testObject.PropertyChanged +=
-               (Sender, Args) =>
-               {
-                  Assert.AreEqual(Args.PropertyName, "IsYourNameHugo");
-                  isTestObjectsNameHugo = testObject.IsYourNameHugo;
-               };
-            testModel.SomeProperty = "Hugo";
-            Assert.IsTrue(isTestObjectsNameHugo);
-            testModel.SomeProperty = "Karl";
-            Assert.IsFalse(isTestObjectsNameHugo);
-            testModel.SomeProperty = "Hugo";
-            Assert.IsTrue(isTestObjectsNameHugo);
-         }
+         var testObject = TestWithNotifyingTransformedProperty.Create(testModel);
+         var isTestObjectsNameHugo = testObject.IsYourNameHugo;
+         testObject.PropertyChanged +=
+            (Sender, Args) =>
+            {
+               Assert.AreEqual(Args.PropertyName, "IsYourNameHugo");
+               isTestObjectsNameHugo = testObject.IsYourNameHugo;
+            };
+         testModel.SomeProperty = "Hugo";
+         Assert.IsTrue(isTestObjectsNameHugo);
+         testModel.SomeProperty = "Karl";
+         Assert.IsFalse(isTestObjectsNameHugo);
+         testModel.SomeProperty = "Hugo";
+         Assert.IsTrue(isTestObjectsNameHugo);         
       }
    }
 }

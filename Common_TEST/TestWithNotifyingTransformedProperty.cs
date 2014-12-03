@@ -8,10 +8,8 @@ using Common;
 namespace Common_TEST
 {
 
-   class TestWithNotifyingTransformedProperty : NotifyPropertyChangedBase, IDisposable
+   sealed class TestWithNotifyingTransformedProperty : NotifyPropertyChangedBase
    {
-      private bool _disposed;
-
       public static TestWithNotifyingTransformedProperty Create(TestNotifyPropertyChanged TestNotifyPropertyChanged)
       {
          return new TestWithNotifyingTransformedProperty(TestNotifyPropertyChanged);
@@ -27,20 +25,6 @@ namespace Common_TEST
                new[] { "SomeProperty" }, "IsYourNameHugo",
                TestNotifyPropertyChanged, this,
                () => TestNotifyPropertyChanged.SomeProperty == "Hugo");
-      }
-
-      public void Dispose()
-      {
-         if (_disposed)
-            return;
-         Dispose(true);
-         _disposed = true;
-         GC.SuppressFinalize(this);
-      }
-
-      protected virtual void Dispose(bool Disposing)
-      {
-         // nothing to do
       }
    }
 }
