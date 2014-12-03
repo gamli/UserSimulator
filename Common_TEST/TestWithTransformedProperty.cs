@@ -9,21 +9,22 @@ namespace Common_TEST
 {
    public sealed class TestWithTransformedProperty : IDisposable
    {
-      public static TestWithTransformedProperty Create(TestNotifyPropertyChanged TestNotifyPropertyChanged)
+      public static TestWithTransformedProperty Create(TestNotifyPropertyChanged TestNotifyPropertyChanged, Action<bool> Release)
       {
-         return new TestWithTransformedProperty(TestNotifyPropertyChanged);
+         return new TestWithTransformedProperty(TestNotifyPropertyChanged, Release);
       }
 
       private TransformedProperty<bool> _isYourNameHugo;
       public bool IsYourNameHugo { get { return _isYourNameHugo.Value; } }
 
-      public TestWithTransformedProperty(TestNotifyPropertyChanged TestNotifyPropertyChanged)
+      public TestWithTransformedProperty(TestNotifyPropertyChanged TestNotifyPropertyChanged, Action<bool> Release)
       {
          _isYourNameHugo =
             new TransformedProperty<bool>(
                new[] { "SomeProperty" }, "IsYourNameHugo",
                TestNotifyPropertyChanged,
-               () => TestNotifyPropertyChanged.SomeProperty == "Hugo");
+               () => TestNotifyPropertyChanged.SomeProperty == "Hugo",
+               Release);
       }
 
       public void Dispose()
