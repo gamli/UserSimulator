@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
@@ -57,10 +58,16 @@ namespace Common
          }
          protected set
          {
-            if (_value != null && _release != null)
+            if (CanValueBeReleased())
                _release(_value);
             _value = value;
          }
+      }
+
+      [DebuggerNonUserCode]
+      private bool CanValueBeReleased()
+      {
+         return _value != null && _release != null;
       }
 
       protected override void Dispose(bool Disposing)
