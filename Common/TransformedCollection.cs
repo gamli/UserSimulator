@@ -84,7 +84,7 @@ namespace Common
                InitTransformedFromSource();
                break;
             default:
-               break;
+               throw new ArgumentException("Action not supported: " + Args.Action);
          }
       }
 

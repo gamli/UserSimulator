@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -48,8 +49,8 @@ namespace Common_TEST
       }
 
       [TestMethod]
-      [ExpectedException(typeof(NotImplementedException))]
-      public void TransformedMoveNotSupported_Property_TEST()
+      [ExpectedException(typeof(ArgumentException))]
+      public void UnsupportedAction_TEST()
       {
          var testCollection = new ObservableCollection<object> { null, null };
          using (var transformedCollection =
@@ -57,7 +58,8 @@ namespace Common_TEST
                testCollection,
                Object => Object))
          {
-            testCollection.Move(0, 1);
+            var collectionChangedRaiseMethod = testCollection.GetType().GetEvent("CollectionChanged").RaiseMethod;
+            collectionChangedRaiseMethod.Invoke(testCollection, new object[] { new NotifyCollectionChangedEventArgs((NotifyCollectionChangedAction)4711) });
          }
       }
    }
