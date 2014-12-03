@@ -30,10 +30,6 @@ namespace Common_TEST
       private string _someOtherProperty;
       public string SomeOtherProperty
       {
-         get
-         {
-            return _someOtherProperty;
-         }
          set
          {
             SetPropertyValue(ref _someOtherProperty, value);
