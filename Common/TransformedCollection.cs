@@ -52,8 +52,7 @@ namespace Common
                   _transformed.Insert(Args.NewStartingIndex + i, Transform(Args.NewItems[i]));
                break;
             case NotifyCollectionChangedAction.Move:
-               Contract.Assert(false, "NotImplemented");
-               break;
+               throw new NotImplementedException();
             case NotifyCollectionChangedAction.Remove:
                Contract.Assert(Args.OldItems.Count > -1);
                Contract.Assert(Args.OldStartingIndex > -1);

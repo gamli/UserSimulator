@@ -46,5 +46,19 @@ namespace Common_TEST
          }
          Assert.AreEqual(5, releaseCounter);
       }
+
+      [TestMethod]
+      [ExpectedException(typeof(NotImplementedException))]
+      public void TransformedMoveNotSupported_Property_TEST()
+      {
+         var testCollection = new ObservableCollection<object> { null, null };
+         using (var transformedCollection =
+            new TransformedCollection<object, object>(
+               testCollection,
+               Object => Object))
+         {
+            testCollection.Move(0, 1);
+         }
+      }
    }
 }
