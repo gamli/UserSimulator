@@ -19,6 +19,12 @@ namespace Common_TEST
             Assert.IsFalse(testObject.IsYourNameHugo);
             testModel.SomeProperty = "Hugo";
             Assert.IsTrue(testObject.IsYourNameHugo);
+            testModel.SomeOtherProperty = "Karl";
+            Assert.IsTrue(testObject.IsYourNameHugo);
+            testModel.SomeOtherProperty = "Hugo";
+            Assert.IsTrue(testObject.IsYourNameHugo);
+            testModel.SomeOtherProperty = null;
+            Assert.IsTrue(testObject.IsYourNameHugo);
          }
       }
 
