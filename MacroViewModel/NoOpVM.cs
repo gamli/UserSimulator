@@ -8,7 +8,7 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class NoOpVM : ViewModelBase<NoOp>
+   public class NoOpVM : MacroBaseVM<NoOp>
    {
       public NoOpVM(NoOp Model)
          : base(Model)
