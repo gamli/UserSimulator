@@ -7,17 +7,17 @@ using Common;
 
 namespace Common_TEST
 {
-   public sealed class TestWithTransformedProperty : IDisposable
+   public sealed class MockWithTransformedProperty : IDisposable
    {
-      public static TestWithTransformedProperty Create(TestNotifyPropertyChanged TestNotifyPropertyChanged, Action<bool> Release)
+      public static MockWithTransformedProperty Create(MockNotifyPropertyChanged TestNotifyPropertyChanged, Action<bool> Release)
       {
-         return new TestWithTransformedProperty(TestNotifyPropertyChanged, Release);
+         return new MockWithTransformedProperty(TestNotifyPropertyChanged, Release);
       }
 
       private TransformedProperty<bool> _isYourNameHugo;
       public bool IsYourNameHugo { get { return _isYourNameHugo.Value; } }
 
-      public TestWithTransformedProperty(TestNotifyPropertyChanged TestNotifyPropertyChanged, Action<bool> Release)
+      public MockWithTransformedProperty(MockNotifyPropertyChanged TestNotifyPropertyChanged, Action<bool> Release)
       {
          _isYourNameHugo =
             new TransformedProperty<bool>(

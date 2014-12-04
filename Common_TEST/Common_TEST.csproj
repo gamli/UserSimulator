@@ -52,10 +52,10 @@
   <ItemGroup>
     <Compile Include="NotifyPropertyChangedBase_TEST.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestNotifyPropertyChanged.cs" />
-    <Compile Include="TestViewModel.cs" />
-    <Compile Include="TestWithNotifyingTransformedProperty.cs" />
-    <Compile Include="TestWithTransformedProperty.cs" />
+    <Compile Include="MockNotifyPropertyChanged.cs" />
+    <Compile Include="MockViewModel.cs" />
+    <Compile Include="MockWithNotifyingTransformedProperty.cs" />
+    <Compile Include="MockWithTransformedProperty.cs" />
     <Compile Include="TransformedProperty_TEST.cs" />
     <Compile Include="NotifyingTransformedProperty_TEST.cs" />
     <Compile Include="TransformedCollection_TEST.cs" />

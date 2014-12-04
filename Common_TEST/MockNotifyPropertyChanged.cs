@@ -7,11 +7,11 @@ using Common;
 
 namespace Common_TEST
 {
-   public class TestNotifyPropertyChanged : NotifyPropertyChangedBase
+   public class MockNotifyPropertyChanged : NotifyPropertyChangedBase
    {
-      public static TestNotifyPropertyChanged Create()
+      public static MockNotifyPropertyChanged Create()
       {
-         return new TestNotifyPropertyChanged { SomeProperty = "Hugo" };
+         return new MockNotifyPropertyChanged { SomeProperty = "Hugo" };
       }
 
       private string _someProperty;

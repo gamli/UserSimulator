@@ -8,17 +8,17 @@ using Common;
 namespace Common_TEST
 {
 
-   sealed class TestWithNotifyingTransformedProperty : NotifyPropertyChangedBase
+   sealed class MockWithNotifyingTransformedProperty : NotifyPropertyChangedBase
    {
-      public static TestWithNotifyingTransformedProperty Create(TestNotifyPropertyChanged TestNotifyPropertyChanged)
+      public static MockWithNotifyingTransformedProperty Create(MockNotifyPropertyChanged TestNotifyPropertyChanged)
       {
-         return new TestWithNotifyingTransformedProperty(TestNotifyPropertyChanged);
+         return new MockWithNotifyingTransformedProperty(TestNotifyPropertyChanged);
       }
 
       private NotifyingTransformedProperty<bool> _isYourNameHugo;
       public bool IsYourNameHugo { get { return _isYourNameHugo.Value; } }
 
-      public TestWithNotifyingTransformedProperty(TestNotifyPropertyChanged TestNotifyPropertyChanged)
+      public MockWithNotifyingTransformedProperty(MockNotifyPropertyChanged TestNotifyPropertyChanged)
       {
          _isYourNameHugo =
             new NotifyingTransformedProperty<bool>(

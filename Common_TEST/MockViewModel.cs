@@ -7,17 +7,17 @@ using Common;
 
 namespace Common_TEST
 {
-   public class TestViewModel : ViewModelBase<TestNotifyPropertyChanged>
+   public class MockViewModel : ViewModelBase<MockNotifyPropertyChanged>
    {
-      public TestViewModel(TestNotifyPropertyChanged Model)
+      public MockViewModel(MockNotifyPropertyChanged Model)
          : base(Model)
       {
          // nothing to do
       }
 
-      public static TestViewModel Create(TestNotifyPropertyChanged Model)
+      public static MockViewModel Create(MockNotifyPropertyChanged Model)
       {
-         return new TestViewModel(Model);
+         return new MockViewModel(Model);
       }
    }
 }

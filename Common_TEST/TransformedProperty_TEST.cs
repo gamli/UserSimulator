@@ -10,8 +10,8 @@ namespace Common_TEST
       [TestMethod]
       public void Value_Property_TEST()
       {
-         var testModel = TestNotifyPropertyChanged.Create();
-         using (var testObject = TestWithTransformedProperty.Create(testModel, null))
+         var testModel = MockNotifyPropertyChanged.Create();
+         using (var testObject = MockWithTransformedProperty.Create(testModel, null))
          {
             testModel.SomeProperty = "Hugo";
             Assert.IsTrue(testObject.IsYourNameHugo);
@@ -31,9 +31,9 @@ namespace Common_TEST
       [TestMethod]
       public void Release_Delegate_TEST()
       {
-         var testModel = TestNotifyPropertyChanged.Create();
+         var testModel = MockNotifyPropertyChanged.Create();
          var releaseCounter = 0;
-         using (var testObject = TestWithTransformedProperty.Create(testModel, BoolValue => releaseCounter++))
+         using (var testObject = MockWithTransformedProperty.Create(testModel, BoolValue => releaseCounter++))
          {
             Assert.AreEqual(releaseCounter, 0);
             testModel.SomeProperty = "Hugo";

@@ -10,7 +10,7 @@ namespace Common_TEST
       [TestMethod]
       public void RaisePropertyChanged_TEST()
       {
-         var testModel = TestNotifyPropertyChanged.Create();
+         var testModel = MockNotifyPropertyChanged.Create();
          var propertyName = "";
          var eventCounter = 0;
          testModel.PropertyChanged +=
@@ -33,7 +33,7 @@ namespace Common_TEST
       [TestMethod]
       public void SetPropertyValue_TEST()
       {
-         var testModel = TestNotifyPropertyChanged.Create();
+         var testModel = MockNotifyPropertyChanged.Create();
          var eventCounter = 0;
          testModel.PropertyChanged +=
             (Sender, Args) =>

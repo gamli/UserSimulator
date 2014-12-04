@@ -9,8 +9,8 @@ namespace Common_TEST
       [TestMethod]
       public void Value_Property_TEST()
       {
-         var testModel = TestNotifyPropertyChanged.Create();
-         var testObject = TestWithNotifyingTransformedProperty.Create(testModel);
+         var testModel = MockNotifyPropertyChanged.Create();
+         var testObject = MockWithNotifyingTransformedProperty.Create(testModel);
          var isTestObjectsNameHugo = testObject.IsYourNameHugo;
          testObject.PropertyChanged +=
             (Sender, Args) =>
