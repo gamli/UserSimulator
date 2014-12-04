@@ -12,7 +12,7 @@ namespace MacroViewModel
    public class BlockVM : MacroBaseVM<Block>
    {
       private TransformedCollection<MacroBase, MacroBaseVM> _itemsVM;
-      public ReadOnlyObservableCollection<MacroBaseVM> ItemsVM { get; private set; }
+      public ReadOnlyObservableCollection<MacroBaseVM> ItemsVM { get { return _itemsVM.Transformed; }  }
 
       public BlockVM(Block Model)
          : base(Model)
