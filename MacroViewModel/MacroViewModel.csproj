@@ -45,6 +45,7 @@
     <Compile Include="ImageEqualsWindowContentVM.cs" />
     <Compile Include="MacroBaseVM.cs" />
     <Compile Include="MacroViewModelFactory.cs" />
+    <Compile Include="MacroWithBodyBaseVM.cs" />
     <Compile Include="MoveVM.cs" />
     <Compile Include="NoOpVM.cs" />
     <Compile Include="PauseVM.cs" />
