@@ -26,10 +26,12 @@ namespace Macro
       }
       protected abstract bool MacroEquals(MacroBase OtherMacro);
 
+      [ExcludeFromCodeCoverage]
       public override int GetHashCode()
       {
          return MacroGetHashCode();
       }
+      [ExcludeFromCodeCoverage]
       protected virtual int MacroGetHashCode()
       {
          return 0; // TODO a correct implementation (to use macros in dictionaries implement properly)

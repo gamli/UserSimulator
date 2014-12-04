@@ -31,5 +31,13 @@ namespace Macro_TEST
          var programClone = new ProgramCloner(program).Clone();
          Assert.AreEqual(program, programClone);
       }
+
+      [TestMethod]
+      public void BaseClass_Equals_TEST()
+      {
+         var noOp = new NoOp();
+         Assert.IsFalse(noOp.Equals(null));
+         Assert.IsFalse(noOp.Equals(new StringBuilder()));
+      }
    }
 }
