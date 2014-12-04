@@ -12,5 +12,10 @@ namespace Macro
       {
          Visitor.VisitNoOp(this);
       }
+
+      protected override bool MacroEquals(MacroBase OtherMacro)
+      {
+         return true;
+      }
    }
 }

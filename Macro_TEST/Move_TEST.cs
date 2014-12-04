@@ -16,5 +16,16 @@ namespace Macro_TEST
          Assert.AreEqual(testVisitor.Macros.Count, 1);
          Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(Move));
       }
+
+      [TestMethod]
+      public void Equals_TEST()
+      {
+         var block = new Block();
+         var move = new Move { TranslationX = 4711, TranslationY = -4711 };
+         block.Items.Add(move);
+         var program = new Program { Body = block };
+         var programClone = new ProgramCloner(program).Clone();
+         Assert.AreEqual(program, programClone);
+      }
    }
 }

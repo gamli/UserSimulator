@@ -17,5 +17,11 @@ namespace Macro
       {
          Visitor.VisitPause(this);
       }
+
+      protected override bool MacroEquals(MacroBase OtherMacro)
+      {
+         var otherPause = (Pause)OtherMacro;
+         return Duration.Equals(otherPause.Duration);
+      }
    }
 }

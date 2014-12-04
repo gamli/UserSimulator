@@ -21,5 +21,11 @@ namespace Macro
       {
          Visitor.VisitPosition(this);
       }
+
+      protected override bool MacroEquals(MacroBase OtherMacro)
+      {
+         var otherPosition = (Position)OtherMacro;
+         return X == otherPosition.X && Y == otherPosition.Y;
+      }
    }
 }

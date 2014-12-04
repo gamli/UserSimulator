@@ -18,5 +18,21 @@ namespace Macro
    public abstract class MacroBase : NotifyPropertyChangedBase
    {
       public abstract void Accept(IVisitor Visitor);
+      public override bool Equals(object Other)
+      {
+         if (Other == null || Other.GetType() != GetType())
+            return false;
+         return MacroEquals((MacroBase)Other);
+      }
+      protected abstract bool MacroEquals(MacroBase OtherMacro);
+
+      public override int GetHashCode()
+      {
+         return MacroGetHashCode();
+      }
+      protected virtual int MacroGetHashCode()
+      {
+         return 0; // TODO a correct implementation (to use macros in dictionaries implement properly)
+      }
    }
 }

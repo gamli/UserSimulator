@@ -51,6 +51,7 @@
     <Compile Include="Move.cs" />
     <Compile Include="Pause.cs" />
     <Compile Include="Position.cs" />
+    <Compile Include="ProgramCloner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

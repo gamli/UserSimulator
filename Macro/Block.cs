@@ -19,5 +19,11 @@ namespace Macro
       {
          Visitor.VisitBlock(this);
       }
+
+      protected override bool MacroEquals(MacroBase OtherMacro)
+      {
+         var otherBlock = (Block)OtherMacro;
+         return Items.SequenceEqual(otherBlock.Items);
+      }
    }
 }

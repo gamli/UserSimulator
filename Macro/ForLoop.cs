@@ -17,5 +17,11 @@ namespace Macro
       {
          Visitor.VisitForLoop(this);
       }
+
+      protected override bool MacroEquals(MacroBase OtherMacro)
+      {
+         var otherForLoop = (ForLoop)OtherMacro;
+         return RepetitionCount == otherForLoop.RepetitionCount && Body.Equals(otherForLoop.Body);
+      }
    }
 }

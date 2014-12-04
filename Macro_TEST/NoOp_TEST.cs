@@ -20,5 +20,16 @@ namespace Macro_TEST
          Assert.AreEqual(testVisitor.Macros.Count, 1);
          Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(NoOp));
       }
+
+      [TestMethod]
+      public void Equals_TEST()
+      {
+         var block = new Block();
+         var noOp = new NoOp();
+         block.Items.Add(noOp);
+         var program = new Program { Body = block };
+         var programClone = new ProgramCloner(program).Clone();
+         Assert.AreEqual(program, programClone);
+      }
    }
 }

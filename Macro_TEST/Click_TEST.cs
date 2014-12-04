@@ -16,5 +16,16 @@ namespace Macro_TEST
          Assert.AreEqual(testVisitor.Macros.Count, 1);
          Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(LeftClick));
       }
+
+      [TestMethod]
+      public void Equals_TEST()
+      {
+         var block = new Block();
+         var leftClick = new LeftClick();
+         block.Items.Add(leftClick);
+         var program = new Program { Body = block };
+         var programClone = new ProgramCloner(program).Clone();
+         Assert.AreEqual(program, programClone);
+      }
    }
 }

@@ -12,5 +12,10 @@ namespace Macro
       {
          Visitor.VisitLeftClick(this);
       }
+
+      protected override bool MacroEquals(MacroBase OtherMacro)
+      {
+         return true;
+      }
    }
 }

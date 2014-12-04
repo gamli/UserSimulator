@@ -30,5 +30,16 @@ namespace Macro
       {
          Visitor.VisitImageEqualsWindowContent(this);
       }
+
+      protected override bool MacroEquals(MacroBase OtherMacro)
+      {
+         var other = (ImageEqualsWindowContent)OtherMacro;
+         return
+            Image.Equals(other.Image) &&
+            Window.Equals(other.Window) &&
+            PositionX == other.PositionX &&
+            PositionY == other.PositionY &&
+            Body.Equals(other.Body);
+      }
    }
 }

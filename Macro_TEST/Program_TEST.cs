@@ -10,8 +10,9 @@ namespace Macro_TEST
       [TestMethod]
       public void Accept_TEST()
       {
-         var program = new Program();
-         program.Block.Items.Add(new NoOp());
+         var block = new Block();
+         block.Items.Add(new NoOp());
+         var program = new Program { Body = block };
          var testVisitor = new MockVisitor();
          program.Accept(testVisitor);
          Assert.AreEqual(testVisitor.Macros.Count, 1);
@@ -20,6 +21,14 @@ namespace Macro_TEST
          Assert.AreEqual(testVisitor.Macros[0].Children[0].Macro.GetType(), typeof(Block));
          Assert.AreEqual(testVisitor.Macros[0].Children[0].Children.Count, 1);
          Assert.AreEqual(testVisitor.Macros[0].Children[0].Children[0].Macro.GetType(), typeof(NoOp));
+      }
+
+      [TestMethod]
+      public void Equals_TEST()
+      {
+         var program = new Program { Body = new Block() };
+         var programClone = new ProgramCloner(program).Clone();
+         Assert.AreEqual(program, programClone);
       }
    }
 }

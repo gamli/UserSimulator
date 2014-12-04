@@ -6,19 +6,17 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Program : MacroBase
+   public class Program : MacroWithBodyBase
    {
-      private Block _block;
-      public Block Block { get { return _block; } set { SetPropertyValue(ref _block, value); } }
-
-      public Program()
-      {
-         Block = new Block();
-      }
-
       public override void Accept(IVisitor Visitor)
       {
          Visitor.VisitProgram(this);
+      }
+
+      protected override bool MacroEquals(MacroBase OtherMacro)
+      {
+         var otherProgram = (Program)OtherMacro;
+         return Body.Equals(otherProgram.Body);
       }
    }
 }

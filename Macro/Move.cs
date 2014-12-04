@@ -21,5 +21,11 @@ namespace Macro
       {
          Visitor.VisitMove(this);
       }
+
+      protected override bool MacroEquals(MacroBase OtherMacro)
+      {
+         var otherMove = (Move)OtherMacro;
+         return TranslationX == otherMove.TranslationX && TranslationY == otherMove.TranslationY;
+      }
    }
 }

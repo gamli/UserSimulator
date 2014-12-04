@@ -19,7 +19,7 @@ namespace Macro_TEST
       public void VisitProgram(Program Program)
       {
          BeginVisit(Program);
-         Program.Block.Accept(this);
+         Program.Body.Accept(this);
          EndVisit(Program);
       }
 
