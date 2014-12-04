@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Macro;
 
-namespace UserSimulator
+namespace MacroLanguage
 {
    public class ProgramPrinter : IVisitor
    {
@@ -28,7 +28,7 @@ namespace UserSimulator
       {
          Append("PROGRAM");
          AppendNewLine();
-         Program.Block.Accept(this);
+         Program.Body.Accept(this);
       }
 
       public void VisitBlock(Block Block)
@@ -57,7 +57,6 @@ namespace UserSimulator
          AppendNewLine();
          ForLoop.Body.Accept(this);
          DecreaseIndent();
-         AppendNewLine();
       }
 
       public void VisitMove(Move Move)
@@ -72,7 +71,7 @@ namespace UserSimulator
 
       public void VisitPause(Pause Pause)
       {
-         AppendStatement("PAUSE(" + Pause.Duration + ")");
+         AppendStatement("PAUSE(" + Pause.Duration.TotalMilliseconds + ")");
       }
 
       public void VisitImageEqualsWindowContent(ImageEqualsWindowContent ImageEqualsWindowContentConditional)
@@ -98,9 +97,14 @@ namespace UserSimulator
 
       private void AppendNewLine()
       {
-         _sb.Append("\n");
+         _sb.Append("\r\n");
+         Indent();
+      }
+
+      private void Indent()
+      {
          for (var i = 0; i < _currentIndent; i++)
-            _sb.Append("\t");
+            _sb.Append("   ");
       }
 
       private void IncreaseIndent()

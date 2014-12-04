@@ -42,6 +42,11 @@ namespace MacroViewModel_TEST
          {
             throw new NotImplementedException();
          }
+
+         protected override bool MacroEquals(MacroBase OtherMacro)
+         {
+            return true;
+         }
       }
    }
 }

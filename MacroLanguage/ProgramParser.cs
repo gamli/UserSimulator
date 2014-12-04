@@ -30,8 +30,8 @@ namespace MacroLanguage
 
          config.Rule()
             .IsMadeUp.By("PROGRAM")
-            .Followed.By(Block(config, Statement(config))).As("Block")
-            .WhenFound(O => new Program { Block = O.Block });
+            .Followed.By(Statement(config)).As("Body")
+            .WhenFound(O => new Program { Body = O.Body });
 
          return config.CreateParser();
       }

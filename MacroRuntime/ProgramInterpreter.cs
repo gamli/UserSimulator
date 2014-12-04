@@ -28,7 +28,7 @@ namespace UserSimulator
 
       public void VisitProgram(Program Program)
       {
-         Program.Block.Accept(this);
+         Program.Body.Accept(this);
       }
 
       public void VisitBlock(Block Block)

@@ -11,10 +11,10 @@ namespace MacroViewModel_TEST
       [TestMethod]
       public void Block_Property_TEST()
       {
-         var program = new Program { Block = new Block() };
+         var program = new Program { Body = new Block() };
          using(var programVM = new ProgramVM(program))
          {
-            Assert.AreSame(program.Block, programVM.BlockVM.Model);
+            Assert.AreSame(program.Body, programVM.BodyVM.Model);
          }
       }
    }
