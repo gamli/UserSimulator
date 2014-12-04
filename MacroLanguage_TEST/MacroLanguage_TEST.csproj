@@ -54,6 +54,20 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProgramPrinter_TEST.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{13834f55-a326-4c25-9ca9-dc8c6282d3f5}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MacroLanguage\MacroLanguage.csproj">
+      <Project>{7e46c7ee-a768-4225-a4bb-de2d7ffb149d}</Project>
+      <Name>MacroLanguage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Macro\Macro.csproj">
+      <Project>{cc94e382-10da-4a49-9ecc-f3b185ec597a}</Project>
+      <Name>Macro</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

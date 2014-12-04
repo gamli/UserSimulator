@@ -8,7 +8,7 @@ using Piglet.Parser;
 using Piglet.Parser.Configuration;
 using Piglet.Parser.Configuration.Fluent;
 
-namespace UserSimulator
+namespace MacroLanguage
 {
    public class ProgramParser
    {
@@ -30,30 +30,42 @@ namespace UserSimulator
 
          config.Rule()
             .IsMadeUp.By("PROGRAM")
-            .Followed.By(Block(config)).As("Block")
+            .Followed.By(Block(config, Statement(config))).As("Block")
             .WhenFound(O => new Program { Block = O.Block });
 
          return config.CreateParser();
       }
 
-      private static IRule Block(IFluentParserConfigurator Config)
+      private static IRule Statement(IFluentParserConfigurator Config)
       {
-         var item = Config.Rule();
-         item
-            .IsMadeUp.By(LeftClick(Config));
-         throw new NotImplementedException();
+         var statement = Config.Rule();
+         statement
+            .IsMadeUp.By(Block(Config, statement))
+            .Or.By(LeftClick(Config))
+            .Or.By(ForLoop(Config, statement))
+            //.Or.By(ImageEqualsWindowContent(Config))
+            .Or.By(Move(Config))
+            .Or.By(NoOp(Config))
+            .Or.By(Pause(Config))
+            .Or.By(Position(Config));
+         return statement;
+      }
+
+      private static IRule Block(IFluentParserConfigurator Config, IRule Statement)
+      {
 
          var block = Config.Rule();
          block
             .IsMadeUp.By("{")
-            .Followed.ByListOf(item).As("Items")
+            .Followed.ByListOf(Statement).As("Items").ThatIs.Optional
             .Followed.By("}")
             .WhenFound(
                O => 
                   {
                      var bock = new Block();
-                     foreach(var bockItem in O.Items)
-                        bock.Items.Add(bockItem);
+                     if(O.Items != null)
+                        foreach(var bockItem in O.Items)
+                           bock.Items.Add(bockItem);
                      return bock;
                   });
 
@@ -73,7 +85,7 @@ namespace UserSimulator
          return leftClick;
       }
 
-      private static IRule ForLoop(IFluentParserConfigurator Config)
+      private static IRule ForLoop(IFluentParserConfigurator Config, IRule Statement)
       {
          var forLoop = Config.Rule();
          forLoop
@@ -81,7 +93,7 @@ namespace UserSimulator
             .Followed.By("(")
             .Followed.By(IntegerConstant(Config)).As("RepetitionCount")
             .Followed.By(")")
-            .Followed.By(Block(Config)).As("Body")
+            .Followed.By(Statement).As("Body")
             .WhenFound(O => new ForLoop { RepetitionCount = O.RepetitionCount, Body = O.Body });
 
          return forLoop;
@@ -122,12 +134,12 @@ namespace UserSimulator
       {
          var pause = Config.Rule();
          pause
-            .IsMadeUp.By("LEFT_CLICK")
+            .IsMadeUp.By("PAUSE")
             .Followed.By(BeginParameterList())
             .Followed.By(IntegerConstant(Config)).As("Duration")
             .Followed.By(EndParameterList())
             .Followed.By(StatementEnd())
-            .WhenFound(O => new Pause { Duration = O.Duration });
+            .WhenFound(O => new Pause { Duration = TimeSpan.FromMilliseconds(O.Duration) });
 
          return pause;
       }
