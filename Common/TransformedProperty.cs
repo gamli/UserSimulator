@@ -58,10 +58,15 @@ namespace Common
          }
          protected set
          {
-            if (CanValueBeReleased())
-               _release(_value);
+            ReleaseValueIfItCanBeReleased();
             _value = value;
          }
+      }
+
+      private void ReleaseValueIfItCanBeReleased()
+      {
+         if (CanValueBeReleased())
+            _release(_value);
       }
 
       [DebuggerNonUserCode]
@@ -73,7 +78,10 @@ namespace Common
       protected override void Dispose(bool Disposing)
       {
          if (Disposing)
+         {
             _sourcePropertyOwner.PropertyChanged -= SourcePropertyOwnerPropertyChanged;
+            ReleaseValueIfItCanBeReleased();
+         }
       }
    }
 }
