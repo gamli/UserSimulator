@@ -12,9 +12,10 @@ namespace Macro_TEST
       {
          var block = new Block();
          Assert.IsNotNull(block.Items);
-         var testVisitor = new TestVisitor();
+         var testVisitor = new MockVisitor();
          block.Accept(testVisitor);
-         Assert.AreEqual(testVisitor.Macros.Count, 0);
+         Assert.AreEqual(testVisitor.Macros.Count, 1);
+         Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(Block));
       }
 
       [TestMethod]
@@ -23,11 +24,13 @@ namespace Macro_TEST
          var block = new Block();
          block.Items.Add(new NoOp());
          block.Items.Add(new NoOp());
-         var testVisitor = new TestVisitor();
+         var testVisitor = new MockVisitor();
          block.Accept(testVisitor);
-         Assert.AreEqual(testVisitor.Macros.Count, 2);
-         Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(NoOp));
-         Assert.AreEqual(testVisitor.Macros[1].Macro.GetType(), typeof(NoOp));
+         Assert.AreEqual(testVisitor.Macros.Count, 1);
+         Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(Block));
+         Assert.AreEqual(testVisitor.Macros[0].Children.Count, 2);
+         Assert.AreEqual(testVisitor.Macros[0].Children[0].Macro.GetType(), typeof(NoOp));
+         Assert.AreEqual(testVisitor.Macros[0].Children[1].Macro.GetType(), typeof(NoOp));
       }
    }
 }

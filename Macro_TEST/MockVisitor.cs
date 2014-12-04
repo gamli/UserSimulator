@@ -7,23 +7,28 @@ using Macro;
 
 namespace Macro_TEST
 {
-   class TestVisitor : IVisitor
+   class MockVisitor : IVisitor
    {
       public List<MacroContainer> Macros { get; private set; }
 
-      public TestVisitor()
+      public MockVisitor()
       {
          Macros = new List<MacroContainer>();
       }
 
-      public void BeginVisitProgram(Program Macro)
+      public void VisitProgram(Program Program)
       {
-         BeginVisit(Macro);
+         BeginVisit(Program);
+         Program.Block.Accept(this);
+         EndVisit(Program);
       }
 
-      public void EndVisitProgram(Program Macro)
+      public void VisitBlock(Block Block)
       {
-         EndVisit(Macro);
+         BeginVisit(Block);
+         foreach (var item in Block.Items)
+            item.Accept(this);
+         EndVisit(Block);
       }
 
       public void VisitNoOp(NoOp NoOp)
@@ -33,7 +38,9 @@ namespace Macro_TEST
 
       public void VisitForLoop(ForLoop ForLoop)
       {
-         Visit(ForLoop);
+         BeginVisit(ForLoop);
+         ForLoop.Body.Accept(this);
+         EndVisit(ForLoop);
       }
 
       public void VisitMove(Move Move)

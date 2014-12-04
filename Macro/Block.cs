@@ -17,8 +17,7 @@ namespace Macro
 
       public override void Accept(IVisitor Visitor)
       {
-         foreach (var item in Items)
-            item.Accept(Visitor);
+         Visitor.VisitBlock(this);
       }
    }
 }

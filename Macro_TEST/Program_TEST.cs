@@ -12,12 +12,14 @@ namespace Macro_TEST
       {
          var program = new Program();
          program.Block.Items.Add(new NoOp());
-         var testVisitor = new TestVisitor();
+         var testVisitor = new MockVisitor();
          program.Accept(testVisitor);
          Assert.AreEqual(testVisitor.Macros.Count, 1);
          Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(Program));
          Assert.AreEqual(testVisitor.Macros[0].Children.Count, 1);
-         Assert.AreEqual(testVisitor.Macros[0].Children[0].Macro.GetType(), typeof(NoOp));
+         Assert.AreEqual(testVisitor.Macros[0].Children[0].Macro.GetType(), typeof(Block));
+         Assert.AreEqual(testVisitor.Macros[0].Children[0].Children.Count, 1);
+         Assert.AreEqual(testVisitor.Macros[0].Children[0].Children[0].Macro.GetType(), typeof(NoOp));
       }
    }
 }

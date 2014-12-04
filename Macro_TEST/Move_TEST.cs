@@ -11,7 +11,7 @@ namespace Macro_TEST
       public void Accept_TEST()
       {
          var move = new Move();
-         var testVisitor = new TestVisitor();
+         var testVisitor = new MockVisitor();
          move.Accept(testVisitor);
          Assert.AreEqual(testVisitor.Macros.Count, 1);
          Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(Move));

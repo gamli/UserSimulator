@@ -12,15 +12,20 @@ namespace Macro
 {
    public interface IVisitor
    {
-      void BeginVisitProgram(Program Macro);
-      void EndVisitProgram(Program Macro);
+      void VisitProgram(Program Macro);
+
+      void VisitBlock(Block Block);
 
       void VisitNoOp(NoOp NoOp);
+
       void VisitForLoop(ForLoop ForLoop);
 
       void VisitMove(Move Move);
+
       void VisitPosition(Position Position);
+
       void VisitPause(Pause Pause);
+
       void VisitImageEqualsWindowContent(ImageEqualsWindowContent ImageEqualsWindowContentConditional);
 
       void VisitLeftClick(LeftClick LeftClick);

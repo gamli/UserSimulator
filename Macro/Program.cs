@@ -18,9 +18,7 @@ namespace Macro
 
       public override void Accept(IVisitor Visitor)
       {
-         Visitor.BeginVisitProgram(this);
-         Block.Accept(Visitor);
-         Visitor.EndVisitProgram(this);
+         Visitor.VisitProgram(this);
       }
    }
 }

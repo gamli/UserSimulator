@@ -10,12 +10,12 @@ using Macro;
 
 namespace UserSimulator
 {
-   class MacroExecutor : IVisitor
+   class ProgramInterpreter : IVisitor
    {
       private readonly Program _program;
       private readonly ScreenshotModel _screenshotModel;
 
-      public MacroExecutor(Program Program, ScreenshotModel ScreenshotModel)
+      public ProgramInterpreter(Program Program, ScreenshotModel ScreenshotModel)
       {
          _program = Program;
          _screenshotModel = ScreenshotModel;
@@ -26,14 +26,15 @@ namespace UserSimulator
          _program.Accept(this);
       }
 
-      public void BeginVisitProgram(Program Program)
+      public void VisitProgram(Program Program)
       {
-         // nothing to do
+         Program.Block.Accept(this);
       }
 
-      public void EndVisitProgram(Program Program)
+      public void VisitBlock(Block Block)
       {
-         // nothing to do
+         foreach (var item in Block.Items)
+            item.Accept(this);
       }
 
       public void VisitNoOp(NoOp NoOp)
