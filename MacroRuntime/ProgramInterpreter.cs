@@ -10,15 +10,15 @@ using Macro;
 
 namespace UserSimulator
 {
-   class ProgramInterpreter : IVisitor
+   public class ProgramInterpreter : IVisitor
    {
       private readonly Program _program;
-      private readonly ScreenshotModel _screenshotModel;
+      private readonly IntPtr _targetWindow;
 
-      public ProgramInterpreter(Program Program, ScreenshotModel ScreenshotModel)
+      public ProgramInterpreter(Program Program, IntPtr TargetWindow)
       {
          _program = Program;
-         _screenshotModel = ScreenshotModel;
+         _targetWindow = TargetWindow;
       }
 
       public void Execute()
@@ -50,7 +50,7 @@ namespace UserSimulator
       public void VisitImageEqualsWindowContent(ImageEqualsWindowContent ImageEqualsWindowContentConditional)
       {
          using (var image = new Bitmap(ImageEqualsWindowContentConditional.Image))
-         using (var windowContent = Window.Capture(_screenshotModel.LastScreenshotWindow))
+         using (var windowContent = Window.Capture(_targetWindow))
          using (var clippedWindowContent = new Bitmap(image.Width, image.Height))
          using (var clippedWindowContentGraphics = Graphics.FromImage(clippedWindowContent))
          {

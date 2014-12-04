@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Piglet">
-      <HintPath>..\packages\Piglet.1.4.0\lib\net40\Piglet.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -57,7 +54,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="MacroExecutor.cs" />
     <Compile Include="ScreenshotModel.cs" />
     <Compile Include="ScreenshotViewModel.cs" />
     <Page Include="MainWindow.xaml">
@@ -91,7 +87,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -109,6 +104,18 @@
     <ProjectReference Include="..\IO\IO.csproj">
       <Project>{52c3838a-1365-4692-b464-b96cc9682349}</Project>
       <Name>IO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MacroLanguage\MacroLanguage.csproj">
+      <Project>{7e46c7ee-a768-4225-a4bb-de2d7ffb149d}</Project>
+      <Name>MacroLanguage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MacroRuntime\MacroRuntime.csproj">
+      <Project>{e204666e-3c0b-4794-977c-b5e4a6b757b0}</Project>
+      <Name>MacroRuntime</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MacroViewModel\MacroViewModel.csproj">
+      <Project>{0cab8df3-0577-48bd-8fd8-84e1b848d99b}</Project>
+      <Name>MacroViewModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Macro\Macro.csproj">
       <Project>{cc94e382-10da-4a49-9ecc-f3b185ec597a}</Project>

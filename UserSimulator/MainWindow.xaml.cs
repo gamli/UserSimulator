@@ -27,12 +27,20 @@ namespace UserSimulator
       private ScreenshotModel _model;
       private ScreenshotViewModel _viewModel;
 
+      public string ProgramText { get; private set; }
+
       public MainWindow()
       {
          InitializeComponent();
          _model = new ScreenshotModel();
          _viewModel = new ScreenshotViewModel(_model);
          DataContext = _viewModel;
+
+         var parser = new ProgramParser();
+         var program = parser.Parse("PROGRAM{LEFT_CLICK;}");
+         var printer = new ProgramPrinter(program);
+         var printedProgram = printer.Print();
+         Console.WriteLine(printedProgram);
       }
 
       private void Button_Click(object sender, RoutedEventArgs e)
@@ -89,7 +97,7 @@ namespace UserSimulator
                   _viewModel.LastScreenshotOverlay = overlayImageSource;
                }
             }
-            var macroExecutor = new MacroExecutor(macro, _model);
+            var macroExecutor = new ProgramInterpreter(macro, _model.LastScreenshotWindow);
             macroExecutor.Execute();
          }
       }
