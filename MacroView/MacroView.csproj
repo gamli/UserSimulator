@@ -47,14 +47,84 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WindowshotView.xaml.cs">
+      <DependentUpon>WindowshotView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="BlockView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ForLoopView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FunctionCallView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LeftClickView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MacroBaseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MoveView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NoOpView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PauseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PositionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ProgramView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="BlockView.xaml.cs">
+      <DependentUpon>BlockView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ForLoopView.xaml.cs">
+      <DependentUpon>ForLoopView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionCallView.xaml.cs">
+      <DependentUpon>FunctionCallView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LeftClickView.xaml.cs">
+      <DependentUpon>LeftClickView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MacroBaseView.xaml.cs">
+      <DependentUpon>MacroBaseView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MoveView.xaml.cs">
+      <DependentUpon>MoveView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NoOpView.xaml.cs">
+      <DependentUpon>NoOpView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PauseView.xaml.cs">
+      <DependentUpon>PauseView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PositionView.xaml.cs">
+      <DependentUpon>PositionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProgramView.xaml.cs">
       <DependentUpon>ProgramView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="WindowshotView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -79,6 +149,23 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{13834f55-a326-4c25-9ca9-dc8c6282d3f5}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MacroViewModel\MacroViewModel.csproj">
+      <Project>{0cab8df3-0577-48bd-8fd8-84e1b848d99b}</Project>
+      <Name>MacroViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Macro\Macro.csproj">
+      <Project>{cc94e382-10da-4a49-9ecc-f3b185ec597a}</Project>
+      <Name>Macro</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
