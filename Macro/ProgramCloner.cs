@@ -71,17 +71,17 @@ namespace Macro
             WithClone(new Pause { Duration = Pause.Duration });
          }
 
-         public void VisitImageEqualsWindowContent(ImageEqualsWindowContent ImageEqualsWindowContentConditional)
+         public void VisitWindowshot(Windowshot Windowshot)
          {
             WithClone(
-               new ImageEqualsWindowContent
+               new Windowshot
                {
-                  Window = ImageEqualsWindowContentConditional.Window,
-                  Image = ImageEqualsWindowContentConditional.Image,
-                  PositionX = ImageEqualsWindowContentConditional.PositionX,
-                  PositionY = ImageEqualsWindowContentConditional.PositionY
+                  Window = Windowshot.Window,
+                  Image = Windowshot.Image,
+                  PositionX = Windowshot.PositionX,
+                  PositionY = Windowshot.PositionY
                },
-               () => ImageEqualsWindowContentConditional.Body.Accept(this));
+               () => Windowshot.Body.Accept(this));
          }
 
          public void VisitLeftClick(LeftClick LeftClick)

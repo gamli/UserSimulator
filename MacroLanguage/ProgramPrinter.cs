@@ -74,7 +74,7 @@ namespace MacroLanguage
          AppendStatement("PAUSE(" + Pause.Duration.TotalMilliseconds + ")");
       }
 
-      public void VisitImageEqualsWindowContent(ImageEqualsWindowContent ImageEqualsWindowContentConditional)
+      public void VisitWindowshot(Windowshot Windowshot)
       {
          throw new NotImplementedException();
       }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class ImageEqualsWindowContent : MacroWithBodyBase
+   public class Windowshot : MacroWithBodyBase
    {
       private Image _image;
       [ExcludeFromCodeCoverage]
@@ -28,12 +28,12 @@ namespace Macro
 
       public override void Accept(IVisitor Visitor)
       {
-         Visitor.VisitImageEqualsWindowContent(this);
+         Visitor.VisitWindowshot(this);
       }
 
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
-         var other = (ImageEqualsWindowContent)OtherMacro;
+         var other = (Windowshot)OtherMacro;
          return
             Image.Equals(other.Image) &&
             Window.Equals(other.Window) &&

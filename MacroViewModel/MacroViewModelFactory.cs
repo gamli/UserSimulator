@@ -44,8 +44,8 @@ namespace MacroViewModel
                { typeof(ForLoop), Macro => 
                   new ForLoopVM((ForLoop)Macro) },
 
-               { typeof(ImageEqualsWindowContent), Macro => 
-                  new ImageEqualsWindowContentVM((ImageEqualsWindowContent)Macro) },
+               { typeof(Windowshot), Macro => 
+                  new WindowshotVM((Windowshot)Macro) },
 
                { typeof(Move), Macro => 
                   new MoveVM((Move)Macro) },

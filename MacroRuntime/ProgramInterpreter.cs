@@ -47,9 +47,9 @@ namespace UserSimulator
          for (var i = 0; i < ForLoop.RepetitionCount; i++)
             ForLoop.Body.Accept(this);
       }
-      public void VisitImageEqualsWindowContent(ImageEqualsWindowContent ImageEqualsWindowContentConditional)
+      public void VisitWindowshot(Windowshot Windowshot)
       {
-         using (var image = new Bitmap(ImageEqualsWindowContentConditional.Image))
+         using (var image = new Bitmap(Windowshot.Image))
          using (var windowContent = Window.Capture(_targetWindow))
          using (var clippedWindowContent = new Bitmap(image.Width, image.Height))
          using (var clippedWindowContentGraphics = Graphics.FromImage(clippedWindowContent))
@@ -57,7 +57,7 @@ namespace UserSimulator
             clippedWindowContentGraphics.DrawImage(
                windowContent,
                0, 0,
-               new Rectangle(ImageEqualsWindowContentConditional.PositionX, ImageEqualsWindowContentConditional.PositionY, image.Width, image.Height),
+               new Rectangle(Windowshot.PositionX, Windowshot.PositionY, image.Width, image.Height),
                GraphicsUnit.Pixel
                );
             for (var x = 0; x < image.Width; x++)
@@ -65,7 +65,7 @@ namespace UserSimulator
                   if (image.GetPixel(x, y) != clippedWindowContent.GetPixel(x, y))
                      return;
          }
-         ImageEqualsWindowContentConditional.Body.Accept(this);
+         Windowshot.Body.Accept(this);
       }
 
       public void VisitMove(Move Move)

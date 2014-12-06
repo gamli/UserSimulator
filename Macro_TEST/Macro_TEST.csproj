@@ -57,7 +57,7 @@
     <Compile Include="MockVisitor.cs" />
     <Compile Include="Click_TEST.cs" />
     <Compile Include="ForLoop_TEST.cs" />
-    <Compile Include="ImageEqualsWindowContent_TEST.cs" />
+    <Compile Include="Windowshot_TEST.cs" />
     <Compile Include="Move_TEST.cs" />
     <Compile Include="Pause_TEST.cs" />
     <Compile Include="Position_TEST.cs" />

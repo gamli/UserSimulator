@@ -58,9 +58,9 @@ namespace Macro_TEST
          Visit(Pause);
       }
 
-      public void VisitImageEqualsWindowContent(ImageEqualsWindowContent ImageEqualsWindowContentConditional)
+      public void VisitWindowshot(Windowshot Windowshot)
       {
-         Visit(ImageEqualsWindowContentConditional);
+         Visit(Windowshot);
       }
 
       public void VisitLeftClick(LeftClick LeftClick)

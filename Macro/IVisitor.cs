@@ -26,7 +26,7 @@ namespace Macro
 
       void VisitPause(Pause Pause);
 
-      void VisitImageEqualsWindowContent(ImageEqualsWindowContent ImageEqualsWindowContentConditional);
+      void VisitWindowshot(Windowshot Windowshot);
 
       void VisitLeftClick(LeftClick LeftClick);
    }

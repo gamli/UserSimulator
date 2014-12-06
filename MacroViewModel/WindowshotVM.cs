@@ -9,9 +9,9 @@ using Macro;
 namespace MacroViewModel
 {
    [ExcludeFromCodeCoverage]
-   public class ImageEqualsWindowContentVM : MacroBaseVM<ImageEqualsWindowContent>
+   public class WindowshotVM : MacroBaseVM<Windowshot>
    {
-      public ImageEqualsWindowContentVM(ImageEqualsWindowContent Model)
+      public WindowshotVM(Windowshot Model)
          : base(Model)
       {
          // nothing to do

@@ -43,7 +43,7 @@
     <Compile Include="Block.cs" />
     <Compile Include="Click.cs" />
     <Compile Include="ForLoop.cs" />
-    <Compile Include="ImageEqualsWindowContent.cs" />
+    <Compile Include="Windowshot.cs" />
     <Compile Include="NoOp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="IVisitor.cs" />
