@@ -43,7 +43,7 @@ namespace MacroLanguage
             .IsMadeUp.By(Block(Config, statement))
             .Or.By(LeftClick(Config))
             .Or.By(ForLoop(Config, statement))
-            //.Or.By(ImageEqualsWindowContent(Config))
+            .Or.By(Windowshot(Config, statement))
             .Or.By(Move(Config))
             .Or.By(NoOp(Config))
             .Or.By(Pause(Config))
@@ -77,8 +77,7 @@ namespace MacroLanguage
          var leftClick = Config.Rule();
          leftClick
             .IsMadeUp.By("LEFT_CLICK")
-            .Followed.By(BeginParameterList())
-            .Followed.By(EndParameterList())
+            .Followed.By(EmptyParameterList())
             .Followed.By(StatementEnd())
             .WhenFound(O => new LeftClick());
 
@@ -90,18 +89,25 @@ namespace MacroLanguage
          var forLoop = Config.Rule();
          forLoop
             .IsMadeUp.By("FOR")
-            .Followed.By("(")
+            .Followed.By(BeginParameterList())
             .Followed.By(IntegerConstant(Config)).As("RepetitionCount")
-            .Followed.By(")")
+            .Followed.By(EndParameterList())
             .Followed.By(Statement).As("Body")
             .WhenFound(O => new ForLoop { RepetitionCount = O.RepetitionCount, Body = O.Body });
 
          return forLoop;
       }
 
-      private static IRule ImageEqualsWindowContent(IFluentParserConfigurator Config)
+      private static IRule Windowshot(IFluentParserConfigurator Config, IRule Statement)
       {
-         throw new NotImplementedException();
+         var windowshot = Config.Rule();
+         windowshot
+            .IsMadeUp.By("IF_WINDOWSHOT")
+            .Followed.By(EmptyParameterList())
+            .Followed.By(Statement).As("Body")
+            .WhenFound(O => new Windowshot { Body = O.Body });
+
+         return windowshot;
       }
 
       private static IRule Move(IFluentParserConfigurator Config)
@@ -177,6 +183,11 @@ namespace MacroLanguage
       private static string StatementEnd()
       {
          return ";";
+      }
+
+      private static string EmptyParameterList()
+      {
+         return BeginParameterList() + EndParameterList();
       }
 
       private static string BeginParameterList()

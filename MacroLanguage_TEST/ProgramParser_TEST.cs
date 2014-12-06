@@ -43,6 +43,16 @@ namespace MacroLanguage_TEST
       }
 
       [TestMethod]
+      public void Windowshot_TEST()
+      {
+         var programWithWindowshot = _parser.Parse("PROGRAM IF_WINDOWSHOT(){}");
+         var windowshot = programWithWindowshot.Body;
+         Assert.AreEqual(windowshot.GetType(), typeof(Windowshot));
+         var forLoopBody = ((Windowshot)windowshot).Body;
+         Assert.AreEqual(forLoopBody.GetType(), typeof(Block));
+      }
+
+      [TestMethod]
       public void Move_TEST()
       {
          var programWithMove = _parser.Parse("PROGRAM MOVE( 4711, 8);");

@@ -74,6 +74,30 @@ namespace MacroLanguage_TEST
       }
 
       [TestMethod]
+      public void Windowshot_TEST()
+      {
+         var windowshotProgram =
+            Program(new Windowshot { Body = new NoOp() });
+         AssertOutput(
+            windowshotProgram,
+@"PROGRAM
+{
+   IF_WINDOWSHOT()
+      ;
+}");
+         var windowshotWithBlockProgram =
+            Program(new Windowshot { Body = new Block { } });
+         AssertOutput(
+            windowshotWithBlockProgram,
+@"PROGRAM
+{
+   IF_WINDOWSHOT()
+      {
+      }
+}");
+      }
+
+      [TestMethod]
       public void Move_TEST()
       {
          var moveProgram =

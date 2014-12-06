@@ -53,46 +53,21 @@ namespace MacroLanguage
       public void VisitForLoop(ForLoop ForLoop)
       {
          Append("FOR(" + ForLoop.RepetitionCount + ")");
-         IncreaseIndent();
-         AppendNewLine();
-         ForLoop.Body.Accept(this);
-         DecreaseIndent();
-      }
-
-      public void VisitMove(Move Move)
-      {
-         AppendStatement("MOVE(" + Move.TranslationX + ", " + Move.TranslationY + ")");
-      }
-
-      public void VisitPosition(Position Position)
-      {
-         AppendStatement("POSITION(" + Position.X + ", " + Position.Y + ")");
-      }
-
-      public void VisitPause(Pause Pause)
-      {
-         AppendStatement("PAUSE(" + Pause.Duration.TotalMilliseconds + ")");
+         AppendBody(ForLoop);
       }
 
       public void VisitWindowshot(Windowshot Windowshot)
       {
-         throw new NotImplementedException();
+         Append("IF_WINDOWSHOT()");
+         AppendBody(Windowshot);
       }
 
-      public void VisitLeftClick(LeftClick LeftClick)
+      private void AppendBody(MacroWithBodyBase MacroWithBody)
       {
-         AppendStatement("LEFT_CLICK()");
-      }
-
-      private void AppendStatement(string StatementText)
-      {
-         Append(StatementText);
-         Append(";");
-      }
-
-      private void Append(string Text)
-      {
-         _sb.Append(Text);
+         IncreaseIndent();
+         AppendNewLine();
+         MacroWithBody.Body.Accept(this);
+         DecreaseIndent();
       }
 
       private void AppendNewLine()
@@ -116,5 +91,46 @@ namespace MacroLanguage
          _currentIndent--;
       }
       private int _currentIndent;
+
+      public void VisitMove(Move Move)
+      {
+         AppendFunctionCall("MOVE", Move.TranslationX, Move.TranslationY);
+      }
+
+      public void VisitPosition(Position Position)
+      {
+         AppendFunctionCall("POSITION", Position.X, Position.Y);
+      }
+
+      public void VisitPause(Pause Pause)
+      {
+         AppendFunctionCall("PAUSE", Pause.Duration.TotalMilliseconds);
+      }
+
+      public void VisitLeftClick(LeftClick LeftClick)
+      {
+         AppendFunctionCall("LEFT_CLICK");
+      }
+
+      private void AppendFunctionCall(string FunctionName, params object[] FunctionParameters)
+      {
+         AppendStatement(FunctionName + "(" + string.Join(", ", FunctionParameters) + ")");
+      }
+
+      private string ParameterSeperator()
+      {
+         return ", ";
+      }
+
+      private void AppendStatement(string StatementText)
+      {
+         Append(StatementText);
+         Append(";");
+      }
+
+      private void Append(string Text)
+      {
+         _sb.Append(Text);
+      }
    }
 }
