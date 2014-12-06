@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\packages\AvalonEdit.5.0.2\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -87,6 +90,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -116,6 +120,10 @@
     <ProjectReference Include="..\MacroViewModel\MacroViewModel.csproj">
       <Project>{0cab8df3-0577-48bd-8fd8-84e1b848d99b}</Project>
       <Name>MacroViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MacroView\MacroView.csproj">
+      <Project>{3d0cb4d9-80b8-442b-adfd-888f2ce8dd28}</Project>
+      <Name>MacroView</Name>
     </ProjectReference>
     <ProjectReference Include="..\Macro\Macro.csproj">
       <Project>{cc94e382-10da-4a49-9ecc-f3b185ec597a}</Project>

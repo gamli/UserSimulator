@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacroLanguage", "MacroLangu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacroRuntime", "MacroRuntime\MacroRuntime.csproj", "{E204666E-3C0B-4794-977C-B5E4A6B757B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacroView", "MacroView\MacroView.csproj", "{3D0CB4D9-80B8-442B-ADFD-888F2CE8DD28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{E204666E-3C0B-4794-977C-B5E4A6B757B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E204666E-3C0B-4794-977C-B5E4A6B757B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E204666E-3C0B-4794-977C-B5E4A6B757B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D0CB4D9-80B8-442B-ADFD-888F2CE8DD28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D0CB4D9-80B8-442B-ADFD-888F2CE8DD28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D0CB4D9-80B8-442B-ADFD-888F2CE8DD28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D0CB4D9-80B8-442B-ADFD-888F2CE8DD28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
