@@ -20,6 +20,8 @@ namespace MacroViewModel
          }
       }
 
+      public IEnumerable<MacroBaseVM> BodyVMEnumrableWrapper { get { yield return BodyVM; } }
+
       protected MacroWithBodyBaseVM(T Model)
          : base(Model)
       {
