@@ -21,7 +21,7 @@ namespace UserSimulator
          _targetWindow = TargetWindow;
       }
 
-      public void Execute()
+      public void Start()
       {
          _program.Accept(this);
       }
