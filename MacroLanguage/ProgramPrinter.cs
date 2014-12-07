@@ -124,10 +124,10 @@ namespace MacroLanguage
 
       private static string FunctionCall(string FunctionName, params object[] FunctionParameters)
       {
-         return FunctionName + "(" + string.Join(", ", FunctionParameters.Select(Param => Param == null ? "null" : Param)) + ")";
+         return FunctionName + "(" + string.Join(ParameterSeperator(), FunctionParameters.Select(Param => Param == null ? "null" : Param)) + ")";
       }
 
-      private string ParameterSeperator()
+      private static string ParameterSeperator()
       {
          return ", ";
       }
