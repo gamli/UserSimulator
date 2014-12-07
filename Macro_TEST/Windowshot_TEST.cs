@@ -26,8 +26,7 @@ namespace Macro_TEST
             new Windowshot 
             { 
                Body = new NoOp(),  
-               Image = new Bitmap(32, 32),
-               Window = new IntPtr(4711),
+               ImageUrl = "nonExistingTestImage",
                PositionX = 13,
                PositionY = 17
             };

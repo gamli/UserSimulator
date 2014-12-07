@@ -77,21 +77,21 @@ namespace MacroLanguage_TEST
       public void Windowshot_TEST()
       {
          var windowshotProgram =
-            Program(new Windowshot { Body = new NoOp() });
+            Program(new Windowshot { PositionX = 4711, PositionY = -4711, ImageUrl = "nonExistingTestImage", Body = new NoOp() });
          AssertOutput(
             windowshotProgram,
 @"PROGRAM
 {
-   IF_WINDOWSHOT()
+   IF_WINDOWSHOT(4711, -4711, ""nonExistingTestImage"")
       ;
 }");
          var windowshotWithBlockProgram =
-            Program(new Windowshot { Body = new Block { } });
+            Program(new Windowshot { PositionX = 4711, PositionY = -4711, Body = new Block { } });
          AssertOutput(
             windowshotWithBlockProgram,
 @"PROGRAM
 {
-   IF_WINDOWSHOT()
+   IF_WINDOWSHOT(4711, -4711, null)
       {
       }
 }");

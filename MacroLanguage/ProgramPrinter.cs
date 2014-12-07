@@ -58,7 +58,7 @@ namespace MacroLanguage
 
       public void VisitWindowshot(Windowshot Windowshot)
       {
-         Append("IF_WINDOWSHOT()");
+         Append(FunctionCall("IF_WINDOWSHOT", Windowshot.PositionX, Windowshot.PositionY, StringParameter(Windowshot.ImageUrl)));
          AppendBody(Windowshot);
       }
 
@@ -94,27 +94,37 @@ namespace MacroLanguage
 
       public void VisitMove(Move Move)
       {
-         AppendFunctionCall("MOVE", Move.TranslationX, Move.TranslationY);
+         AppendFunctionCallStatement("MOVE", Move.TranslationX, Move.TranslationY);
       }
 
       public void VisitPosition(Position Position)
       {
-         AppendFunctionCall("POSITION", Position.X, Position.Y);
+         AppendFunctionCallStatement("POSITION", Position.X, Position.Y);
       }
 
       public void VisitPause(Pause Pause)
       {
-         AppendFunctionCall("PAUSE", Pause.Duration.TotalMilliseconds);
+         AppendFunctionCallStatement("PAUSE", Pause.Duration.TotalMilliseconds);
       }
 
       public void VisitLeftClick(LeftClick LeftClick)
       {
-         AppendFunctionCall("LEFT_CLICK");
+         AppendFunctionCallStatement("LEFT_CLICK");
       }
 
-      private void AppendFunctionCall(string FunctionName, params object[] FunctionParameters)
+      private string StringParameter(string ParameterValue)
       {
-         AppendStatement(FunctionName + "(" + string.Join(", ", FunctionParameters) + ")");
+         return ParameterValue == null ? null : "\"" + ParameterValue + "\"";
+      }
+
+      private void AppendFunctionCallStatement(string FunctionName, params object[] FunctionParameters)
+      {
+         AppendStatement(FunctionCall(FunctionName, FunctionParameters));
+      }
+
+      private static string FunctionCall(string FunctionName, params object[] FunctionParameters)
+      {
+         return FunctionName + "(" + string.Join(", ", FunctionParameters.Select(Param => Param == null ? "null" : Param)) + ")";
       }
 
       private string ParameterSeperator()

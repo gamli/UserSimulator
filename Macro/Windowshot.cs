@@ -10,13 +10,10 @@ namespace Macro
 {
    public class Windowshot : MacroWithBodyBase
    {
-      private Image _image;
+      private string _imageUrl;
       [ExcludeFromCodeCoverage]
-      public Image Image { get { return _image; } set { SetPropertyValue(ref _image, value); } }
-
-      private IntPtr _window;
-      [ExcludeFromCodeCoverage]
-      public IntPtr Window { get { return _window; } set { SetPropertyValue(ref _window, value); } }
+      public string ImageUrl { get { 
+         return _imageUrl; } set { SetPropertyValue(ref _imageUrl, value); } }
 
       private int _positionX;
       [ExcludeFromCodeCoverage]
@@ -35,8 +32,7 @@ namespace Macro
       {
          var other = (Windowshot)OtherMacro;
          return
-            Image.Equals(other.Image) &&
-            Window.Equals(other.Window) &&
+            ImageUrl.Equals(other.ImageUrl) &&
             PositionX == other.PositionX &&
             PositionY == other.PositionY &&
             Body.Equals(other.Body);

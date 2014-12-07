@@ -76,8 +76,7 @@ namespace Macro
             WithClone(
                new Windowshot
                {
-                  Window = Windowshot.Window,
-                  Image = Windowshot.Image,
+                  ImageUrl = Windowshot.ImageUrl,
                   PositionX = Windowshot.PositionX,
                   PositionY = Windowshot.PositionY
                },

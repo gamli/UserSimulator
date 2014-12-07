@@ -28,5 +28,30 @@ namespace IO
             return textBuilder.ToString();
          return "UNKNOWN";
       }
+
+      [DllImport("user32.dll")]
+      private static extern bool ScreenToClient(IntPtr hWnd, ref Point lpPoint);
+      public static void ScreenToClient(IntPtr WindowHandle, int ScreenX, int ScreenY, out int ClientX, out int ClientY)
+      {
+         var point = new Point { X = ScreenX, Y = ScreenY };
+         ScreenToClient(WindowHandle, ref point);
+         ClientX = point.X;
+         ClientY = point.Y;
+      }
+      [DllImport("user32.dll")]
+      private static extern bool ClientToScreen(IntPtr hWnd, ref Point lpPoint);
+      public static void ClientToScreen(IntPtr WindowHandle, int ClientX, int ClientY, out int ScreenX, out int ScreenY)
+      {
+         var point = new Point { X = ClientX, Y = ClientY };
+         ClientToScreen(WindowHandle, ref point);
+         ScreenX = point.X;
+         ScreenY = point.Y;
+      }
+      [StructLayout(LayoutKind.Sequential)]
+      private struct Point
+      {
+         public int X { get; set; }
+         public int Y { get; set; }
+      }
    }
 }

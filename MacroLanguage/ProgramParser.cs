@@ -90,7 +90,7 @@ namespace MacroLanguage
          forLoop
             .IsMadeUp.By("FOR")
             .Followed.By(BeginParameterList())
-            .Followed.By(IntegerConstant(Config)).As("RepetitionCount")
+            .Followed.By(IntegerLiteral(Config)).As("RepetitionCount")
             .Followed.By(EndParameterList())
             .Followed.By(Statement).As("Body")
             .WhenFound(O => new ForLoop { RepetitionCount = O.RepetitionCount, Body = O.Body });
@@ -103,9 +103,15 @@ namespace MacroLanguage
          var windowshot = Config.Rule();
          windowshot
             .IsMadeUp.By("IF_WINDOWSHOT")
-            .Followed.By(EmptyParameterList())
+            .Followed.By(BeginParameterList())
+            .Followed.By(IntegerLiteral(Config)).As("PositionX")
+            .Followed.By(ParameterSeperator())
+            .Followed.By(IntegerLiteral(Config)).As("PositionY")
+            .Followed.By(ParameterSeperator())
+            .Followed.By(StringLiteral(Config)).As("ImageUrl")
+            .Followed.By(EndParameterList())
             .Followed.By(Statement).As("Body")
-            .WhenFound(O => new Windowshot { Body = O.Body });
+            .WhenFound(O => new Windowshot { PositionX = O.PositionX, PositionY = O.PositionY, ImageUrl = O.ImageUrl, Body = O.Body });
 
          return windowshot;
       }
@@ -116,9 +122,9 @@ namespace MacroLanguage
          move
             .IsMadeUp.By("MOVE")
             .Followed.By(BeginParameterList())
-            .Followed.By(IntegerConstant(Config)).As("TranslationX")
+            .Followed.By(IntegerLiteral(Config)).As("TranslationX")
             .Followed.By(ParameterSeperator())
-            .Followed.By(IntegerConstant(Config)).As("TranslationY")
+            .Followed.By(IntegerLiteral(Config)).As("TranslationY")
             .Followed.By(EndParameterList())
             .Followed.By(StatementEnd())
             .WhenFound(O => new Move { TranslationX = O.TranslationX, TranslationY = O.TranslationY });
@@ -142,7 +148,7 @@ namespace MacroLanguage
          pause
             .IsMadeUp.By("PAUSE")
             .Followed.By(BeginParameterList())
-            .Followed.By(IntegerConstant(Config)).As("Duration")
+            .Followed.By(IntegerLiteral(Config)).As("Duration")
             .Followed.By(EndParameterList())
             .Followed.By(StatementEnd())
             .WhenFound(O => new Pause { Duration = TimeSpan.FromMilliseconds(O.Duration) });
@@ -156,9 +162,9 @@ namespace MacroLanguage
          position
             .IsMadeUp.By("POSITION")
             .Followed.By(BeginParameterList())
-            .Followed.By(IntegerConstant(Config)).As("X")
+            .Followed.By(IntegerLiteral(Config)).As("X")
             .Followed.By(ParameterSeperator())
-            .Followed.By(IntegerConstant(Config)).As("Y")
+            .Followed.By(IntegerLiteral(Config)).As("Y")
             .Followed.By(EndParameterList())
             .Followed.By(StatementEnd())
             .WhenFound(O => new Position { X = O.X, Y = O.Y });
@@ -166,13 +172,24 @@ namespace MacroLanguage
          return position;
       }
 
-      private static IRule IntegerConstant(IFluentParserConfigurator Config)
+      private static IRule IntegerLiteral(IFluentParserConfigurator Config)
       {
          var integerConstant = Config.Rule();
          integerConstant
             .IsMadeUp.By<int>().As("Value")
             .WhenFound(O => O.Value);
          return integerConstant;
+      }
+
+      private static IRule StringLiteral(IFluentParserConfigurator Config)
+      {
+         var stringConstant = Config.Rule();
+         stringConstant
+            .IsMadeUp.By(Config.QuotedString).As("Value")
+            .WhenFound(O => O.Value)
+            .Or.By("null")
+            .WhenFound(O => null);
+         return stringConstant;
       }
 
       private static IFluentParserConfigurator ParserConfigurator()

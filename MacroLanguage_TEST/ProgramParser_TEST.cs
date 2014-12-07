@@ -45,7 +45,7 @@ namespace MacroLanguage_TEST
       [TestMethod]
       public void Windowshot_TEST()
       {
-         var programWithWindowshot = _parser.Parse("PROGRAM IF_WINDOWSHOT(){}");
+         var programWithWindowshot = _parser.Parse("PROGRAM IF_WINDOWSHOT(4711, -4711, \"nonExistingTestImage\"){}");
          var windowshot = programWithWindowshot.Body;
          Assert.AreEqual(windowshot.GetType(), typeof(Windowshot));
          var forLoopBody = ((Windowshot)windowshot).Body;
