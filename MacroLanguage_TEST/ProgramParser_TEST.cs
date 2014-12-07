@@ -55,11 +55,11 @@ namespace MacroLanguage_TEST
       [TestMethod]
       public void Move_TEST()
       {
-         var programWithMove = _parser.Parse("PROGRAM MOVE( 4711, 8);");
+         var programWithMove = _parser.Parse("PROGRAM MOVE( 4711, -4711);");
          var move = programWithMove.Body;
          Assert.AreEqual(move.GetType(), typeof(Move));
          Assert.AreEqual(((Move)move).TranslationX, 4711);
-         Assert.AreEqual(((Move)move).TranslationY, 8);
+         Assert.AreEqual(((Move)move).TranslationY, -4711);
       }
 
       [TestMethod]
@@ -85,13 +85,13 @@ namespace MacroLanguage_TEST
             _parser.Parse(
                @"PROGRAM
                   {
-            POSITION(4711,8);}");
+            POSITION(4711,-4711);}");
          var block = programWithPosition.Body;
          Assert.IsTrue(block is Block);
          var position = ((Block)block).Items[0];
          Assert.AreEqual(position.GetType(), typeof(Position));
          Assert.AreEqual(((Position)position).X, 4711);
-         Assert.AreEqual(((Position)position).Y, 8);
+         Assert.AreEqual(((Position)position).Y, -4711);
       }  
 
       [TestMethod]

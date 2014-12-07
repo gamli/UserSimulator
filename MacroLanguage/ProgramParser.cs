@@ -177,7 +177,9 @@ namespace MacroLanguage
          var integerConstant = Config.Rule();
          integerConstant
             .IsMadeUp.By<int>().As("Value")
-            .WhenFound(O => O.Value);
+            .WhenFound(O => O.Value)
+            .Or.By("-").Followed.By<int>().As("Value")
+            .WhenFound(O => -O.Value);
          return integerConstant;
       }
 
