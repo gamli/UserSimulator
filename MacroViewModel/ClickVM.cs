@@ -8,9 +8,9 @@ using Macro;
 
 namespace MacroViewModel
 {
-   [ExcludeFromCodeCoverage]
    public class LeftClickVM : MacroBaseVM<LeftClick>
    {
+      [ExcludeFromCodeCoverage]
       public LeftClickVM(LeftClick Model)
          : base (Model)
       {

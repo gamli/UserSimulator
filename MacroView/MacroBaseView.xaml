@@ -36,6 +36,18 @@
          <DataTemplate DataType="{x:Type macrovm:WindowshotVM}">
             <macroview:WindowshotView/>
          </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:ConstantBooleanExpressionVM}">
+            <macroview:ConstantBooleanExpressionView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:ConstantStringExpressionVM}">
+            <macroview:ConstantStringExpressionView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:ConstantIntegerExpressionVM}">
+            <macroview:ConstantIntegerExpressionView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:IfStatementVM}">
+            <macroview:IfStatementView/>
+         </DataTemplate>
       </Grid.Resources>
       <ContentPresenter Content="{Binding}"/>
    </Grid>

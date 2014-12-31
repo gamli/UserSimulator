@@ -59,6 +59,18 @@ namespace MacroViewModel
                { typeof(Position), Macro => 
                   new PositionVM((Position)Macro) },
 
+               { typeof(ConstantExpression<bool>), Macro => 
+                  new ConstantBooleanExpressionVM((ConstantExpression<bool>)Macro) },
+
+               { typeof(ConstantExpression<string>), Macro => 
+                  new ConstantStringExpressionVM((ConstantExpression<string>)Macro) },
+
+               { typeof(ConstantExpression<int>), Macro => 
+                  new ConstantIntegerExpressionVM((ConstantExpression<int>)Macro) },
+
+               { typeof(IfStatement), Macro => 
+                  new IfStatementVM((IfStatement)Macro) },
+
                { typeof(Program), Macro => 
                   new ProgramVM((Program)Macro) },
             };

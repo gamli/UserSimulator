@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
    <macroview:FunctionCallView FunctionName="MOVE" DataContext="{Binding}">
-      <TextBox Text="{Binding Model.TranslationX}"/>
-      <TextBox Text="{Binding Model.TranslationY}"/>
+      <macroview:MacroBaseView DataContext="{Binding TranslationXVM}"/>
+      <macroview:MacroBaseView DataContext="{Binding TranslationYVM}"/>
    </macroview:FunctionCallView>
 </UserControl>

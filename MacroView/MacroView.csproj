@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -47,10 +48,34 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConstantIntegerExpressionView.xaml.cs">
+      <DependentUpon>ConstantIntegerExpressionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConstantStringExpressionView.xaml.cs">
+      <DependentUpon>ConstantStringExpressionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConstantBooleanExpressionView.xaml.cs">
+      <DependentUpon>ConstantBooleanExpressionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IfStatementView.xaml.cs">
+      <DependentUpon>IfStatementView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowshotView.xaml.cs">
       <DependentUpon>WindowshotView.xaml</DependentUpon>
     </Compile>
     <Page Include="BlockView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConstantIntegerExpressionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConstantStringExpressionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConstantBooleanExpressionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -59,6 +84,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FunctionCallView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IfStatementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -154,6 +183,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{13834f55-a326-4c25-9ca9-dc8c6282d3f5}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IO\IO.csproj">
+      <Project>{52c3838a-1365-4692-b464-b96cc9682349}</Project>
+      <Name>IO</Name>
     </ProjectReference>
     <ProjectReference Include="..\MacroViewModel\MacroViewModel.csproj">
       <Project>{0cab8df3-0577-48bd-8fd8-84e1b848d99b}</Project>

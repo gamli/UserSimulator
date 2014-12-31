@@ -19,6 +19,10 @@ namespace MacroViewModel_TEST
          AssertCreatesExpectedViewModelType(typeof(NoOp), typeof(NoOpVM));
          AssertCreatesExpectedViewModelType(typeof(Pause), typeof(PauseVM));
          AssertCreatesExpectedViewModelType(typeof(Position), typeof(PositionVM));
+         AssertCreatesExpectedViewModelType(typeof(ConstantExpression<bool>), typeof(ConstantBooleanExpressionVM));
+         AssertCreatesExpectedViewModelType(typeof(ConstantExpression<string>), typeof(ConstantStringExpressionVM));
+         AssertCreatesExpectedViewModelType(typeof(ConstantExpression<int>), typeof(ConstantIntegerExpressionVM));
+         AssertCreatesExpectedViewModelType(typeof(IfStatement), typeof(IfStatementVM));
          AssertCreatesExpectedViewModelType(typeof(Program), typeof(ProgramVM));
          Assert.AreEqual(MacroViewModelFactory.Instance.Create(null), null);
       }

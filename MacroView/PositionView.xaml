@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
    <macroview:FunctionCallView FunctionName="POSITION" DataContext="{Binding}">
-      <TextBox Text="{Binding Model.X}"/>
-      <TextBox Text="{Binding Model.Y}"/>
+      <macroview:MacroBaseView DataContext="{Binding XVM}"/>
+      <macroview:MacroBaseView DataContext="{Binding YVM}"/>
    </macroview:FunctionCallView>
 </UserControl>

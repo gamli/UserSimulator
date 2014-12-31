@@ -6,10 +6,23 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <Border Background="#FFF7F6DA" CornerRadius="5" BorderBrush="#FFEBF1AF" BorderThickness="3">
+   <Border Background="#FFF7E5DA" CornerRadius="5" BorderBrush="#FFF1C0AF" BorderThickness="3">
       <StackPanel>
-         <TextBlock Text="IF_WINDOWSHOT" FontWeight="ExtraBlack"/>
-         
+         <macroview:FunctionCallView FunctionName="IF_WINDOWSHOT" DataContext="{Binding}">
+            <macroview:MacroBaseView DataContext="{Binding PositionXVM}"/>
+            <macroview:MacroBaseView DataContext="{Binding PositionYVM}"/>
+            <macroview:MacroBaseView DataContext="{Binding ImageUrlVM}"/>
+         </macroview:FunctionCallView>
+         <Grid>
+            <Image x:Name="_windowshot" Stretch="Uniform" MaxWidth="512" MaxHeight="512" MouseUp="_windowshot_MouseUp" LayoutUpdated="_windowshot_LayoutUpdated"/>
+            <Border BorderThickness="2" BorderBrush="#E92088E4" x:Name="_kuh">
+               <Border.RenderTransform>
+                  <TranslateTransform x:Name="_muh"/>
+               </Border.RenderTransform>
+               <Image Source="{Binding Model.ImageUrl.Value}">
+               </Image>
+            </Border>
+         </Grid>
          <macroview:MacroBaseView DataContext="{Binding BodyVM}" Margin="5, 0, 0, 0"/>
       </StackPanel>
    </Border>

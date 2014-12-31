@@ -55,6 +55,12 @@
     <Compile Include="MacroViewModelFactory_TEST.cs" />
     <Compile Include="BlockVM_TEST.cs" />
     <Compile Include="MacroWithBodyBaseVM_TEST.cs" />
+    <Compile Include="ForLoopVM_TEST.cs" />
+    <Compile Include="IfStatementVM_TEST.cs" />
+    <Compile Include="MoveVM_TEST.cs" />
+    <Compile Include="PositionVM_TEST.cs" />
+    <Compile Include="PauseVM_TEST.cs" />
+    <Compile Include="WindowshotVM_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

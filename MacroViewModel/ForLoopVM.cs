@@ -4,17 +4,31 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 using Macro;
 
 namespace MacroViewModel
 {
-   [ExcludeFromCodeCoverage]
    public class ForLoopVM : MacroWithBodyBaseVM<ForLoop>
    {
+      private NotifyingTransformedProperty<ExpressionBaseVM> _repetitionCountVM;
+      public ExpressionBaseVM RepetitionCountVM
+      {
+         get
+         {
+            return _repetitionCountVM.Value;
+         }
+      }
+
       public ForLoopVM(ForLoop Model)
          : base(Model)
       {
-         // nothing to do
+         _repetitionCountVM =
+            new NotifyingTransformedProperty<ExpressionBaseVM>(
+               new[] { "RepetitionCount" }, "RepetitionCountVM",
+               Model, this,
+               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.RepetitionCount),
+               VM => VM.Dispose());
       }
    }
 }
