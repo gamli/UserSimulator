@@ -25,9 +25,9 @@ namespace MacroView
    /// <summary>
    /// Interaction logic for WindowshotView.xaml
    /// </summary>
-   public partial class WindowshotView : UserControl
+   public partial class WindowshotExpressionView : UserControl
    {
-      public WindowshotView()
+      public WindowshotExpressionView()
       {
          InitializeComponent();
          var timer =
@@ -38,9 +38,9 @@ namespace MacroView
          timer.Tick +=
             (Sender, Args) =>
             {
-               if (DataContext is WindowshotVM)
+               if (DataContext is WindowshotExpressionVM)
                {
-                  var windowshotMacro = ((WindowshotVM)DataContext).Model;
+                  var windowshotMacro = (WindowshotExpression)((WindowshotExpressionVM)DataContext).Model;
                   var windowshotImageSource = ((BitmapImage)_windowshot.Source);
                   if (windowshotImageSource != null)
                   {
@@ -100,7 +100,7 @@ namespace MacroView
          _kuh.Width = windowshotMacroWidth * (_windowshot.ActualWidth / _windowshotImage.Width) + _kuh.BorderThickness.Left + _kuh.BorderThickness.Right;
          _kuh.Height = windowshotMacroHeight * (_windowshot.ActualHeight / _windowshotImage.Height) + _kuh.BorderThickness.Top + _kuh.BorderThickness.Bottom;
 
-         var windowshotMacro = ((WindowshotVM)DataContext).Model;
+         var windowshotMacro = (WindowshotExpression)((WindowshotExpressionVM)DataContext).Model;
          var windowshotMacroImageUrl = System.IO.Path.GetTempFileName();
          using (var windowshotMacroImage = new System.Drawing.Bitmap(windowshotMacroWidth, windowshotMacroHeight))
          using (var graphics = Graphics.FromImage(windowshotMacroImage))

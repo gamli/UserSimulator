@@ -54,7 +54,7 @@ namespace Macro_TEST
          Visit(Pause);
       }
 
-      public void VisitWindowshot(Windowshot Windowshot)
+      public void VisitWindowshotExpression(WindowshotExpression Windowshot)
       {
          Visit(Windowshot);
       }

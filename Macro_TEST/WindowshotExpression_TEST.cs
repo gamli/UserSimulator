@@ -6,16 +6,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Macro_TEST
 {
    [TestClass]
-   public class Windowshot_TEST
+   public class WindowshotExpression_TEST
    {
       [TestMethod]
       public void Accept_TEST()
       {
-         var windowshot = new Windowshot();
+         var windowshot = new WindowshotExpression();
          var testVisitor = new MockVisitor();
          windowshot.Accept(testVisitor);
          Assert.AreEqual(testVisitor.Macros.Count, 1);
-         Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(Windowshot));
+         Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(WindowshotExpression));
       }
 
       [TestMethod]
@@ -23,9 +23,8 @@ namespace Macro_TEST
       {
          var block = new Block();
          var windowshot = 
-            new Windowshot 
+            new WindowshotExpression 
             { 
-               Body = new NoOp(),  
                ImageUrl = ConstantExpressions.Create("nonExistingTestImage"),
                PositionX = ConstantExpressions.Create(13),
                PositionY = ConstantExpressions.Create(17)

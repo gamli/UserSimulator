@@ -29,7 +29,7 @@ namespace Macro
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
          var otherConstantExpression = (ConstantExpression<T>)OtherMacro;
-         return Value.Equals(otherConstantExpression.Value);
+         return Value == null ? otherConstantExpression.Value == null : Value.Equals(otherConstantExpression.Value);
       }
    }
 }

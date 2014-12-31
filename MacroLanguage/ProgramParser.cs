@@ -43,7 +43,6 @@ namespace MacroLanguage
             .IsMadeUp.By(Block(Config, statement))
             .Or.By(LeftClick(Config))
             .Or.By(ForLoop(Config, statement))
-            .Or.By(Windowshot(Config, statement))
             .Or.By(Move(Config))
             .Or.By(NoOp(Config))
             .Or.By(Pause(Config))
@@ -97,24 +96,6 @@ namespace MacroLanguage
             .WhenFound(O => new ForLoop { RepetitionCount = O.RepetitionCount, Body = O.Body });
 
          return forLoop;
-      }
-
-      private static IRule Windowshot(IFluentParserConfigurator Config, IRule Statement)
-      {
-         var windowshot = Config.Rule();
-         windowshot
-            .IsMadeUp.By("IF_WINDOWSHOT")
-            .Followed.By(BeginParameterList())
-            .Followed.By(IntegerExpression(Config)).As("PositionX")
-            .Followed.By(ParameterSeperator())
-            .Followed.By(IntegerExpression(Config)).As("PositionY")
-            .Followed.By(ParameterSeperator())
-            .Followed.By(StringExpression(Config)).As("ImageUrl")
-            .Followed.By(EndParameterList())
-            .Followed.By(Statement).As("Body")
-            .WhenFound(O => new Windowshot { PositionX = O.PositionX, PositionY = O.PositionY, ImageUrl = O.ImageUrl, Body = O.Body });
-
-         return windowshot;
       }
 
       private static IRule Move(IFluentParserConfigurator Config)
@@ -184,11 +165,27 @@ namespace MacroLanguage
          return expression;
       }*/
 
+      private static IRule WindowshotExpression(IFluentParserConfigurator Config)
+      {
+         var windowshot = Config.Rule();
+         windowshot
+            .IsMadeUp.By("WINDOWSHOT")
+            .Followed.By(BeginParameterList())
+            .Followed.By(IntegerExpression(Config)).As("PositionX")
+            .Followed.By(ParameterSeperator())
+            .Followed.By(IntegerExpression(Config)).As("PositionY")
+            .Followed.By(ParameterSeperator())
+            .Followed.By(StringExpression(Config)).As("ImageUrl")
+            .Followed.By(EndParameterList())
+            .WhenFound(O => new WindowshotExpression { PositionX = O.PositionX, PositionY = O.PositionY, ImageUrl = O.ImageUrl });
+         return windowshot;
+      }
       private static IRule BooleanExpression(IFluentParserConfigurator Config)
       {
          var booleanExpression = Config.Rule();
          booleanExpression
-            .IsMadeUp.By(ConstantBooleanExpression(Config));
+            .IsMadeUp.By(ConstantBooleanExpression(Config))
+            .Or.By(WindowshotExpression(Config));
          return booleanExpression;
       }
       private static IRule ConstantBooleanExpression(IFluentParserConfigurator Config)

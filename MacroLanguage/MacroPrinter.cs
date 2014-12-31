@@ -58,10 +58,9 @@ namespace MacroLanguage
          AppendBody(ForLoop);
       }
 
-      public void VisitWindowshot(Windowshot Windowshot)
+      public void VisitWindowshotExpression(WindowshotExpression Windowshot)
       {
-         Append(FunctionCall("IF_WINDOWSHOT", Windowshot.PositionX, Windowshot.PositionY, Windowshot.ImageUrl));
-         AppendBody(Windowshot);
+         Append(FunctionCall("WINDOWSHOT", Windowshot.PositionX, Windowshot.PositionY, Windowshot.ImageUrl));
       }
 
       private void AppendBody(MacroWithBodyBase MacroWithBody)

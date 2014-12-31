@@ -44,8 +44,8 @@ namespace MacroViewModel
                { typeof(ForLoop), Macro => 
                   new ForLoopVM((ForLoop)Macro) },
 
-               { typeof(Windowshot), Macro => 
-                  new WindowshotVM((Windowshot)Macro) },
+               { typeof(WindowshotExpression), Macro => 
+                  new WindowshotExpressionVM((WindowshotExpression)Macro) },
 
                { typeof(Move), Macro => 
                   new MoveVM((Move)Macro) },

@@ -74,52 +74,67 @@ namespace MacroLanguage_TEST
       }
 
       [TestMethod]
-      public void Windowshot_TEST()
+      public void WindowshotExpression_TEST()
       {
          var windowshotProgram =
             Program(
-               new Windowshot 
-               { 
-                  PositionX = ConstantExpressions.Create(4711), 
-                  PositionY = ConstantExpressions.Create(-4711), 
-                  ImageUrl = ConstantExpressions.Create("nonExistingTestImage"), Body = new NoOp() });
-         AssertOutput(
-            windowshotProgram,
-@"PROGRAM
-{
-   IF_WINDOWSHOT(4711, -4711, ""nonExistingTestImage"")
-      ;
-}");
-         windowshotProgram =
-            Program(
-               new Windowshot
+               new IfStatement
                {
-                  PositionX = ConstantExpressions.Create(4711),
-                  PositionY = ConstantExpressions.Create(-4711),
-                  ImageUrl = ConstantExpressions.Create<string>(null),
+                  Expression = 
+                     new WindowshotExpression 
+                        { 
+                           PositionX = ConstantExpressions.Create(4711), 
+                           PositionY = ConstantExpressions.Create(-4711), 
+                           ImageUrl = ConstantExpressions.Create("nonExistingTestImage")
+                        },
                   Body = new NoOp()
                });
          AssertOutput(
             windowshotProgram,
 @"PROGRAM
 {
-   IF_WINDOWSHOT(4711, -4711, null)
+   IF(WINDOWSHOT(4711, -4711, ""nonExistingTestImage""))
       ;
 }");
-
-         var windowshotWithBlockProgram =
+         windowshotProgram =
             Program(
-               new Windowshot 
-               { 
-                  PositionX = ConstantExpressions.Create(4711), 
-                  PositionY = ConstantExpressions.Create(-4711), Body = new Block { } });
+               new IfStatement
+               {
+                  Expression = 
+                     new WindowshotExpression 
+                        { 
+                           PositionX = ConstantExpressions.Create(4711), 
+                           PositionY = ConstantExpressions.Create(-4711), 
+                           ImageUrl = ConstantExpressions.Create<string>(null)
+                        },
+                  Body = new NoOp()
+               });
          AssertOutput(
-            windowshotWithBlockProgram,
+            windowshotProgram,
 @"PROGRAM
 {
-   IF_WINDOWSHOT(4711, -4711, null)
-      {
-      }
+   IF(WINDOWSHOT(4711, -4711, null))
+      ;
+}");
+         windowshotProgram =
+            Program(
+               new IfStatement
+               {
+                  Expression =
+                     new WindowshotExpression
+                     {
+                        PositionX = ConstantExpressions.Create(4711),
+                        PositionY = ConstantExpressions.Create(-4711),
+                        ImageUrl = null
+                     },
+                  Body = new NoOp()
+               });
+         AssertOutput(
+            windowshotProgram,
+@"PROGRAM
+{
+   IF(WINDOWSHOT(4711, -4711, null))
+      ;
 }");
       }
 

@@ -58,28 +58,9 @@ namespace UserSimulator
             for (var i = 0; i < EvaluateExpression<int>(ForLoop.RepetitionCount); i++)
                ForLoop.Body.Accept(this);
          }
-         public void VisitWindowshot(Windowshot Windowshot)
+         public void VisitWindowshotExpression(WindowshotExpression Windowshot)
          {
-            using (var image = new Bitmap(EvaluateExpression<string>(Windowshot.ImageUrl)))
-            using (var windowContent = Window.Capture(_targetWindow))
-            using (var clippedWindowContent = new Bitmap(image.Width, image.Height))
-            using (var clippedWindowContentGraphics = Graphics.FromImage(clippedWindowContent))
-            {
-               clippedWindowContentGraphics.DrawImage(
-                  windowContent,
-                  0, 0,
-                  new Rectangle(
-                     EvaluateExpression<int>(Windowshot.PositionX), EvaluateExpression<int>(Windowshot.PositionY), 
-                     image.Width, image.Height),
-                  GraphicsUnit.Pixel
-                  );
-
-               for (var x = 0; x < image.Width; x++)
-                  for (var y = 0; y < image.Height; y++)
-                     if (image.GetPixel(x, y) != clippedWindowContent.GetPixel(x, y))
-                        return;
-            }
-            Windowshot.Body.Accept(this);
+            throw new Exception("Malformed program: Windowshot expression is not a statement");
          }
 
          public void VisitMove(Move Move)
@@ -144,7 +125,7 @@ namespace UserSimulator
          else
             throw new Exception(
                string.Format(
-                  "Malformed program: Expected expression of type {0} and got expression óf type {1}",
+                  "Malformed program: Expected expression of type {0} and got expression of type {1}",
                   typeof(TExpressionValue),
                   _expressionVisitor.Value.GetType()));
       }
@@ -179,9 +160,31 @@ namespace UserSimulator
          {
             throw new Exception("Malformed program: For-Statement is not an expression");
          }
-         public void VisitWindowshot(Windowshot Windowshot)
+         public void VisitWindowshotExpression(WindowshotExpression Windowshot)
          {
-            throw new Exception("Malformed program: Windowshot-Statement is not an expression");
+            using (var image = new Bitmap(EvaluateExpression<string>(Windowshot.ImageUrl)))
+            using (var windowContent = Window.Capture(_targetWindow))
+            using (var clippedWindowContent = new Bitmap(image.Width, image.Height))
+            using (var clippedWindowContentGraphics = Graphics.FromImage(clippedWindowContent))
+            {
+               clippedWindowContentGraphics.DrawImage(
+                  windowContent,
+                  0, 0,
+                  new Rectangle(
+                     EvaluateExpression<int>(Windowshot.PositionX), EvaluateExpression<int>(Windowshot.PositionY),
+                     image.Width, image.Height),
+                  GraphicsUnit.Pixel
+                  );
+
+               for (var x = 0; x < image.Width; x++)
+                  for (var y = 0; y < image.Height; y++)
+                     if (image.GetPixel(x, y) != clippedWindowContent.GetPixel(x, y))
+                     {
+                        Value = false;
+                        return;
+                     }
+            }
+            Value = true;
          }
 
          public void VisitMove(Move Move)
@@ -211,6 +214,11 @@ namespace UserSimulator
          public void VisitIfStatement(IfStatement IfStatement)
          {
             throw new Exception("Malformed program: If-Statement is not an expression");
+         }
+
+         private T EvaluateExpression<T>(ExpressionBase<T> Expression)
+         {
+            return new ExpreesionEvaluator<T>(Expression, _targetWindow).Evaluate();
          }
       }
    }

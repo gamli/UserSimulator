@@ -14,7 +14,7 @@ namespace MacroViewModel_TEST
          AssertCreatesExpectedViewModelType(typeof(Block), typeof(BlockVM));
          AssertCreatesExpectedViewModelType(typeof(LeftClick), typeof(LeftClickVM));
          AssertCreatesExpectedViewModelType(typeof(ForLoop), typeof(ForLoopVM));
-         AssertCreatesExpectedViewModelType(typeof(Windowshot), typeof(WindowshotVM));
+         AssertCreatesExpectedViewModelType(typeof(WindowshotExpression), typeof(WindowshotExpressionVM));
          AssertCreatesExpectedViewModelType(typeof(Move), typeof(MoveVM));
          AssertCreatesExpectedViewModelType(typeof(NoOp), typeof(NoOpVM));
          AssertCreatesExpectedViewModelType(typeof(Pause), typeof(PauseVM));

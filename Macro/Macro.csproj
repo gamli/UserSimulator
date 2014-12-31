@@ -46,7 +46,7 @@
     <Compile Include="ExpressionBase.cs" />
     <Compile Include="ForLoop.cs" />
     <Compile Include="IfStatement.cs" />
-    <Compile Include="Windowshot.cs" />
+    <Compile Include="WindowshotExpression.cs" />
     <Compile Include="NoOp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="IVisitor.cs" />

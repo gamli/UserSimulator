@@ -50,7 +50,7 @@
     <Compile Include="ExpressionBaseVM.cs" />
     <Compile Include="ForLoopVM.cs" />
     <Compile Include="IfStatementVM.cs" />
-    <Compile Include="WindowshotVM.cs" />
+    <Compile Include="WindowshotExpressionVM.cs" />
     <Compile Include="MacroBaseVM.cs" />
     <Compile Include="MacroViewModelFactory.cs" />
     <Compile Include="MacroWithBodyBaseVM.cs" />

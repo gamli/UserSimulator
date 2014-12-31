@@ -12,13 +12,13 @@ namespace MacroViewModel_TEST
       public void PositionVM_Property_TEST()
       {
          var windowshot = 
-            new Windowshot 
+            new WindowshotExpression 
                { 
                   PositionX = ConstantExpressions.Create(4711), 
                   PositionY = ConstantExpressions.Create(-4711),
                   ImageUrl = ConstantExpressions.Create("blubb")
                };
-         using (var moveVM = new WindowshotVM(windowshot))
+         using (var moveVM = new WindowshotExpressionVM(windowshot))
          {
             Assert.AreEqual(windowshot.PositionX, moveVM.PositionXVM.Model);
             Assert.AreEqual(windowshot.PositionY, moveVM.PositionYVM.Model);

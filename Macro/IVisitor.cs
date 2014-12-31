@@ -26,7 +26,7 @@ namespace Macro
 
       void VisitPause(Pause Pause);
 
-      void VisitWindowshot(Windowshot Windowshot);
+      void VisitWindowshotExpression(WindowshotExpression Windowshot);
 
       void VisitLeftClick(LeftClick LeftClick);
 

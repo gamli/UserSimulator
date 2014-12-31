@@ -70,16 +70,15 @@ namespace Macro
             WithClone(new Pause { Duration = Pause.Duration });
          }
 
-         public void VisitWindowshot(Windowshot Windowshot)
+         public void VisitWindowshotExpression(WindowshotExpression Windowshot)
          {
             WithClone(
-               new Windowshot
+               new WindowshotExpression
                {
                   ImageUrl = Windowshot.ImageUrl,
                   PositionX = Windowshot.PositionX,
                   PositionY = Windowshot.PositionY
-               },
-               () => Windowshot.Body.Accept(this));
+               });
          }
 
          public void VisitLeftClick(LeftClick LeftClick)

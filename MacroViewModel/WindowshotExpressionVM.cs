@@ -14,7 +14,7 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class WindowshotVM : MacroWithBodyBaseVM<Windowshot>
+   public class WindowshotExpressionVM : BooleanExpressionBaseVM
    {
       private NotifyingTransformedProperty<ExpressionBaseVM> _positionXVM;
       public ExpressionBaseVM PositionXVM
@@ -43,7 +43,7 @@ namespace MacroViewModel
          }
       }
 
-      public WindowshotVM(Windowshot Model)
+      public WindowshotExpressionVM(WindowshotExpression Model)
          : base(Model)
       {
          _positionXVM =

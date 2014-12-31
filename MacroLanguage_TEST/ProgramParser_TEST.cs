@@ -43,13 +43,21 @@ namespace MacroLanguage_TEST
       }
 
       [TestMethod]
-      public void Windowshot_TEST()
+      public void WindowshotExpression_TEST()
       {
-         var programWithWindowshot = _parser.Parse("PROGRAM IF_WINDOWSHOT(4711, -4711, \"nonExistingTestImage\"){}");
-         var windowshot = programWithWindowshot.Body;
-         Assert.AreEqual(windowshot.GetType(), typeof(Windowshot));
-         var forLoopBody = ((Windowshot)windowshot).Body;
-         Assert.AreEqual(forLoopBody.GetType(), typeof(Block));
+         var programWithIfWindowshot = _parser.Parse("PROGRAM IF(WINDOWSHOT(4711, -4711, \"nonExistingTestImage\")){}");
+         var ifStatetment = programWithIfWindowshot.Body;
+         Assert.AreEqual(ifStatetment.GetType(), typeof(IfStatement));
+         var windowshot = ((IfStatement)ifStatetment).Expression;
+         Assert.AreEqual(windowshot.GetType(), typeof(WindowshotExpression));
+         Assert.AreEqual(
+            windowshot, 
+            new WindowshotExpression 
+               {
+                  PositionX = ConstantExpressions.Create(4711), 
+                  PositionY = ConstantExpressions.Create(-4711),
+                  ImageUrl = ConstantExpressions.Create("nonExistingTestImage") 
+               });
       }
 
       [TestMethod]
