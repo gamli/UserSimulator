@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ProgramParser.cs" />
-    <Compile Include="ProgramPrinter.cs" />
+    <Compile Include="MacroPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

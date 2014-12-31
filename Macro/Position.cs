@@ -9,13 +9,13 @@ namespace Macro
 {
    public class Position : MacroBase
    {
-      private int _x;
+      private ExpressionBase<int> _x;
       [ExcludeFromCodeCoverage]
-      public int X { get { return _x; } set { SetPropertyValue(ref _x, value); } }
+      public ExpressionBase<int> X { get { return _x; } set { SetPropertyValue(ref _x, value); } }
 
-      private int _y;
+      private ExpressionBase<int> _y;
       [ExcludeFromCodeCoverage]
-      public int Y { get { return _y; } set { SetPropertyValue(ref _y, value); } }
+      public ExpressionBase<int> Y { get { return _y; } set { SetPropertyValue(ref _y, value); } }
 
       public override void Accept(IVisitor Visitor)
       {

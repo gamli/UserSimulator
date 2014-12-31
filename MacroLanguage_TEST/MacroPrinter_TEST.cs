@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MacroLanguage_TEST
 {
    [TestClass]
-   public class ProgramPrinter_TEST
+   public class MacroPrinter_TEST
    {
       [TestMethod]
       public void Block_TEST()
@@ -53,7 +53,7 @@ namespace MacroLanguage_TEST
       public void ForLoop_TEST()
       {
          var emptyForLoopProgram =
-            Program(new ForLoop { RepetitionCount = 4711, Body = new NoOp() });
+            Program(new ForLoop { RepetitionCount = ConstantExpressions.Create(4711), Body = new NoOp() });
          AssertOutput(
             emptyForLoopProgram,
 @"PROGRAM
@@ -62,7 +62,7 @@ namespace MacroLanguage_TEST
       ;
 }");
          var forLoopWithBlockProgram =
-            Program(new ForLoop { RepetitionCount = 4711, Body = new Block { } });
+            Program(new ForLoop { RepetitionCount = ConstantExpressions.Create(4711), Body = new Block { } });
          AssertOutput(
             forLoopWithBlockProgram,
 @"PROGRAM
@@ -77,7 +77,12 @@ namespace MacroLanguage_TEST
       public void Windowshot_TEST()
       {
          var windowshotProgram =
-            Program(new Windowshot { PositionX = 4711, PositionY = -4711, ImageUrl = "nonExistingTestImage", Body = new NoOp() });
+            Program(
+               new Windowshot 
+               { 
+                  PositionX = ConstantExpressions.Create(4711), 
+                  PositionY = ConstantExpressions.Create(-4711), 
+                  ImageUrl = ConstantExpressions.Create("nonExistingTestImage"), Body = new NoOp() });
          AssertOutput(
             windowshotProgram,
 @"PROGRAM
@@ -85,8 +90,29 @@ namespace MacroLanguage_TEST
    IF_WINDOWSHOT(4711, -4711, ""nonExistingTestImage"")
       ;
 }");
+         windowshotProgram =
+            Program(
+               new Windowshot
+               {
+                  PositionX = ConstantExpressions.Create(4711),
+                  PositionY = ConstantExpressions.Create(-4711),
+                  ImageUrl = ConstantExpressions.Create<string>(null),
+                  Body = new NoOp()
+               });
+         AssertOutput(
+            windowshotProgram,
+@"PROGRAM
+{
+   IF_WINDOWSHOT(4711, -4711, null)
+      ;
+}");
+
          var windowshotWithBlockProgram =
-            Program(new Windowshot { PositionX = 4711, PositionY = -4711, Body = new Block { } });
+            Program(
+               new Windowshot 
+               { 
+                  PositionX = ConstantExpressions.Create(4711), 
+                  PositionY = ConstantExpressions.Create(-4711), Body = new Block { } });
          AssertOutput(
             windowshotWithBlockProgram,
 @"PROGRAM
@@ -101,7 +127,11 @@ namespace MacroLanguage_TEST
       public void Move_TEST()
       {
          var moveProgram =
-            Program(new Move { TranslationX = 4711, TranslationY = -4711 });
+            Program(
+               new Move 
+               { 
+                  TranslationX = ConstantExpressions.Create(4711), 
+                  TranslationY = ConstantExpressions.Create(-4711) });
          AssertOutput(
             moveProgram,
 @"PROGRAM
@@ -127,7 +157,7 @@ namespace MacroLanguage_TEST
       public void Pause_TEST()
       {
          var pauseProgram =
-            Program(new Pause { Duration = TimeSpan.FromMilliseconds(4711) });
+            Program(new Pause { Duration = ConstantExpressions.Create(4711) });
          AssertOutput(
             pauseProgram,
 @"PROGRAM
@@ -140,7 +170,7 @@ namespace MacroLanguage_TEST
       public void Position_TEST()
       {
          var positionProgram = 
-            Program(new Position { X = 4711, Y = -4711 });
+            Program(new Position { X = ConstantExpressions.Create(4711), Y = ConstantExpressions.Create(-4711) });
          AssertOutput(
             positionProgram,
 @"PROGRAM
@@ -157,6 +187,20 @@ namespace MacroLanguage_TEST
             emptyProgram,
 @"PROGRAM
 {
+}");
+      }
+
+      [TestMethod]
+      public void IfStatement_TEST()
+      {
+         var ifStatementProgram =
+            Program(new IfStatement { Expression = ConstantExpressions.Create(true), Body = new NoOp() });
+         AssertOutput(
+            ifStatementProgram,
+@"PROGRAM
+{
+   IF(True)
+      ;
 }");
       }
 
@@ -184,7 +228,7 @@ namespace MacroLanguage_TEST
 
       private string Print(Program Program)
       {
-         return new ProgramPrinter(Program).Print();
+         return new MacroPrinter(Program).Print();
       }
    }
 }

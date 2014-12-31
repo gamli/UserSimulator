@@ -42,7 +42,10 @@
   <ItemGroup>
     <Compile Include="Block.cs" />
     <Compile Include="Click.cs" />
+    <Compile Include="ConstantExpression.cs" />
+    <Compile Include="ExpressionBase.cs" />
     <Compile Include="ForLoop.cs" />
+    <Compile Include="IfStatement.cs" />
     <Compile Include="Windowshot.cs" />
     <Compile Include="NoOp.cs" />
     <Compile Include="Program.cs" />

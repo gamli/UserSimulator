@@ -13,9 +13,9 @@ namespace Macro
 
       public Program Clone()
       {
-         var programCloneVisitor = new ProgramCloneVisitor();
+         var programCloneVisitor = new CloneVisitor();
          _program.Accept(programCloneVisitor);
-         return programCloneVisitor.Clone;
+         return (Program)programCloneVisitor.Clone;
       }
 
       public ProgramCloner(Program Program)
@@ -25,14 +25,13 @@ namespace Macro
 
       Program _program;
 
-      private class ProgramCloneVisitor : IVisitor
+      private class CloneVisitor : IVisitor
       {
-         public Program Clone { get; private set; }
+         public MacroBase Clone { get; private set; }
 
          public void VisitProgram(Program Program)
          {
-            Clone = new Program();
-            WithClone(Clone, () => Program.Body.Accept(this));            
+            WithClone(new Program(), () => Program.Body.Accept(this));            
          }
 
          public void VisitBlock(Block Block)
@@ -87,32 +86,52 @@ namespace Macro
          {
             WithClone(new LeftClick());
          }
-
-         private void WithClone(MacroBase Clone, Action Action = null)
+         
+         public void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression)
          {
+            WithClone(new ConstantExpression<T> { Value = ConstantExpression.Value });
+         }
+
+         public void VisitIfStatement(IfStatement IfStatement)
+         {
+            WithClone(new IfStatement { Expression = CloneExpression(IfStatement.Expression) }, () => IfStatement.Body.Accept(this));
+         }
+
+         private void WithClone(MacroBase MacroClone, Action Action = null)
+         {
+            if (Clone == null)
+               Clone = MacroClone;
+
             if (_macroStack.Count > 0)
             {
                var topLevelMacro = _macroStack.Peek();
                if (topLevelMacro is MacroWithBodyBase)
                {
                   var macroWithBody = (MacroWithBodyBase)topLevelMacro;
-                  macroWithBody.Body = Clone;
+                  macroWithBody.Body = MacroClone;
                }
                else
                {
                   var block = (Block)topLevelMacro;
-                  block.Items.Add(Clone);
+                  block.Items.Add(MacroClone);
                }
             }
-            var putOnStack = Clone is MacroWithBodyBase || Clone is Block;
+            var putOnStack = MacroClone is MacroWithBodyBase || MacroClone is Block;
             if (putOnStack)
-               _macroStack.Push(Clone);
+               _macroStack.Push(MacroClone);
             if(Action != null)
                Action();
             if (putOnStack)
                _macroStack.Pop();
          }
          private Stack<MacroBase> _macroStack = new Stack<MacroBase>();
+
+         private ExpressionBase<T> CloneExpression<T>(ExpressionBase<T> Expression)
+         {
+            var cloneVisitor = new CloneVisitor();
+            Expression.Accept(cloneVisitor);
+            return (ExpressionBase<T>)cloneVisitor.Clone;
+         }
       }
    }
 }

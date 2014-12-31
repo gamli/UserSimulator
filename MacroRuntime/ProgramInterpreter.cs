@@ -12,85 +12,206 @@ using Macro;
 
 namespace UserSimulator
 {
-   public class ProgramInterpreter : IVisitor
+   public class ProgramInterpreter
    {
       private readonly Program _program;
-      private readonly IntPtr _targetWindow;
+      private readonly StatementVisitor _statementVisitor;
 
       public ProgramInterpreter(Program Program, IntPtr TargetWindow)
       {
          _program = Program;
-         _targetWindow = TargetWindow;
+         _statementVisitor = new StatementVisitor(TargetWindow);
       }
 
       public void Start()
       {
-         _program.Accept(this);
+         _program.Accept(_statementVisitor);
       }
 
-      public void VisitProgram(Program Program)
+      private class StatementVisitor : IVisitor
       {
-         Program.Body.Accept(this);
-      }
+         private readonly IntPtr _targetWindow;
 
-      public void VisitBlock(Block Block)
-      {
-         foreach (var item in Block.Items)
-            item.Accept(this);
-      }
-
-      public void VisitNoOp(NoOp NoOp)
-      {
-         // nothing to do
-      }
-
-      public void VisitForLoop(ForLoop ForLoop)
-      {
-         for (var i = 0; i < ForLoop.RepetitionCount; i++)
-            ForLoop.Body.Accept(this);
-      }
-      public void VisitWindowshot(Windowshot Windowshot)
-      {
-         using (var image = new Bitmap(Windowshot.ImageUrl))
-         using (var windowContent = Window.Capture(_targetWindow))
-         using (var clippedWindowContent = new Bitmap(image.Width, image.Height))
-         using (var clippedWindowContentGraphics = Graphics.FromImage(clippedWindowContent))
+         public StatementVisitor(IntPtr TargetWindow)
          {
-            clippedWindowContentGraphics.DrawImage(
-               windowContent,
-               0, 0,
-               new Rectangle(Windowshot.PositionX, Windowshot.PositionY, image.Width, image.Height),
-               GraphicsUnit.Pixel
-               );
-
-            for (var x = 0; x < image.Width; x++)
-               for (var y = 0; y < image.Height; y++)
-                  if (image.GetPixel(x, y) != clippedWindowContent.GetPixel(x, y))
-                     return;
+            _targetWindow = TargetWindow;
          }
-         Windowshot.Body.Accept(this);
+
+         public void VisitProgram(Program Program)
+         {
+            Program.Body.Accept(this);
+         }
+
+         public void VisitBlock(Block Block)
+         {
+            foreach (var item in Block.Items)
+               item.Accept(this);
+         }
+
+         public void VisitNoOp(NoOp NoOp)
+         {
+            // nothing to do
+         }
+
+         public void VisitForLoop(ForLoop ForLoop)
+         {
+            for (var i = 0; i < EvaluateExpression<int>(ForLoop.RepetitionCount); i++)
+               ForLoop.Body.Accept(this);
+         }
+         public void VisitWindowshot(Windowshot Windowshot)
+         {
+            using (var image = new Bitmap(EvaluateExpression<string>(Windowshot.ImageUrl)))
+            using (var windowContent = Window.Capture(_targetWindow))
+            using (var clippedWindowContent = new Bitmap(image.Width, image.Height))
+            using (var clippedWindowContentGraphics = Graphics.FromImage(clippedWindowContent))
+            {
+               clippedWindowContentGraphics.DrawImage(
+                  windowContent,
+                  0, 0,
+                  new Rectangle(
+                     EvaluateExpression<int>(Windowshot.PositionX), EvaluateExpression<int>(Windowshot.PositionY), 
+                     image.Width, image.Height),
+                  GraphicsUnit.Pixel
+                  );
+
+               for (var x = 0; x < image.Width; x++)
+                  for (var y = 0; y < image.Height; y++)
+                     if (image.GetPixel(x, y) != clippedWindowContent.GetPixel(x, y))
+                        return;
+            }
+            Windowshot.Body.Accept(this);
+         }
+
+         public void VisitMove(Move Move)
+         {
+            Mouse.X += EvaluateExpression<int>(Move.TranslationX);
+            Mouse.Y += EvaluateExpression<int>(Move.TranslationY);
+         }
+
+         public void VisitPosition(Position Position)
+         {
+            int screenX, screenY;
+            Window.ClientToScreen(
+               _targetWindow, 
+               EvaluateExpression<int>(Position.X), EvaluateExpression<int>(Position.Y), 
+               out screenX, out screenY);
+            Mouse.Position = new Mouse.MousePoint(screenX, screenY);
+         }
+         public void VisitLeftClick(LeftClick LeftClick)
+         {
+            Mouse.LeftClick();
+         }
+
+         public void VisitPause(Pause Pause)
+         {
+            Thread.Sleep(EvaluateExpression<int>(Pause.Duration));
+         }
+
+         public void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression)
+         {
+            throw new Exception("Malformed program: Constant expression is not a statement");
+         }
+
+         public void VisitIfStatement(IfStatement IfStatement)
+         {
+            if (EvaluateExpression<bool>(IfStatement.Expression))
+               IfStatement.Body.Accept(this);
+         }
+
+         private T EvaluateExpression<T>(ExpressionBase<T> Expression)
+         {
+            return new ExpreesionEvaluator<T>(Expression, _targetWindow).Evaluate();
+         }
+      }
+   }
+
+   public class ExpreesionEvaluator<TExpressionValue>
+   {
+      private readonly ExpressionBase<TExpressionValue> _expression;
+      private ExpressionVisitor _expressionVisitor;
+
+      public ExpreesionEvaluator(ExpressionBase<TExpressionValue> Expression, IntPtr TargetWindow)
+      {
+         _expression = Expression;
+         _expressionVisitor = new ExpressionVisitor(TargetWindow);
       }
 
-      public void VisitMove(Move Move)
+      public TExpressionValue Evaluate()
       {
-         Mouse.X += Move.TranslationX;
-         Mouse.Y += Move.TranslationY;
+         _expression.Accept(_expressionVisitor);
+         if (_expressionVisitor.Value is TExpressionValue)
+            return (TExpressionValue)_expressionVisitor.Value;
+         else
+            throw new Exception(
+               string.Format(
+                  "Malformed program: Expected expression of type {0} and got expression óf type {1}",
+                  typeof(TExpressionValue),
+                  _expressionVisitor.Value.GetType()));
       }
 
-      public void VisitPosition(Position Position)
+      private class ExpressionVisitor : IVisitor
       {
-         int screenX, screenY;
-         Window.ClientToScreen(_targetWindow, Position.X, Position.Y, out screenX, out screenY);
-         Mouse.Position = new Mouse.MousePoint(screenX, screenY);
-      }
-      public void VisitLeftClick(LeftClick LeftClick)
-      {
-         Mouse.LeftClick();
-      }
+         public object Value { get; private set; }
 
-      public void VisitPause(Pause Pause)
-      {
-         Thread.Sleep(Pause.Duration);
+         private readonly IntPtr _targetWindow;
+
+         public ExpressionVisitor(IntPtr TargetWindow)
+         {
+            _targetWindow = TargetWindow;
+         }
+
+         public void VisitProgram(Program Program)
+         {
+            throw new Exception("Malformed program: Program is not an expression");
+         }
+
+         public void VisitBlock(Block Block)
+         {
+            throw new Exception("Malformed program: Block-Statement is not an expression");
+         }
+
+         public void VisitNoOp(NoOp NoOp)
+         {
+            throw new Exception("Malformed program: NoOp-Statement is not an expression");
+         }
+
+         public void VisitForLoop(ForLoop ForLoop)
+         {
+            throw new Exception("Malformed program: For-Statement is not an expression");
+         }
+         public void VisitWindowshot(Windowshot Windowshot)
+         {
+            throw new Exception("Malformed program: Windowshot-Statement is not an expression");
+         }
+
+         public void VisitMove(Move Move)
+         {
+            throw new Exception("Malformed program: Move-Statement is not an expression");
+         }
+
+         public void VisitPosition(Position Position)
+         {
+            throw new Exception("Malformed program: Position-Statement is not an expression");
+         }
+         public void VisitLeftClick(LeftClick LeftClick)
+         {
+            throw new Exception("Malformed program: LeftClick-Statement is not an expression");
+         }
+
+         public void VisitPause(Pause Pause)
+         {
+            throw new Exception("Malformed program: Pause-Statement is not an expression");
+         }
+
+         public void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression)
+         {
+            Value = ConstantExpression.Value;
+         }
+
+         public void VisitIfStatement(IfStatement IfStatement)
+         {
+            throw new Exception("Malformed program: If-Statement is not an expression");
+         }
       }
    }
 }

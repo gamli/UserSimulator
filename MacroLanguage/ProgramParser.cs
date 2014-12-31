@@ -25,7 +25,7 @@ namespace MacroLanguage
       private IParser<object> _parser;
 
       private static IParser<object> CreateParser()
-      {         
+      {
          var config = ParserConfigurator();
 
          config.Rule()
@@ -47,7 +47,8 @@ namespace MacroLanguage
             .Or.By(Move(Config))
             .Or.By(NoOp(Config))
             .Or.By(Pause(Config))
-            .Or.By(Position(Config));
+            .Or.By(Position(Config))
+            .Or.By(IfStatement(Config, statement));
          return statement;
       }
 
@@ -60,14 +61,14 @@ namespace MacroLanguage
             .Followed.ByListOf(Statement).As("Items").ThatIs.Optional
             .Followed.By("}")
             .WhenFound(
-               O => 
-                  {
-                     var bock = new Block();
-                     if(O.Items != null)
-                        foreach(var bockItem in O.Items)
-                           bock.Items.Add(bockItem);
-                     return bock;
-                  });
+               O =>
+               {
+                  var bock = new Block();
+                  if (O.Items != null)
+                     foreach (var bockItem in O.Items)
+                        bock.Items.Add(bockItem);
+                  return bock;
+               });
 
          return block;
       }
@@ -90,7 +91,7 @@ namespace MacroLanguage
          forLoop
             .IsMadeUp.By("FOR")
             .Followed.By(BeginParameterList())
-            .Followed.By(IntegerLiteral(Config)).As("RepetitionCount")
+            .Followed.By(IntegerExpression(Config)).As("RepetitionCount")
             .Followed.By(EndParameterList())
             .Followed.By(Statement).As("Body")
             .WhenFound(O => new ForLoop { RepetitionCount = O.RepetitionCount, Body = O.Body });
@@ -104,11 +105,11 @@ namespace MacroLanguage
          windowshot
             .IsMadeUp.By("IF_WINDOWSHOT")
             .Followed.By(BeginParameterList())
-            .Followed.By(IntegerLiteral(Config)).As("PositionX")
+            .Followed.By(IntegerExpression(Config)).As("PositionX")
             .Followed.By(ParameterSeperator())
-            .Followed.By(IntegerLiteral(Config)).As("PositionY")
+            .Followed.By(IntegerExpression(Config)).As("PositionY")
             .Followed.By(ParameterSeperator())
-            .Followed.By(StringLiteral(Config)).As("ImageUrl")
+            .Followed.By(StringExpression(Config)).As("ImageUrl")
             .Followed.By(EndParameterList())
             .Followed.By(Statement).As("Body")
             .WhenFound(O => new Windowshot { PositionX = O.PositionX, PositionY = O.PositionY, ImageUrl = O.ImageUrl, Body = O.Body });
@@ -122,9 +123,9 @@ namespace MacroLanguage
          move
             .IsMadeUp.By("MOVE")
             .Followed.By(BeginParameterList())
-            .Followed.By(IntegerLiteral(Config)).As("TranslationX")
+            .Followed.By(IntegerExpression(Config)).As("TranslationX")
             .Followed.By(ParameterSeperator())
-            .Followed.By(IntegerLiteral(Config)).As("TranslationY")
+            .Followed.By(IntegerExpression(Config)).As("TranslationY")
             .Followed.By(EndParameterList())
             .Followed.By(StatementEnd())
             .WhenFound(O => new Move { TranslationX = O.TranslationX, TranslationY = O.TranslationY });
@@ -148,10 +149,10 @@ namespace MacroLanguage
          pause
             .IsMadeUp.By("PAUSE")
             .Followed.By(BeginParameterList())
-            .Followed.By(IntegerLiteral(Config)).As("Duration")
+            .Followed.By(IntegerExpression(Config)).As("Duration")
             .Followed.By(EndParameterList())
             .Followed.By(StatementEnd())
-            .WhenFound(O => new Pause { Duration = TimeSpan.FromMilliseconds(O.Duration) });
+            .WhenFound(O => new Pause { Duration = O.Duration });
 
          return pause;
       }
@@ -162,9 +163,9 @@ namespace MacroLanguage
          position
             .IsMadeUp.By("POSITION")
             .Followed.By(BeginParameterList())
-            .Followed.By(IntegerLiteral(Config)).As("X")
+            .Followed.By(IntegerExpression(Config)).As("X")
             .Followed.By(ParameterSeperator())
-            .Followed.By(IntegerLiteral(Config)).As("Y")
+            .Followed.By(IntegerExpression(Config)).As("Y")
             .Followed.By(EndParameterList())
             .Followed.By(StatementEnd())
             .WhenFound(O => new Position { X = O.X, Y = O.Y });
@@ -172,26 +173,81 @@ namespace MacroLanguage
          return position;
       }
 
-      private static IRule IntegerLiteral(IFluentParserConfigurator Config)
+      /*private static IRule Expression(IFluentParserConfigurator Config)
       {
-         var integerConstant = Config.Rule();
-         integerConstant
-            .IsMadeUp.By<int>().As("Value")
-            .WhenFound(O => O.Value)
-            .Or.By("-").Followed.By<int>().As("Value")
-            .WhenFound(O => -O.Value);
-         return integerConstant;
+         var expression = Config.Rule();
+         expression
+            .IsMadeUp.By(BooleanExpression(Config))
+            .Or.By(StringExpression(Config))
+            .Or.By(IntegerExpression(Config));
+
+         return expression;
+      }*/
+
+      private static IRule BooleanExpression(IFluentParserConfigurator Config)
+      {
+         var booleanExpression = Config.Rule();
+         booleanExpression
+            .IsMadeUp.By(ConstantBooleanExpression(Config));
+         return booleanExpression;
+      }
+      private static IRule ConstantBooleanExpression(IFluentParserConfigurator Config)
+      {
+         var boolExpression = Config.Rule();
+         boolExpression
+            .IsMadeUp.By("True").WhenFound(_ => new ConstantExpression<bool> { Value = true })
+            .Or.By("False").WhenFound(_ => new ConstantExpression<bool> { Value = false });
+         return boolExpression;
       }
 
-      private static IRule StringLiteral(IFluentParserConfigurator Config)
+      private static IRule StringExpression(IFluentParserConfigurator Config)
+      {
+         var stringExpression = Config.Rule();
+         stringExpression
+            .IsMadeUp.By(ConstantStringExpression(Config));
+         return stringExpression;
+      }
+      private static IRule ConstantStringExpression(IFluentParserConfigurator Config)
       {
          var stringConstant = Config.Rule();
          stringConstant
             .IsMadeUp.By(Config.QuotedString).As("Value")
-            .WhenFound(O => O.Value)
+            .WhenFound(O => new ConstantExpression<string> { Value = O.Value })
             .Or.By("null")
-            .WhenFound(O => null);
+            .WhenFound(O => new ConstantExpression<string> { Value = null });
          return stringConstant;
+      }
+
+      private static IRule IntegerExpression(IFluentParserConfigurator Config)
+      {
+         var integerExpression = Config.Rule();
+         integerExpression
+            .IsMadeUp.By(ConstantIntegerExpression(Config));
+         return integerExpression;
+      }
+      private static IRule ConstantIntegerExpression(IFluentParserConfigurator Config)
+      {
+         var integerConstant = Config.Rule();
+         integerConstant
+            .IsMadeUp.By<int>().As("Value")
+            .WhenFound(O => new ConstantExpression<int> { Value = O.Value })
+            .Or.By("-").Followed.By<int>().As("Value")
+            .WhenFound(O => new ConstantExpression<int> { Value = -O.Value });
+         return integerConstant;
+      }
+
+      private static IRule IfStatement(IFluentParserConfigurator Config, IRule Statement)
+      {
+         var ifStatement = Config.Rule();
+         ifStatement
+            .IsMadeUp.By("IF")
+            .Followed.By(BeginParameterList())
+            .Followed.By(BooleanExpression(Config)).As("Expression")
+            .Followed.By(EndParameterList())
+            .Followed.By(Statement).As("Body")
+            .WhenFound(O =>
+               new IfStatement { Expression = O.Expression, Body = O.Body });
+         return ifStatement;
       }
 
       private static IFluentParserConfigurator ParserConfigurator()
@@ -218,7 +274,7 @@ namespace MacroLanguage
       {
          return ",";
       }
-      
+
       private static string EndParameterList()
       {
          return ")";

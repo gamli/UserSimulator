@@ -26,14 +26,20 @@ namespace Macro_TEST
             new Windowshot 
             { 
                Body = new NoOp(),  
-               ImageUrl = "nonExistingTestImage",
-               PositionX = 13,
-               PositionY = 17
+               ImageUrl = ConstantExpressions.Create("nonExistingTestImage"),
+               PositionX = ConstantExpressions.Create(13),
+               PositionY = ConstantExpressions.Create(17)
             };
          block.Items.Add(windowshot);
          var program = new Program { Body = block };
          var programClone = new ProgramCloner(program).Clone();
          Assert.AreEqual(program, programClone);
+         windowshot.PositionY = ConstantExpressions.Create(-17);
+         Assert.AreNotEqual(program, programClone);
+         windowshot.PositionX = ConstantExpressions.Create(-13);
+         Assert.AreNotEqual(program, programClone);
+         windowshot.ImageUrl = ConstantExpressions.Create("");
+         Assert.AreNotEqual(program, programClone);
       }
    }
 }

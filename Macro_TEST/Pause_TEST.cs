@@ -21,7 +21,7 @@ namespace Macro_TEST
       public void Equals_TEST()
       {
          var block = new Block();
-         var pause = new Pause { Duration = TimeSpan.FromMilliseconds(4711) };
+         var pause = new Pause { Duration = ConstantExpressions.Create(4711) };
          block.Items.Add(pause);
          var program = new Program { Body = block };
          var programClone = new ProgramCloner(program).Clone();

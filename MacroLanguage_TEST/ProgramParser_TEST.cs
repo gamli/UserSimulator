@@ -37,7 +37,7 @@ namespace MacroLanguage_TEST
          var programWithForLoop = _parser.Parse("PROGRAM FOR(4711){}");
          var forLoop = programWithForLoop.Body;
          Assert.AreEqual(forLoop.GetType(), typeof(ForLoop));
-         Assert.AreEqual(((ForLoop)forLoop).RepetitionCount, 4711);
+         Assert.AreEqual(((ForLoop)forLoop).RepetitionCount, new ConstantExpression<int> { Value = 4711 });
          var forLoopBody = ((ForLoop)forLoop).Body;
          Assert.AreEqual(forLoopBody.GetType(), typeof(Block));
       }
@@ -58,8 +58,8 @@ namespace MacroLanguage_TEST
          var programWithMove = _parser.Parse("PROGRAM MOVE( 4711, -4711);");
          var move = programWithMove.Body;
          Assert.AreEqual(move.GetType(), typeof(Move));
-         Assert.AreEqual(((Move)move).TranslationX, 4711);
-         Assert.AreEqual(((Move)move).TranslationY, -4711);
+         Assert.AreEqual(((Move)move).TranslationX, ConstantExpressions.Create(4711));
+         Assert.AreEqual(((Move)move).TranslationY, ConstantExpressions.Create(-4711));
       }
 
       [TestMethod]
@@ -72,10 +72,10 @@ namespace MacroLanguage_TEST
       [TestMethod]
       public void Pause_TEST()
       {
-         var programWithPause = _parser.Parse("PROGRAMPAUSE(4711 );");
+         var programWithPause = _parser.Parse("PROGRAM PAUSE(4711 );");
          var pause = programWithPause.Body;
          Assert.AreEqual(pause.GetType(), typeof(Pause));
-         Assert.AreEqual(((Pause)pause).Duration.TotalMilliseconds, 4711);
+         Assert.AreEqual(((Pause)pause).Duration, ConstantExpressions.Create(4711));
       }
 
       [TestMethod]
@@ -90,8 +90,29 @@ namespace MacroLanguage_TEST
          Assert.IsTrue(block is Block);
          var position = ((Block)block).Items[0];
          Assert.AreEqual(position.GetType(), typeof(Position));
-         Assert.AreEqual(((Position)position).X, 4711);
-         Assert.AreEqual(((Position)position).Y, -4711);
+         Assert.AreEqual(((Position)position).X, ConstantExpressions.Create(4711));
+         Assert.AreEqual(((Position)position).Y, ConstantExpressions.Create(-4711));
+      }
+
+      [TestMethod]
+      public void IfStatement_TEST()
+      {
+         var programWithPosition =
+            _parser.Parse(
+               @"PROGRAM
+                  {
+            IF(True);}");
+         var block = programWithPosition.Body;
+         Assert.IsTrue(block is Block);
+         var ifStatement = ((Block)block).Items[0];
+         Assert.AreEqual(ifStatement.GetType(), typeof(IfStatement));
+         Assert.AreEqual(((IfStatement)ifStatement).Expression, ConstantExpressions.Create(true));
+         programWithPosition =
+            _parser.Parse(
+               @"PROGRAM
+                  {
+            IF(False);}");
+         Assert.AreEqual(((IfStatement)((Block)programWithPosition.Body).Items[0]).Expression, ConstantExpressions.Create(false));
       }  
 
       [TestMethod]

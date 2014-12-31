@@ -7,20 +7,20 @@ using Macro;
 
 namespace MacroLanguage
 {
-   public class ProgramPrinter : IVisitor
+   public class MacroPrinter : IVisitor
    {
       private StringBuilder _sb;
-      private Program _program;
+      private MacroBase _macro;
 
-      public ProgramPrinter(Program Program)
+      public MacroPrinter(MacroBase Macro)
       {
          _sb = new StringBuilder();
-         _program = Program;
+         _macro = Macro;
       }
 
       public string Print()
       {
-         _program.Accept(this);
+         _macro.Accept(this);
          return _sb.ToString();
       }
 
@@ -52,13 +52,15 @@ namespace MacroLanguage
 
       public void VisitForLoop(ForLoop ForLoop)
       {
-         Append("FOR(" + ForLoop.RepetitionCount + ")");
+         Append("FOR(");
+         ForLoop.RepetitionCount.Accept(this);
+         Append(")");
          AppendBody(ForLoop);
       }
 
       public void VisitWindowshot(Windowshot Windowshot)
       {
-         Append(FunctionCall("IF_WINDOWSHOT", Windowshot.PositionX, Windowshot.PositionY, StringParameter(Windowshot.ImageUrl)));
+         Append(FunctionCall("IF_WINDOWSHOT", Windowshot.PositionX, Windowshot.PositionY, Windowshot.ImageUrl));
          AppendBody(Windowshot);
       }
 
@@ -104,7 +106,7 @@ namespace MacroLanguage
 
       public void VisitPause(Pause Pause)
       {
-         AppendFunctionCallStatement("PAUSE", Pause.Duration.TotalMilliseconds);
+         AppendFunctionCallStatement("PAUSE", Pause.Duration);
       }
 
       public void VisitLeftClick(LeftClick LeftClick)
@@ -112,19 +114,34 @@ namespace MacroLanguage
          AppendFunctionCallStatement("LEFT_CLICK");
       }
 
-      private string StringParameter(string ParameterValue)
+      public void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression)
       {
-         return ParameterValue == null ? null : "\"" + ParameterValue + "\"";
+         var expressionValue = ConstantExpression.Value;
+
+         if (expressionValue is string)
+            Append("\"" + expressionValue + "\"");
+         else
+            Append(expressionValue == null ? "null" : expressionValue.ToString());         
+      }
+      
+      public void VisitIfStatement(IfStatement IfStatement)
+      {
+         Append("IF(");
+         IfStatement.Expression.Accept(this);
+         Append(")");
+         AppendBody(IfStatement);
       }
 
-      private void AppendFunctionCallStatement(string FunctionName, params object[] FunctionParameters)
+      private void AppendFunctionCallStatement(string FunctionName, params ExpressionBase[] FunctionParameters)
       {
          AppendStatement(FunctionCall(FunctionName, FunctionParameters));
       }
 
-      private static string FunctionCall(string FunctionName, params object[] FunctionParameters)
+      private static string FunctionCall(string FunctionName, params ExpressionBase[] FunctionParameters)
       {
-         return FunctionName + "(" + string.Join(ParameterSeperator(), FunctionParameters.Select(Param => Param == null ? "null" : Param)) + ")";
+         var printedFunctionParameters =
+            FunctionParameters.Select(Param => Param == null ? "null" : new MacroPrinter(Param).Print());
+         return FunctionName + "(" + string.Join(ParameterSeperator(), printedFunctionParameters) + ")";
       }
 
       private static string ParameterSeperator()

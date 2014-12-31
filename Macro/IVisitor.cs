@@ -29,5 +29,9 @@ namespace Macro
       void VisitWindowshot(Windowshot Windowshot);
 
       void VisitLeftClick(LeftClick LeftClick);
+
+      void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression);
+
+      void VisitIfStatement(IfStatement IfStatement);
    }
 }

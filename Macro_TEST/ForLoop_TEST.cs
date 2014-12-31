@@ -21,11 +21,13 @@ namespace Macro_TEST
       public void Equals_TEST()
       {
          var block = new Block();
-         var forLoop = new ForLoop { RepetitionCount = 4711, Body = new NoOp() };
+         var forLoop = new ForLoop { RepetitionCount = ConstantExpressions.Create(4711), Body = new NoOp() };
          block.Items.Add(forLoop);
          var program = new Program { Body = block };
          var programClone = new ProgramCloner(program).Clone();
          Assert.AreEqual(program, programClone);
+         forLoop.RepetitionCount = ConstantExpressions.Create(-4711);
+         Assert.AreNotEqual(program, programClone);
       }
    }
 }

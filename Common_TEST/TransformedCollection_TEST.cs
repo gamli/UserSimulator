@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -46,6 +48,69 @@ namespace Common_TEST
             Assert.AreEqual(12345678, transformedCollection.Transformed[1]);
          }
          Assert.AreEqual(5, releaseCounter);
+      }
+
+      [TestMethod]
+      [ExcludeFromCodeCoverage]
+      public void MoveNotSupportedTest_TEST()
+      {
+         var testCollection = new ObservableCollection<object> { 0, 1, 2 };
+         var releaseCounter = 0;
+         using (var transformedCollection =
+            new TransformedCollection<object, object>(
+               testCollection,
+               BoxedIntValue => -((int)BoxedIntValue),
+               12345678,
+               BoxedIntValue => releaseCounter++))
+         {
+            try
+            {
+               testCollection.Move(0, 1);
+               Assert.Fail();
+            }
+            catch (NotImplementedException)
+            {
+               // everything ok
+            }
+         }
+      }
+
+      [TestMethod]
+      [ExcludeFromCodeCoverage]
+      public void IllegalCollectionChangedEventArgs_TEST()
+      {
+         var testCollection = new ObservableCollection<object> { 0 };
+         var releaseCounter = 0;
+         using (var transformedCollection =
+            new TransformedCollection<object, object>(
+               testCollection,
+               BoxedIntValue => -((int)BoxedIntValue),
+               12345678,
+               BoxedIntValue => releaseCounter++))
+         {
+            var eventName = "CollectionChanged";
+            var eventInfo = testCollection.GetType().GetEvent(eventName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var eventDelegate =
+               (MulticastDelegate)testCollection.GetType().GetField(eventName, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(testCollection);
+
+            Assert.IsNotNull(eventDelegate);
+
+            var illegalEventArgs = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+            var fields = illegalEventArgs.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+            Console.Write(fields);
+            illegalEventArgs.GetType().GetField("_action", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(illegalEventArgs, 5);
+            try
+            {
+               foreach (var handler in eventDelegate.GetInvocationList())
+                  handler.Method.Invoke(handler.Target, new object[] { testCollection, illegalEventArgs });
+               Assert.Fail();
+            }
+            catch (TargetInvocationException Ex)
+            {
+               // everything ok
+               Assert.AreEqual(Ex.InnerException.GetType(), typeof(ArgumentException));
+            }
+         }
       }
    }
 }

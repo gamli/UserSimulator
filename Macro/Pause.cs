@@ -9,9 +9,9 @@ namespace Macro
 {
    public class Pause : MacroBase
    {
-      private TimeSpan _duration;
+      private ExpressionBase<int> _duration;
       [ExcludeFromCodeCoverage]
-      public TimeSpan Duration { get { return _duration; } set { SetPropertyValue(ref _duration, value); } }
+      public ExpressionBase<int> Duration { get { return _duration; } set { SetPropertyValue(ref _duration, value); } }
 
       public override void Accept(IVisitor Visitor)
       {

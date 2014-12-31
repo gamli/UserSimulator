@@ -10,18 +10,17 @@ namespace Macro
 {
    public class Windowshot : MacroWithBodyBase
    {
-      private string _imageUrl;
+      private ExpressionBase<string> _imageUrl;
       [ExcludeFromCodeCoverage]
-      public string ImageUrl { get { 
-         return _imageUrl; } set { SetPropertyValue(ref _imageUrl, value); } }
+      public ExpressionBase<string> ImageUrl { get { return _imageUrl; } set { SetPropertyValue(ref _imageUrl, value); } }
 
-      private int _positionX;
+      private ExpressionBase<int> _positionX;
       [ExcludeFromCodeCoverage]
-      public int PositionX { get { return _positionX; } set { SetPropertyValue(ref _positionX, value); } }
+      public ExpressionBase<int> PositionX { get { return _positionX; } set { SetPropertyValue(ref _positionX, value); } }
 
-      private int _positionY;
+      private ExpressionBase<int> _positionY;
       [ExcludeFromCodeCoverage]
-      public int PositionY { get { return _positionY; } set { SetPropertyValue(ref _positionY, value); } }
+      public ExpressionBase<int> PositionY { get { return _positionY; } set { SetPropertyValue(ref _positionY, value); } }
 
       public override void Accept(IVisitor Visitor)
       {

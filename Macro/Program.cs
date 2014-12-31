@@ -16,7 +16,7 @@ namespace Macro
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
          var otherProgram = (Program)OtherMacro;
-         return Body.Equals(otherProgram.Body);
+         return base.BodyEquals(otherProgram);
       }
    }
 }

@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="ProgramParser_TEST.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProgramPrinter_TEST.cs" />
+    <Compile Include="MacroPrinter_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

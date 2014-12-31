@@ -18,9 +18,7 @@ namespace Macro_TEST
 
       public void VisitProgram(Program Program)
       {
-         BeginVisit(Program);
-         Program.Body.Accept(this);
-         EndVisit(Program);
+         VisitMacroWithBody(Program);
       }
 
       public void VisitBlock(Block Block)
@@ -38,9 +36,7 @@ namespace Macro_TEST
 
       public void VisitForLoop(ForLoop ForLoop)
       {
-         BeginVisit(ForLoop);
-         ForLoop.Body.Accept(this);
-         EndVisit(ForLoop);
+         VisitMacroWithBody(ForLoop);
       }
 
       public void VisitMove(Move Move)
@@ -66,6 +62,24 @@ namespace Macro_TEST
       public void VisitLeftClick(LeftClick LeftClick)
       {
          Visit(LeftClick);
+      }
+
+      public void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression)
+      {
+         Visit(ConstantExpression);
+      }
+
+      public void VisitIfStatement(IfStatement IfStatement)
+      {
+         IfStatement.Expression.Accept(this);
+         VisitMacroWithBody(IfStatement);
+      }
+
+      private void VisitMacroWithBody(MacroWithBodyBase MacroWithBody)
+      {
+         BeginVisit(MacroWithBody);
+         MacroWithBody.Body.Accept(this);
+         EndVisit(MacroWithBody);
       }
 
       private void BeginVisit(MacroBase MacroBase)
