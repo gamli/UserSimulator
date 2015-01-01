@@ -6,7 +6,8 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <macroview:FunctionCallView FunctionName="PAUSE" DataContext="{Binding}">
+   <StackPanel Orientation="Horizontal">
+      <Image Source="/MacroView;component/Resources/PauseIcon.png" Width="24" Height="24"/>
       <macroview:MacroBaseView DataContext="{Binding DurationVM}"/>
-   </macroview:FunctionCallView>
+   </StackPanel>
 </UserControl>

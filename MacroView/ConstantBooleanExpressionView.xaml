@@ -5,7 +5,5 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <Border Background="#FF4AF1F1" BorderBrush="#FF43CBCB" CornerRadius="5" BorderThickness="3">
-      <CheckBox IsChecked="{Binding Model.Value}"/>
-   </Border>
+   <CheckBox IsChecked="{Binding Model.Value}" VerticalAlignment="Center"/>
 </UserControl>

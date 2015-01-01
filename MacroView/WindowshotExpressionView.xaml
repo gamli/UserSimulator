@@ -6,23 +6,25 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <Border Background="#FFF7E5DA" CornerRadius="5" BorderBrush="#FFF1C0AF" BorderThickness="3">
-      <StackPanel>
-         <macroview:FunctionCallView FunctionName="WINDOWSHOT" DataContext="{Binding}">
-            <macroview:MacroBaseView DataContext="{Binding PositionXVM}"/>
-            <macroview:MacroBaseView DataContext="{Binding PositionYVM}"/>
-            <macroview:MacroBaseView DataContext="{Binding ImageUrlVM}"/>
-         </macroview:FunctionCallView>
-         <Grid>
-            <Image x:Name="_windowshot" Stretch="Uniform" MaxWidth="512" MaxHeight="512" MouseUp="_windowshot_MouseUp" LayoutUpdated="_windowshot_LayoutUpdated"/>
-            <Border BorderThickness="2" BorderBrush="#E92088E4" x:Name="_kuh">
-               <Border.RenderTransform>
-                  <TranslateTransform x:Name="_muh"/>
-               </Border.RenderTransform>
-               <Image Source="{Binding Model.ImageUrl.Value}">
-               </Image>
-            </Border>
-         </Grid>
+   <StackPanel>
+      <StackPanel Orientation="Horizontal">
+         <Image Source="/MacroView;component/Resources/WindowshotExpressionIcon.png" Width="24" Height="24"/>
+         <TextBlock Text="("/>
+         <macroview:MacroBaseView DataContext="{Binding PositionXVM}"/>
+         <TextBlock Text=","/>
+         <macroview:MacroBaseView DataContext="{Binding PositionYVM}"/>
+         <TextBlock Text=")"/>
+         <macroview:MacroBaseView DataContext="{Binding ImageUrlVM}"/>
       </StackPanel>
-   </Border>
+      <Grid>
+         <Image x:Name="_windowshot" Stretch="Uniform" MaxWidth="512" MaxHeight="512" MouseUp="_windowshot_MouseUp" LayoutUpdated="_windowshot_LayoutUpdated"/>
+         <Border BorderThickness="2" BorderBrush="#E92088E4" x:Name="_kuh">
+            <Border.RenderTransform>
+               <TranslateTransform x:Name="_muh"/>
+            </Border.RenderTransform>
+            <Image Source="{Binding Model.ImageUrl.Value}">
+            </Image>
+         </Border>
+      </Grid>
+   </StackPanel>
 </UserControl>

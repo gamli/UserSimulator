@@ -6,8 +6,12 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <macroview:FunctionCallView FunctionName="MOVE" DataContext="{Binding}">
+   <StackPanel Orientation="Horizontal">
+      <Image Source="/MacroView;component/Resources/MoveIcon.png" Width="24" Height="24"/>
+      <TextBlock Text="("/>
       <macroview:MacroBaseView DataContext="{Binding TranslationXVM}"/>
+      <TextBlock Text=","/>
       <macroview:MacroBaseView DataContext="{Binding TranslationYVM}"/>
-   </macroview:FunctionCallView>
+      <TextBlock Text=")"/>
+   </StackPanel>
 </UserControl>

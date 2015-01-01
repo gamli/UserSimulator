@@ -6,11 +6,14 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <ListView ItemsSource="{Binding ItemsVM}" Background="Transparent" BorderThickness="0">
-      <ListView.ItemTemplate>
-         <DataTemplate>
-            <macroview:MacroBaseView/>
-         </DataTemplate>
-      </ListView.ItemTemplate>
-   </ListView>
+   <StackPanel Orientation="Horizontal" x:Name="_blockStackPanel">
+      <Line X1="0" Y1="0" X2="0" Y2="{Binding Path=ActualHeight, ElementName=_blockStackPanel}" Stroke="DarkGray" StrokeThickness="3" StrokeDashArray="2 1 1 1 1 1 1 1"/>
+      <ItemsControl ItemsSource="{Binding ItemsVM}" Background="Transparent" BorderThickness="0">
+         <ItemsControl.ItemTemplate>
+            <DataTemplate>
+               <macroview:MacroBaseView/>
+            </DataTemplate>
+         </ItemsControl.ItemTemplate>
+      </ItemsControl>
+   </StackPanel>
 </UserControl>

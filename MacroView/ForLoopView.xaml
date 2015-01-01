@@ -6,14 +6,11 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <Border Background="#FFF7F6DA" CornerRadius="5" BorderBrush="#FFEBF1AF" BorderThickness="3">
-      <StackPanel>
-         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="FOR(" FontWeight="ExtraBlack"/>
-            <macroview:MacroBaseView DataContext="{Binding RepetitionCountVM}"/>
-            <TextBlock Text=")" FontWeight="ExtraBlack"/>
-         </StackPanel>
-         <macroview:MacroBaseView DataContext="{Binding BodyVM}" Margin="5, 0, 0, 0"/>
+   <StackPanel>
+      <StackPanel Orientation="Horizontal">
+         <Image Source="/MacroView;component/Resources/ForLoopIcon.png" Width="24" Height="24"/>
+         <macroview:MacroBaseView HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5 0 0 0" DataContext="{Binding RepetitionCountVM}"/>
       </StackPanel>
-   </Border>
+      <macroview:MacroBaseView DataContext="{Binding BodyVM}" Margin="24 0 0 0"/>
+   </StackPanel>
 </UserControl>

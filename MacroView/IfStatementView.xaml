@@ -6,12 +6,11 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <Border Background="#FFF7E5DA" CornerRadius="5" BorderBrush="#FFF0AFF1" BorderThickness="3">
-      <StackPanel>
-         <macroview:FunctionCallView FunctionName="IF" DataContext="{Binding}">
-            <macroview:MacroBaseView DataContext="{Binding ExpressionVM}"/>
-         </macroview:FunctionCallView>
-         <macroview:MacroBaseView DataContext="{Binding BodyVM}" Margin="5, 0, 0, 0"/>
+   <StackPanel>
+      <StackPanel Orientation="Horizontal">
+         <Image Source="/MacroView;component/Resources/IfStatementIcon.png" Width="24" Height="24"/>
+         <macroview:MacroBaseView DataContext="{Binding ExpressionVM}" Margin="5, 0, 0, 0"/>
       </StackPanel>
-   </Border>
+      <macroview:MacroBaseView DataContext="{Binding BodyVM}" Margin="24, 0, 0, 0"/>
+   </StackPanel>
 </UserControl>

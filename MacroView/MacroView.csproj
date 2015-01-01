@@ -172,6 +172,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -198,7 +199,25 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
+    <Resource Include="Resources\ForLoopIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\LeftClickIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\PauseIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MoveIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\PositionIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\IfStatementIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\WindowshotExpressionIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

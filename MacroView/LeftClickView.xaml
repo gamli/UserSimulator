@@ -6,5 +6,5 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <macroview:FunctionCallView FunctionName="LEFT_CLICK"/>
+   <Image Source="/MacroView;component/Resources/LeftClickIcon.png" Width="24" Height="24" HorizontalAlignment="Left"/>
 </UserControl>
