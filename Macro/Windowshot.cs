@@ -11,7 +11,6 @@ namespace Macro
    public class Windowshot : ExpressionBase<bool>
    {
       private ExpressionBase<string> _imageUrl;
-      [ExcludeFromCodeCoverage]
       public ExpressionBase<string> ImageUrl { get { return _imageUrl; } set { SetPropertyValue(ref _imageUrl, value); } }
 
       private ExpressionBase<int> _positionX;
