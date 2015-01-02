@@ -27,66 +27,63 @@ namespace UserSimulator
    /// </summary>
    public partial class MainWindow : System.Windows.Window
    {
-      private Program _model;
-      private ObservableCollection<ProgramVM> _treeViewModel;
+      private readonly UserSimulatorModel _model;
+      private readonly UserSimulatorVM _viewModel;
 
       public MainWindow()
       {
          InitializeComponent();
 
-         var block = new Block();
-         _model = new Program { Body = block };
+         _model = new UserSimulatorModel();
+         _model.PropertyChanged += (Sender, Args) => { 
+            if (Args.PropertyName == "ProgramText")
+               _codeEditor.Document.Text = _model.ProgramText;
+         };
+         _viewModel = new UserSimulatorVM(_model);
+         DataContext = _viewModel;
 
-         _treeViewModel = new ObservableCollection<ProgramVM> { new ProgramVM(_model) };
-         DataContext = _treeViewModel;
+         InitializeProgram();         
       }
 
-      private void ButtonFormatClick(object sender, RoutedEventArgs e)
+      private void CodeEditorLostFocus(object sender, RoutedEventArgs e)
       {
-         Parse();
-         Print();
+         _model.ProgramText = _codeEditor.Text;
       }
 
-      private void ButtonPrintClick(object sender, RoutedEventArgs e)
+      private void InitializeProgram()
       {
-         Print();
+         const string program =
+@"
+PROGRAM
+{
+   FOR(30)
+      {
+         IF_WINDOWSHOT(0, 0, null)
+            {
+               POSITION(750, 375);
+               PAUSE(100);
+               LEFT_CLICK();
+               PAUSE(100);
+               POSITION(0, 0);
+            }
+         PAUSE(1000);
+      }
+}
+";
+         if (File.Exists("data"))
+            _model.ProgramText = File.ReadAllText("data");         
+         else
+            _model.ProgramText = program;
       }
 
-      private void Print()
+      private void ButtonExecuteClick(object sender, RoutedEventArgs e)
       {
-
-         _code.Text = new ProgramPrinter(_model).Print();
+         new ProgramInterpreter(_model.Program, _model.LastWindow).Start();
       }
 
-      private void ButtonParseClick(object sender, RoutedEventArgs e)
+      private void ButtonSaveClick(object sender, RoutedEventArgs e)
       {
-         Parse();
-      }
-
-      private void Parse()
-      {
-         try
-         {
-            _model = new ProgramParser().Parse(_code.Text);
-         }
-         catch (Exception e)
-         {
-            MessageBox.Show("Unknown error while parsing: " + e.Message);
-         }
-         
-         _treeViewModel[0].Dispose();
-         _treeViewModel.Clear();
-         _treeViewModel.Add(new ProgramVM(_model));
-      }
-
-      private void Button_Click(object sender, RoutedEventArgs e)
-      {
-         new ProgramInterpreter(_model, IntPtr.Zero).Start();
-      }
-
-      private void _ast_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-      {
-         Console.WriteLine();
+         File.WriteAllText("data", _model.ProgramText);
       }
    }
 }

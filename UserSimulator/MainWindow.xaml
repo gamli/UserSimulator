@@ -1,82 +1,57 @@
 ﻿<Window x:Class="UserSimulator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usersimulator="clr-namespace:UserSimulator"
         xmlns:macrovm="clr-namespace:MacroViewModel;assembly=MacroViewModel"
         xmlns:macroview="clr-namespace:MacroView;assembly=MacroView"
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
+   <Grid>
+      
+      <!-- row and column definitions -->
+      
       <Grid.RowDefinitions>
          <RowDefinition Height="*"/>
          <RowDefinition Height="25"/>
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
-         <ColumnDefinition Width="2*"/>
-         <ColumnDefinition Width="*"/>
-         <ColumnDefinition Width="2*"/>
+         <ColumnDefinition/>
+         <ColumnDefinition Width="5"/>
+         <ColumnDefinition/>
+         <ColumnDefinition Width="5"/>
+         <ColumnDefinition/>
       </Grid.ColumnDefinitions>
-      <avalonEdit:TextEditor x:Name="_code" Grid.Row="0" Grid.Column="0"/>
-      <TreeView x:Name="_ast" ItemsSource="{Binding}" Grid.Row="0" Grid.Column="1" SelectedItemChanged="_ast_SelectedItemChanged">         
-         <TreeView.Resources>
-            <HierarchicalDataTemplate DataType="{x:Type macrovm:BlockVM}" ItemsSource="{Binding ItemsVM}">
-               <StackPanel Orientation="Horizontal">
-                  <TextBlock Text="BLOCK{"/>
-                  <TextBlock Text="{Binding ItemsVM.Count}"/>
-                  <TextBlock Text="}"/>
-               </StackPanel>
-            </HierarchicalDataTemplate>
-            <DataTemplate DataType="{x:Type macrovm:LeftClickVM}">
-               <TextBlock Text="LEFT_CLICK()"/>
-            </DataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type macrovm:ForLoopVM}" ItemsSource="{Binding BodyVMEnumrableWrapper}">
-               <StackPanel Orientation="Horizontal">
-                  <TextBlock Text="FOR("/>
-                  <TextBlock Text="{Binding Model.RepetitionCount}"/>
-                  <TextBlock Text=")"/>
-               </StackPanel>
-            </HierarchicalDataTemplate>
-            <DataTemplate DataType="{x:Type macrovm:MoveVM}">
-               <StackPanel Orientation="Horizontal">
-                  <TextBlock Text="MOVE("/>
-                  <TextBlock Text="{Binding Model.TranslationX}"/>
-                  <TextBlock Text=", "/>
-                  <TextBlock Text="{Binding Model.TranslationY}"/>
-                  <TextBlock Text=")"/>
-               </StackPanel>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type macrovm:NoOpVM}">
-               <TextBlock Text="()"/>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type macrovm:PauseVM}">
-               <TextBlock Text="zzZ"/>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type macrovm:PositionVM}">
-               <StackPanel Orientation="Horizontal">
-                  <TextBlock Text="POSITION("/>
-                  <TextBlock Text="{Binding Model.X}"/>
-                  <TextBlock Text=", "/>
-                  <TextBlock Text="{Binding Model.Y}"/>
-                  <TextBlock Text=")"/>
-               </StackPanel>
-            </DataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type macrovm:ProgramVM}" ItemsSource="{Binding BodyVMEnumrableWrapper}">
-               <TextBlock Text="PROGRAM"/>
-            </HierarchicalDataTemplate>
-         </TreeView.Resources>
-      </TreeView>
-      <Grid DataContext="{Binding SelectedItem, ElementName=_ast}" Grid.Row="0" Grid.Column="2">
-         <Grid.Resources>
-            <DataTemplate DataType="{x:Type macrovm:ProgramVM}">
-               <macroview:ProgramView/>
-            </DataTemplate>
-         </Grid.Resources>
-         <ContentPresenter Content="{Binding}"/>
+
+      <!-- first row -->
+
+      <Grid Grid.Row="0" Grid.Column="0">
+         <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*"/>
+         </Grid.RowDefinitions>
+         <avalonEdit:TextEditor x:Name="_codeEditor" ShowLineNumbers="True" LostFocus="CodeEditorLostFocus" Grid.Row="0"/>
+         <GridSplitter Grid.Row="1" Width="5" HorizontalAlignment="Stretch"/>
+         <TextBlock Text="{Binding Model.ParserError}" Grid.Row="2"/>
       </Grid>
+
+      <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+
+      <Grid DataContext="{Binding ProgramVM}" Grid.Row="0" Grid.Column="4">
+         <ScrollViewer>
+            <macroview:MacroBaseView/>
+         </ScrollViewer>
+      </Grid>
+
+      <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch"/>
+
+      <Image Source="{Binding LastWindowshotVM}" Grid.Row="0" Grid.Column="2"/>
+
+      <!-- second row -->
+
       <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-         <Button Content="Print" Click="ButtonPrintClick"/>
-         <Button Content="Parse" Click="ButtonParseClick"/>
-         <Button Content="Format" Click="ButtonFormatClick"/>
-         <Button Content="Execute" Click="Button_Click"/>
+         <Button Content="Execute" Click="ButtonExecuteClick"/>
+         <Button Content="Save" Click="ButtonSaveClick"/>
       </StackPanel>
    </Grid>
 </Window>
