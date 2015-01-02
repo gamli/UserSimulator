@@ -19,7 +19,15 @@ namespace MacroLanguage
 
       public Program Parse(string ProgramText)
       {
-         return (Program)_parser.Parse(ProgramText);
+         try
+         {
+            return (Program)_parser.Parse(ProgramText);
+         }
+         catch(Piglet.Parser.ParseException E)
+         {
+            _parser = CreateParser();
+            throw new ParseException(E.Message, E) { LineNumber = E.LexerState.CurrentLineNumber };
+         }
       }
 
       private IParser<object> _parser;
@@ -275,6 +283,17 @@ namespace MacroLanguage
       private static string EndParameterList()
       {
          return ")";
+      }
+   }
+
+   public class ParseException : Exception
+   {
+      public int LineNumber { get; set; }
+
+      public ParseException(string Message, Exception InnerException) 
+         : base(Message, InnerException)
+      {
+         // nothing to do
       }
    }
 }
