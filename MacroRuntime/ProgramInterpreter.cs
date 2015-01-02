@@ -171,7 +171,7 @@ namespace UserSimulator
                   windowContent,
                   0, 0,
                   new Rectangle(
-                     EvaluateExpression<int>(Windowshot.PositionX), EvaluateExpression<int>(Windowshot.PositionY),
+                     EvaluateExpression<int>(Windowshot.PositionX) - image.Width / 2, EvaluateExpression<int>(Windowshot.PositionY) - image.Width / 2,
                      image.Width, image.Height),
                   GraphicsUnit.Pixel
                   );
