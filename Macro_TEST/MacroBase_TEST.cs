@@ -15,7 +15,9 @@ namespace Macro_TEST
          mockMacro.MacroChanged += (Sender, Args) => macroChangedFired = true;
          Assert.IsFalse(macroChangedFired);
          var position = new Position { X = ConstantExpressions.Create(4711), Y = ConstantExpressions.Create(-4711) };
-         mockMacro.Body = position;
+         var block = new Block();
+         block.Items.Add(position);
+         mockMacro.Body = block;
          Assert.IsTrue(macroChangedFired);
          macroChangedFired = false;
          ((ConstantExpression<int>)position.X).Value = 0;
