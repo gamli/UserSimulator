@@ -27,13 +27,16 @@ namespace MacroView
    /// </summary>
    public partial class WindowshotExpressionView : UserControl
    {
+      const int WINDOWSHOT_MACRO_WIDTH = 16;
+      const int WINDOWSHOT_MACRO_HEIGHT = 16;
+
       public WindowshotExpressionView()
       {
          InitializeComponent();
          var timer =
             new DispatcherTimer
                {
-                  Interval = TimeSpan.FromMilliseconds(1000)
+                  Interval = TimeSpan.FromMilliseconds(100)
                };
          timer.Tick +=
             (Sender, Args) =>
@@ -46,20 +49,19 @@ namespace MacroView
                   {
                      if (windowshotMacro.PositionX is ConstantExpression<int>)
                         _muh.X =
-                           ((ConstantExpression<int>)windowshotMacro.PositionX).Value * (_windowshot.ActualWidth / windowshotImageSource.PixelWidth)
-                           - _windowshot.ActualWidth / 2 + _kuh.BorderThickness.Left;
+                           ((ConstantExpression<int>)windowshotMacro.PositionX).Value
+                           * (_windowshot.ActualWidth / windowshotImageSource.PixelWidth)
+                           - _windowshot.ActualWidth / 2;
                      else
                         _muh.X = 0;
+
                      if (windowshotMacro.PositionY is ConstantExpression<int>)
                         _muh.Y =
-                           ((ConstantExpression<int>)windowshotMacro.PositionY).Value * (_windowshot.ActualHeight / windowshotImageSource.PixelHeight)
-                           - _windowshot.ActualHeight / 2 + _kuh.BorderThickness.Top;
+                           ((ConstantExpression<int>)windowshotMacro.PositionY).Value
+                           * (_windowshot.ActualHeight / windowshotImageSource.PixelHeight)
+                           - _windowshot.ActualHeight / 2;
                      else
                         _muh.Y = 0;
-                     var windowshotMacroWidth = 16;
-                     var windowshotMacroHeight = 16;
-                     _kuh.Width = windowshotMacroWidth * (_windowshot.ActualWidth / _windowshotImage.Width) + _kuh.BorderThickness.Left + _kuh.BorderThickness.Right;
-                     _kuh.Height = windowshotMacroHeight * (_windowshot.ActualHeight / _windowshotImage.Height) + _kuh.BorderThickness.Top + _kuh.BorderThickness.Bottom;
                   }
                }
                if (!IO.Keyboard.IsControlKeyDown())
@@ -81,6 +83,7 @@ namespace MacroView
                   stream.Position = 0;
                   _windowshot.Source = imageSource;
                }
+               GC.Collect();
             };
          timer.Start();
       }
@@ -88,35 +91,32 @@ namespace MacroView
       private void WindowshotMouseUp(object sender, MouseButtonEventArgs e)
       {
          var mousePosition = e.GetPosition(_windowshot);
-         _muh.X = mousePosition.X - _windowshot.ActualWidth / 2;
-         _muh.Y = mousePosition.Y - _windowshot.ActualHeight / 2;
          var windowshotImageSource = ((BitmapImage)_windowshot.Source);
-         var mousePositionPixelX = (int)(mousePosition.X * windowshotImageSource.PixelWidth / _windowshot.ActualWidth);
-         var mousePositionPixelY = (int)(mousePosition.Y * windowshotImageSource.PixelHeight / _windowshot.ActualHeight);
-         var windowshotMacroWidth = 16;
-         var windowshotMacroHeight = 16;
-         var windowshotMacroPositionX = Math.Max(0, mousePositionPixelX - windowshotMacroWidth / 2);
-         var windowshotMacroPositionY = Math.Max(0, mousePositionPixelY - windowshotMacroHeight / 2);
-         _kuh.Width = windowshotMacroWidth * (_windowshot.ActualWidth / _windowshotImage.Width) + _kuh.BorderThickness.Left + _kuh.BorderThickness.Right;
-         _kuh.Height = windowshotMacroHeight * (_windowshot.ActualHeight / _windowshotImage.Height) + _kuh.BorderThickness.Top + _kuh.BorderThickness.Bottom;
+         var mousePositionPixelX = (int)((mousePosition.X * windowshotImageSource.PixelWidth) / _windowshot.ActualWidth);
+         var mousePositionPixelY = (int)((mousePosition.Y * windowshotImageSource.PixelHeight) / _windowshot.ActualHeight);
 
          var windowshotMacro = (WindowshotExpression)((WindowshotExpressionVM)DataContext).Model;
          var windowshotMacroImageUrl = System.IO.Path.GetTempFileName();
-         using (var windowshotMacroImage = new System.Drawing.Bitmap(windowshotMacroWidth, windowshotMacroHeight))
+         using (var windowshotMacroImage = new System.Drawing.Bitmap(WINDOWSHOT_MACRO_WIDTH, WINDOWSHOT_MACRO_HEIGHT))
          using (var graphics = Graphics.FromImage(windowshotMacroImage))
          {
             graphics.DrawImage(
                _windowshotImage,
                0, 0,
-               new System.Drawing.Rectangle(windowshotMacroPositionX, windowshotMacroPositionY, windowshotMacroWidth, windowshotMacroHeight),
+               new System.Drawing.Rectangle(
+                  mousePositionPixelX - WINDOWSHOT_MACRO_WIDTH / 2, 
+                  mousePositionPixelY - WINDOWSHOT_MACRO_HEIGHT / 2, 
+                  WINDOWSHOT_MACRO_WIDTH, 
+                  WINDOWSHOT_MACRO_HEIGHT),
                GraphicsUnit.Pixel
                );
             using (var stream = File.OpenWrite(windowshotMacroImageUrl))
                windowshotMacroImage.Save(stream, ImageFormat.Bmp);
             windowshotMacro.ImageUrl = ConstantExpressions.Create(windowshotMacroImageUrl);
          }
-         windowshotMacro.PositionX = ConstantExpressions.Create(windowshotMacroPositionX);
-         windowshotMacro.PositionY = ConstantExpressions.Create(windowshotMacroPositionY);
+         windowshotMacro.PositionX = ConstantExpressions.Create(mousePositionPixelX);
+         windowshotMacro.PositionY = ConstantExpressions.Create(mousePositionPixelY);
+         GC.Collect();
       }
 
       private System.Drawing.Image _windowshotImage;

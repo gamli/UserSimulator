@@ -16,17 +16,19 @@
          <TextBlock Text=")"/>
          <macroview:MacroBaseView DataContext="{Binding ImageUrlVM}"/>
       </StackPanel>
-      <Grid>
-         <Expander>
-            <Image x:Name="_windowshot" Stretch="Uniform" MaxWidth="512" MaxHeight="512" MouseUp="WindowshotMouseUp"/>
-         </Expander>
-         <Border BorderThickness="2" BorderBrush="#E92088E4" x:Name="_kuh">
-            <Border.RenderTransform>
-               <TranslateTransform x:Name="_muh"/>
-            </Border.RenderTransform>
-            <Image Source="{Binding Model.ImageUrl.Value}">
-            </Image>
-         </Border>
-      </Grid>
+      <Expander>
+         <Grid>
+            <Image x:Name="_windowshot" Stretch="None" MouseUp="WindowshotMouseUp"/>
+            <Border BorderThickness="24" BorderBrush="#AEE42020" Width="64" Height="64" x:Name="_kuh">
+               <Border.RenderTransform>
+                  <TranslateTransform x:Name="_muh"/>
+               </Border.RenderTransform>
+               <Grid Width="Auto" Height="Auto">
+                  <Image Source="{Binding Model.ImageUrl.Value}" Stretch="None" Width="16" Height="16"/>
+                  <Ellipse Fill="Red" Width="3" Height="3"/>
+               </Grid>
+            </Border>
+         </Grid>
+      </Expander>
    </StackPanel>
 </UserControl>
