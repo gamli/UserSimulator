@@ -7,7 +7,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
    <StackPanel Orientation="Horizontal">
       <TextBlock Text="&quot;"/>
-      <TextBox Text="{Binding Model.Value}" BorderThickness="0" Background="Transparent"/>
+      <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent"/>
       <TextBlock Text="&quot;"/>
    </StackPanel>
 </UserControl>
