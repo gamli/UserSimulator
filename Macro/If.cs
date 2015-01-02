@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class IfStatement : MacroWithBodyBase
+   public class If : StatementWithBodyBase
    {
       private ExpressionBase<bool> _expression;
       [ExcludeFromCodeCoverage]
@@ -15,13 +15,13 @@ namespace Macro
 
       public override void Accept(IVisitor Visitor)
       {
-         Visitor.VisitIfStatement(this);
+         Visitor.VisitIf(this);
       }
 
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
-         var otherIfStatement = (IfStatement)OtherMacro;
-         return Expression.Equals(otherIfStatement.Expression) && base.BodyEquals(otherIfStatement);
+         var otherIf = (If)OtherMacro;
+         return Expression.Equals(otherIf.Expression) && base.BodyEquals(otherIf);
       }
    }
 }

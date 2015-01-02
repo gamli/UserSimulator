@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class LeftClick : StatementBase
+   public class VaiableDeclaration : StatementBase
    {
       public override void Accept(IVisitor Visitor)
       {
-         Visitor.VisitLeftClick(this);
+         throw new NotImplementedException();
+         // Visitor.VisitVariableDeclaration(this);
       }
 
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
-         return true;
+         throw new NotImplementedException();
       }
    }
 }

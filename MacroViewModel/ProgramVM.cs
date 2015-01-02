@@ -9,7 +9,7 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class ProgramVM : MacroWithBodyBaseVM<Program>
+   public class ProgramVM : StatementWithBodyBaseVM<Program>
    {
       [ExcludeFromCodeCoverage]
       public ProgramVM(Program Model)

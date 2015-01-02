@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Program : MacroWithBodyBase
+   public class Program : StatementWithBodyBase
    {
       public override void Accept(IVisitor Visitor)
       {

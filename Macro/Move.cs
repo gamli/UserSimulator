@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Move : MacroBase
+   public class Move : StatementBase
    {
       private ExpressionBase<int> _translationX;
       [ExcludeFromCodeCoverage]

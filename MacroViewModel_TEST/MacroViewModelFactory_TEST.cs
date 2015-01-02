@@ -14,7 +14,7 @@ namespace MacroViewModel_TEST
          AssertCreatesExpectedViewModelType(typeof(Block), typeof(BlockVM));
          AssertCreatesExpectedViewModelType(typeof(LeftClick), typeof(LeftClickVM));
          AssertCreatesExpectedViewModelType(typeof(ForLoop), typeof(ForLoopVM));
-         AssertCreatesExpectedViewModelType(typeof(WindowshotExpression), typeof(WindowshotExpressionVM));
+         AssertCreatesExpectedViewModelType(typeof(Windowshot), typeof(WindowshotVM));
          AssertCreatesExpectedViewModelType(typeof(Move), typeof(MoveVM));
          AssertCreatesExpectedViewModelType(typeof(NoOp), typeof(NoOpVM));
          AssertCreatesExpectedViewModelType(typeof(Pause), typeof(PauseVM));
@@ -22,7 +22,7 @@ namespace MacroViewModel_TEST
          AssertCreatesExpectedViewModelType(typeof(ConstantExpression<bool>), typeof(ConstantBooleanExpressionVM));
          AssertCreatesExpectedViewModelType(typeof(ConstantExpression<string>), typeof(ConstantStringExpressionVM));
          AssertCreatesExpectedViewModelType(typeof(ConstantExpression<int>), typeof(ConstantIntegerExpressionVM));
-         AssertCreatesExpectedViewModelType(typeof(IfStatement), typeof(IfStatementVM));
+         AssertCreatesExpectedViewModelType(typeof(If), typeof(IfVM));
          AssertCreatesExpectedViewModelType(typeof(Program), typeof(ProgramVM));
          Assert.AreEqual(MacroViewModelFactory.Instance.Create(null), null);
       }

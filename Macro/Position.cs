@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Position : MacroBase
+   public class Position : StatementBase
    {
       private ExpressionBase<int> _x;
       [ExcludeFromCodeCoverage]

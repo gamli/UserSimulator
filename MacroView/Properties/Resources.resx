@@ -121,8 +121,8 @@
   <data name="ForLoopIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ForLoopIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="IfStatementIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IfStatementIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="IfIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IfIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="LeftClickIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LeftClickIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -136,7 +136,7 @@
   <data name="PositionIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PositionIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="WindowshotExpressionIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\WindowshotExpressionIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="WindowshotIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\WindowshotIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

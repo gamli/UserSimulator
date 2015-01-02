@@ -57,11 +57,11 @@
     <Compile Include="ConstantBooleanExpressionView.xaml.cs">
       <DependentUpon>ConstantBooleanExpressionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IfStatementView.xaml.cs">
-      <DependentUpon>IfStatementView.xaml</DependentUpon>
+    <Compile Include="IfView.xaml.cs">
+      <DependentUpon>IfView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowshotExpressionView.xaml.cs">
-      <DependentUpon>WindowshotExpressionView.xaml</DependentUpon>
+    <Compile Include="WindowshotView.xaml.cs">
+      <DependentUpon>WindowshotView.xaml</DependentUpon>
     </Compile>
     <Page Include="BlockView.xaml">
       <SubType>Designer</SubType>
@@ -87,7 +87,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="IfStatementView.xaml">
+    <Page Include="IfView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -150,7 +150,7 @@
       <DependentUpon>ProgramView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="WindowshotExpressionView.xaml">
+    <Page Include="WindowshotView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -214,10 +214,10 @@
     <Resource Include="Resources\PositionIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\IfStatementIcon.png" />
+    <Resource Include="Resources\IfIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\WindowshotExpressionIcon.png" />
+    <Resource Include="Resources\WindowshotIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

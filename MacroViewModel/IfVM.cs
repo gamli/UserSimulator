@@ -8,7 +8,7 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class IfStatementVM : MacroWithBodyBaseVM<IfStatement>
+   public class IfVM : StatementWithBodyBaseVM<If>
    {
       private NotifyingTransformedProperty<ExpressionBaseVM> _expressionVM;
       public ExpressionBaseVM ExpressionVM
@@ -19,7 +19,7 @@ namespace MacroViewModel
          }
       }
 
-      public IfStatementVM(IfStatement Model)
+      public IfVM(If Model)
          : base(Model)
       {
          _expressionVM =

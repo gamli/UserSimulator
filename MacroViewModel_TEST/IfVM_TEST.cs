@@ -6,13 +6,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MacroViewModel_TEST
 {
    [TestClass]
-   public class IfStatementVM_TEST
+   public class IfVM_TEST
    {
       [TestMethod]
       public void ExpressionVM_Property_TEST()
       {
-         var ifStatement = new IfStatement { Expression = ConstantExpressions.Create(true), Body = new NoOp() };
-         using (var forLoopVM = new IfStatementVM(ifStatement))
+         var ifStatement = new If { Expression = ConstantExpressions.Create(true), Body = new NoOp() };
+         using (var forLoopVM = new IfVM(ifStatement))
          {
             Assert.AreEqual(ifStatement.Expression, forLoopVM.ExpressionVM.Model);
             ifStatement.Expression = ConstantExpressions.Create(false);

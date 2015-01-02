@@ -58,7 +58,7 @@ namespace UserSimulator
             for (var i = 0; i < EvaluateExpression<int>(ForLoop.RepetitionCount); i++)
                ForLoop.Body.Accept(this);
          }
-         public void VisitWindowshotExpression(WindowshotExpression Windowshot)
+         public void VisitWindowshot(Windowshot Windowshot)
          {
             throw new Exception("Malformed program: Windowshot expression is not a statement");
          }
@@ -93,7 +93,7 @@ namespace UserSimulator
             throw new Exception("Malformed program: Constant expression is not a statement");
          }
 
-         public void VisitIfStatement(IfStatement IfStatement)
+         public void VisitIf(If IfStatement)
          {
             if (EvaluateExpression<bool>(IfStatement.Expression))
                IfStatement.Body.Accept(this);
@@ -160,7 +160,7 @@ namespace UserSimulator
          {
             throw new Exception("Malformed program: For-Statement is not an expression");
          }
-         public void VisitWindowshotExpression(WindowshotExpression Windowshot)
+         public void VisitWindowshot(Windowshot Windowshot)
          {
             using (var image = new Bitmap(EvaluateExpression<string>(Windowshot.ImageUrl)))
             using (var windowContent = Window.Capture(_targetWindow))
@@ -211,7 +211,7 @@ namespace UserSimulator
             Value = ConstantExpression.Value;
          }
 
-         public void VisitIfStatement(IfStatement IfStatement)
+         public void VisitIf(If IfStatement)
          {
             throw new Exception("Malformed program: If-Statement is not an expression");
          }

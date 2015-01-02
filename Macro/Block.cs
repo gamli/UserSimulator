@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Block : MacroBase
+   public class Block : StatementBase
    {
       public ObservableCollection<MacroBase> Items { get; private set; }
 

@@ -42,11 +42,13 @@
   <ItemGroup>
     <Compile Include="Block.cs" />
     <Compile Include="Click.cs" />
-    <Compile Include="ConstantExpression.cs" />
+    <Compile Include="Constant.cs" />
     <Compile Include="ExpressionBase.cs" />
     <Compile Include="ForLoop.cs" />
-    <Compile Include="IfStatement.cs" />
-    <Compile Include="WindowshotExpression.cs" />
+    <Compile Include="If.cs" />
+    <Compile Include="StatementBase.cs" />
+    <Compile Include="VaiableDeclaration.cs" />
+    <Compile Include="Windowshot.cs" />
     <Compile Include="NoOp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="IVisitor.cs" />

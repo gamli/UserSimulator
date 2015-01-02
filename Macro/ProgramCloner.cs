@@ -70,10 +70,10 @@ namespace Macro
             WithClone(new Pause { Duration = Pause.Duration });
          }
 
-         public void VisitWindowshotExpression(WindowshotExpression Windowshot)
+         public void VisitWindowshot(Windowshot Windowshot)
          {
             WithClone(
-               new WindowshotExpression
+               new Windowshot
                {
                   ImageUrl = Windowshot.ImageUrl,
                   PositionX = Windowshot.PositionX,
@@ -91,12 +91,12 @@ namespace Macro
             WithClone(new ConstantExpression<T> { Value = ConstantExpression.Value });
          }
 
-         public void VisitIfStatement(IfStatement IfStatement)
+         public void VisitIf(If If)
          {
-            WithClone(new IfStatement { Expression = CloneExpression(IfStatement.Expression) }, () => IfStatement.Body.Accept(this));
+            WithClone(new If { Expression = CloneExpression(If.Expression) }, () => If.Body.Accept(this));
          }
 
-         private void WithClone(MacroBase MacroClone, Action Action = null)
+         private void WithClone(StatementBase MacroClone, Action Action = null)
          {
             if (Clone == null)
                Clone = MacroClone;
@@ -104,10 +104,10 @@ namespace Macro
             if (_macroStack.Count > 0)
             {
                var topLevelMacro = _macroStack.Peek();
-               if (topLevelMacro is MacroWithBodyBase)
+               if (topLevelMacro is StatementWithBodyBase)
                {
-                  var macroWithBody = (MacroWithBodyBase)topLevelMacro;
-                  macroWithBody.Body = MacroClone;
+                  var statementWithBody = (StatementWithBodyBase)topLevelMacro;
+                  statementWithBody.Body = MacroClone;
                }
                else
                {
@@ -115,7 +115,7 @@ namespace Macro
                   block.Items.Add(MacroClone);
                }
             }
-            var putOnStack = MacroClone is MacroWithBodyBase || MacroClone is Block;
+            var putOnStack = MacroClone is StatementWithBodyBase || MacroClone is Block;
             if (putOnStack)
                _macroStack.Push(MacroClone);
             if(Action != null)

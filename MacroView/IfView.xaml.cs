@@ -18,9 +18,9 @@ namespace MacroView
    /// <summary>
    /// Interaction logic for IfStatementView.xaml
    /// </summary>
-   public partial class IfStatementView : UserControl
+   public partial class IfView : UserControl
    {
-      public IfStatementView()
+      public IfView()
       {
          InitializeComponent();
       }

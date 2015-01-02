@@ -18,7 +18,7 @@ namespace Macro_TEST
 
       public void VisitProgram(Program Program)
       {
-         VisitMacroWithBody(Program);
+         VisitStatementWithBody(Program);
       }
 
       public void VisitBlock(Block Block)
@@ -36,7 +36,7 @@ namespace Macro_TEST
 
       public void VisitForLoop(ForLoop ForLoop)
       {
-         VisitMacroWithBody(ForLoop);
+         VisitStatementWithBody(ForLoop);
       }
 
       public void VisitMove(Move Move)
@@ -54,7 +54,7 @@ namespace Macro_TEST
          Visit(Pause);
       }
 
-      public void VisitWindowshotExpression(WindowshotExpression Windowshot)
+      public void VisitWindowshot(Windowshot Windowshot)
       {
          Visit(Windowshot);
       }
@@ -69,17 +69,17 @@ namespace Macro_TEST
          Visit(ConstantExpression);
       }
 
-      public void VisitIfStatement(IfStatement IfStatement)
+      public void VisitIf(If If)
       {
-         IfStatement.Expression.Accept(this);
-         VisitMacroWithBody(IfStatement);
+         If.Expression.Accept(this);
+         VisitStatementWithBody(If);
       }
 
-      private void VisitMacroWithBody(MacroWithBodyBase MacroWithBody)
+      private void VisitStatementWithBody(StatementWithBodyBase StatementWithBody)
       {
-         BeginVisit(MacroWithBody);
-         MacroWithBody.Body.Accept(this);
-         EndVisit(MacroWithBody);
+         BeginVisit(StatementWithBody);
+         StatementWithBody.Body.Accept(this);
+         EndVisit(StatementWithBody);
       }
 
       private void BeginVisit(MacroBase MacroBase)

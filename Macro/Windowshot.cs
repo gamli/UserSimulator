@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class WindowshotExpression : ExpressionBase<bool>
+   public class Windowshot : ExpressionBase<bool>
    {
       private ExpressionBase<string> _imageUrl;
       [ExcludeFromCodeCoverage]
@@ -24,12 +24,12 @@ namespace Macro
 
       public override void Accept(IVisitor Visitor)
       {
-         Visitor.VisitWindowshotExpression(this);
+         Visitor.VisitWindowshot(this);
       }
 
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
-         var other = (WindowshotExpression)OtherMacro;
+         var other = (Windowshot)OtherMacro;
          return
             ImageUrl.Equals(other.ImageUrl) &&
             PositionX.Equals(other.PositionX) &&

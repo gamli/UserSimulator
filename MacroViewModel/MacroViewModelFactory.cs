@@ -44,8 +44,8 @@ namespace MacroViewModel
                { typeof(ForLoop), Macro => 
                   new ForLoopVM((ForLoop)Macro) },
 
-               { typeof(WindowshotExpression), Macro => 
-                  new WindowshotExpressionVM((WindowshotExpression)Macro) },
+               { typeof(Windowshot), Macro => 
+                  new WindowshotVM((Windowshot)Macro) },
 
                { typeof(Move), Macro => 
                   new MoveVM((Move)Macro) },
@@ -68,8 +68,8 @@ namespace MacroViewModel
                { typeof(ConstantExpression<int>), Macro => 
                   new ConstantIntegerExpressionVM((ConstantExpression<int>)Macro) },
 
-               { typeof(IfStatement), Macro => 
-                  new IfStatementVM((IfStatement)Macro) },
+               { typeof(If), Macro => 
+                  new IfVM((If)Macro) },
 
                { typeof(Program), Macro => 
                   new ProgramVM((Program)Macro) },

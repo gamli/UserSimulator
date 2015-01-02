@@ -9,7 +9,7 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class ForLoopVM : MacroWithBodyBaseVM<ForLoop>
+   public class ForLoopVM : StatementWithBodyBaseVM<ForLoop>
    {
       private NotifyingTransformedProperty<ExpressionBaseVM> _repetitionCountVM;
       public ExpressionBaseVM RepetitionCountVM

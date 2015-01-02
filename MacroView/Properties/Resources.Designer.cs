@@ -73,9 +73,9 @@ namespace MacroView.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap IfStatementIcon {
+        internal static System.Drawing.Bitmap IfIcon {
             get {
-                object obj = ResourceManager.GetObject("IfStatementIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("IfIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +123,9 @@ namespace MacroView.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap WindowshotExpressionIcon {
+        internal static System.Drawing.Bitmap WindowshotIcon {
             get {
-                object obj = ResourceManager.GetObject("WindowshotExpressionIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("WindowshotIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

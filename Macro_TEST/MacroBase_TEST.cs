@@ -11,14 +11,14 @@ namespace Macro_TEST
       [TestMethod]
       public void Test_Event_MacroChanged()
       {
-         var mockMacro = new MockMacroWithMacroProperty();
+         var mockStatement = new MockStatementWithMacroProperty();
          var macroChangedFired = false;
-         mockMacro.MacroChanged += (Sender, Args) => macroChangedFired = true;
+         mockStatement.MacroChanged += (Sender, Args) => macroChangedFired = true;
          Assert.IsFalse(macroChangedFired);
          var position = new Position { X = ConstantExpressions.Create(4711), Y = ConstantExpressions.Create(-4711) };
          var block = new Block();
          block.Items.Add(position);
-         mockMacro.Body = block;
+         mockStatement.Body = block;
          Assert.IsTrue(macroChangedFired);
          macroChangedFired = false;
          ((ConstantExpression<int>)position.X).Value = 0;
@@ -27,14 +27,14 @@ namespace Macro_TEST
          position.X = ConstantExpressions.Create(4711);
          Assert.IsTrue(macroChangedFired);
          macroChangedFired = false;
-         mockMacro.Body = null;
+         mockStatement.Body = null;
          Assert.IsTrue(macroChangedFired);
          macroChangedFired = false;
          position.X = ConstantExpressions.Create(0);
          Assert.IsFalse(macroChangedFired);
       }
 
-      private class MockMacroWithMacroProperty : MacroWithBodyBase
+      private class MockStatementWithMacroProperty : StatementWithBodyBase
       {
          // nothing to add - base class's  Body is enough
 

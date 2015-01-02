@@ -26,12 +26,12 @@ namespace Macro
 
       void VisitPause(Pause Pause);
 
-      void VisitWindowshotExpression(WindowshotExpression Windowshot);
+      void VisitWindowshot(Windowshot Windowshot);
 
       void VisitLeftClick(LeftClick LeftClick);
 
       void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression);
 
-      void VisitIfStatement(IfStatement IfStatement);
+      void VisitIf(If If);
    }
 }

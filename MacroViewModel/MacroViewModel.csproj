@@ -46,14 +46,14 @@
   <ItemGroup>
     <Compile Include="BlockVM.cs" />
     <Compile Include="ClickVM.cs" />
-    <Compile Include="ConstantExpressionVM.cs" />
+    <Compile Include="ConstantVM.cs" />
     <Compile Include="ExpressionBaseVM.cs" />
     <Compile Include="ForLoopVM.cs" />
-    <Compile Include="IfStatementVM.cs" />
-    <Compile Include="WindowshotExpressionVM.cs" />
+    <Compile Include="IfVM.cs" />
+    <Compile Include="WindowshotVM.cs" />
     <Compile Include="MacroBaseVM.cs" />
     <Compile Include="MacroViewModelFactory.cs" />
-    <Compile Include="MacroWithBodyBaseVM.cs" />
+    <Compile Include="StatementWithBodyBaseVM.cs" />
     <Compile Include="MoveVM.cs" />
     <Compile Include="NoOpVM.cs" />
     <Compile Include="PauseVM.cs" />

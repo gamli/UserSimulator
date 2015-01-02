@@ -58,16 +58,16 @@ namespace MacroLanguage
          AppendBody(ForLoop);
       }
 
-      public void VisitWindowshotExpression(WindowshotExpression Windowshot)
+      public void VisitWindowshot(Windowshot Windowshot)
       {
          Append(FunctionCall("WINDOWSHOT", Windowshot.PositionX, Windowshot.PositionY, Windowshot.ImageUrl));
       }
 
-      private void AppendBody(MacroWithBodyBase MacroWithBody)
+      private void AppendBody(StatementWithBodyBase StatementWithBody)
       {
          IncreaseIndent();
          AppendNewLine();
-         MacroWithBody.Body.Accept(this);
+         StatementWithBody.Body.Accept(this);
          DecreaseIndent();
       }
 
@@ -123,7 +123,7 @@ namespace MacroLanguage
             Append(expressionValue == null ? "null" : expressionValue.ToString());         
       }
       
-      public void VisitIfStatement(IfStatement IfStatement)
+      public void VisitIf(If IfStatement)
       {
          Append("IF(");
          IfStatement.Expression.Accept(this);

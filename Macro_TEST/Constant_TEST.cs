@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Macro_TEST
 {
    [TestClass]
-   public class ConstantExpression_TEST
+   public class Constant_TEST
    {
       [TestMethod]
       public void BooleanExpression_TEST()

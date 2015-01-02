@@ -9,8 +9,8 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public abstract class MacroWithBodyBaseVM<T> : MacroBaseVM<T>
-      where T : MacroWithBodyBase
+   public abstract class StatementWithBodyBaseVM<T> : MacroBaseVM<T>
+      where T : StatementWithBodyBase
    {
       private NotifyingTransformedProperty<MacroBaseVM> _bodyVM;
       public MacroBaseVM BodyVM
@@ -21,7 +21,7 @@ namespace MacroViewModel
          }
       }
 
-      protected MacroWithBodyBaseVM(T Model)
+      protected StatementWithBodyBaseVM(T Model)
          : base(Model)
       {
          _bodyVM =

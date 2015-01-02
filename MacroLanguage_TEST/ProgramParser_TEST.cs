@@ -44,16 +44,16 @@ namespace MacroLanguage_TEST
       }
 
       [TestMethod]
-      public void WindowshotExpression_TEST()
+      public void Windowshot_TEST()
       {
          var programWithIfWindowshot = _parser.Parse("PROGRAM IF(WINDOWSHOT(4711, -4711, \"nonExistingTestImage\")){}");
          var ifStatetment = programWithIfWindowshot.Body;
-         Assert.AreEqual(ifStatetment.GetType(), typeof(IfStatement));
-         var windowshot = ((IfStatement)ifStatetment).Expression;
-         Assert.AreEqual(windowshot.GetType(), typeof(WindowshotExpression));
+         Assert.AreEqual(ifStatetment.GetType(), typeof(If));
+         var windowshot = ((If)ifStatetment).Expression;
+         Assert.AreEqual(windowshot.GetType(), typeof(Windowshot));
          Assert.AreEqual(
             windowshot, 
-            new WindowshotExpression 
+            new Windowshot 
                {
                   PositionX = ConstantExpressions.Create(4711), 
                   PositionY = ConstantExpressions.Create(-4711),
@@ -104,7 +104,7 @@ namespace MacroLanguage_TEST
       }
 
       [TestMethod]
-      public void IfStatement_TEST()
+      public void If_TEST()
       {
          var programWithPosition =
             _parser.Parse(
@@ -114,14 +114,14 @@ namespace MacroLanguage_TEST
          var block = programWithPosition.Body;
          Assert.IsTrue(block is Block);
          var ifStatement = ((Block)block).Items[0];
-         Assert.AreEqual(ifStatement.GetType(), typeof(IfStatement));
-         Assert.AreEqual(((IfStatement)ifStatement).Expression, ConstantExpressions.Create(true));
+         Assert.AreEqual(ifStatement.GetType(), typeof(If));
+         Assert.AreEqual(((If)ifStatement).Expression, ConstantExpressions.Create(true));
          programWithPosition =
             _parser.Parse(
                @"PROGRAM
                   {
             IF(False);}");
-         Assert.AreEqual(((IfStatement)((Block)programWithPosition.Body).Items[0]).Expression, ConstantExpressions.Create(false));
+         Assert.AreEqual(((If)((Block)programWithPosition.Body).Items[0]).Expression, ConstantExpressions.Create(false));
       }
 
       [TestMethod]

@@ -173,7 +173,7 @@ namespace MacroLanguage
          return expression;
       }*/
 
-      private static IRule WindowshotExpression(IFluentParserConfigurator Config)
+      private static IRule Windowshot(IFluentParserConfigurator Config)
       {
          var windowshot = Config.Rule();
          windowshot
@@ -185,7 +185,7 @@ namespace MacroLanguage
             .Followed.By(ParameterSeperator())
             .Followed.By(StringExpression(Config)).As("ImageUrl")
             .Followed.By(EndParameterList())
-            .WhenFound(O => new WindowshotExpression { PositionX = O.PositionX, PositionY = O.PositionY, ImageUrl = O.ImageUrl });
+            .WhenFound(O => new Windowshot { PositionX = O.PositionX, PositionY = O.PositionY, ImageUrl = O.ImageUrl });
          return windowshot;
       }
       private static IRule BooleanExpression(IFluentParserConfigurator Config)
@@ -193,7 +193,7 @@ namespace MacroLanguage
          var booleanExpression = Config.Rule();
          booleanExpression
             .IsMadeUp.By(ConstantBooleanExpression(Config))
-            .Or.By(WindowshotExpression(Config));
+            .Or.By(Windowshot(Config));
          return booleanExpression;
       }
       private static IRule ConstantBooleanExpression(IFluentParserConfigurator Config)
@@ -251,7 +251,7 @@ namespace MacroLanguage
             .Followed.By(EndParameterList())
             .Followed.By(Statement).As("Body")
             .WhenFound(O =>
-               new IfStatement { Expression = O.Expression, Body = O.Body });
+               new If { Expression = O.Expression, Body = O.Body });
          return ifStatement;
       }
 

@@ -74,14 +74,14 @@ namespace MacroLanguage_TEST
       }
 
       [TestMethod]
-      public void WindowshotExpression_TEST()
+      public void Windowshot_TEST()
       {
          var windowshotProgram =
             Program(
-               new IfStatement
+               new If
                {
                   Expression = 
-                     new WindowshotExpression 
+                     new Windowshot 
                         { 
                            PositionX = ConstantExpressions.Create(4711), 
                            PositionY = ConstantExpressions.Create(-4711), 
@@ -98,10 +98,10 @@ namespace MacroLanguage_TEST
 }");
          windowshotProgram =
             Program(
-               new IfStatement
+               new If
                {
                   Expression = 
-                     new WindowshotExpression 
+                     new Windowshot 
                         { 
                            PositionX = ConstantExpressions.Create(4711), 
                            PositionY = ConstantExpressions.Create(-4711), 
@@ -118,10 +118,10 @@ namespace MacroLanguage_TEST
 }");
          windowshotProgram =
             Program(
-               new IfStatement
+               new If
                {
                   Expression =
-                     new WindowshotExpression
+                     new Windowshot
                      {
                         PositionX = ConstantExpressions.Create(4711),
                         PositionY = ConstantExpressions.Create(-4711),
@@ -206,12 +206,12 @@ namespace MacroLanguage_TEST
       }
 
       [TestMethod]
-      public void IfStatement_TEST()
+      public void If_TEST()
       {
-         var ifStatementProgram =
-            Program(new IfStatement { Expression = ConstantExpressions.Create(true), Body = new NoOp() });
+         var ifProgram =
+            Program(new If { Expression = ConstantExpressions.Create(true), Body = new NoOp() });
          AssertOutput(
-            ifStatementProgram,
+            ifProgram,
 @"PROGRAM
 {
    IF(True)

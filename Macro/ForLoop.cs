@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class ForLoop : MacroWithBodyBase
+   public class ForLoop : StatementWithBodyBase
    {
       private ExpressionBase<int> _repetitionCount;
       [ExcludeFromCodeCoverage]

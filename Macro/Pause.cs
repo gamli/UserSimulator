@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Pause : MacroBase
+   public class Pause : StatementBase
    {
       private ExpressionBase<int> _duration;
       [ExcludeFromCodeCoverage]

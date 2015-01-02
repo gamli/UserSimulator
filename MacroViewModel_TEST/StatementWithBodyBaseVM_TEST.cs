@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MacroViewModel_TEST
 {
    [TestClass]
-   public class MacroWithBodyBaseVM_TEST
+   public class StatementWithBodyBaseVM_TEST
    {
 
       [TestMethod]
@@ -21,7 +21,7 @@ namespace MacroViewModel_TEST
       }
 
       [ExcludeFromCodeCoverage]
-      private class MockMacroVM : MacroWithBodyBaseVM<MockMacro>
+      private class MockMacroVM : StatementWithBodyBaseVM<MockMacro>
       {
          public MockMacroVM(MockMacro Model)
             : base(Model)
@@ -31,7 +31,7 @@ namespace MacroViewModel_TEST
       }
 
       [ExcludeFromCodeCoverage]
-      private class MockMacro : MacroWithBodyBase
+      private class MockMacro : StatementWithBodyBase
       {
          public MockMacro()
          {

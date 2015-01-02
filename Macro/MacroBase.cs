@@ -10,18 +10,6 @@ using Common;
 
 namespace Macro
 {
-   public abstract class MacroWithBodyBase : MacroBase
-   {
-      private MacroBase _body;
-      [ExcludeFromCodeCoverage]
-      public MacroBase Body { get { return _body; } set { SetPropertyValue(ref _body, value); } }
-
-      protected bool BodyEquals(MacroWithBodyBase MacroWithBody)
-      {
-         return Body.Equals(MacroWithBody.Body);
-      }
-   }
-
    public abstract class MacroBase : NotifyPropertyChangedBase
    {
       public event EventHandler MacroChanged;

@@ -10,7 +10,7 @@ namespace Macro
    {
    }
 
-   public abstract class ExpressionBase : MacroBase
+   public abstract class ExpressionBase : StatementBase
    {
    }
 }

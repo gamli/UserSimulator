@@ -57,8 +57,8 @@
     <Compile Include="MockVisitor.cs" />
     <Compile Include="Click_TEST.cs" />
     <Compile Include="ForLoop_TEST.cs" />
-    <Compile Include="IfStatement_TEST.cs" />
-    <Compile Include="ConstantExpression_TEST.cs" />
+    <Compile Include="If_TEST.cs" />
+    <Compile Include="Constant_TEST.cs" />
     <Compile Include="MacroBase_TEST.cs" />
     <Compile Include="WindowshotExpression_TEST.cs" />
     <Compile Include="Move_TEST.cs" />
