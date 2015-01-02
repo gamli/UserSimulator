@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Macro;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -37,11 +38,13 @@ namespace Macro_TEST
       {
          // nothing to add - base class's  Body is enough
 
+         [ExcludeFromCodeCoverage]
          public override void Accept(IVisitor Visitor)
          {
             throw new NotImplementedException();
          }
 
+         [ExcludeFromCodeCoverage]
          protected override bool MacroEquals(MacroBase OtherMacro)
          {
             throw new NotImplementedException();
