@@ -20,7 +20,7 @@ namespace Common
             handler(this, new PropertyChangedEventArgs(PropertyName));
       }
 
-      public bool SetPropertyValue<TProperty>(ref TProperty BackingField, TProperty Value, [CallerMemberName]string PropertyName = null)
+      public virtual bool SetPropertyValue<TProperty>(ref TProperty BackingField, TProperty Value, [CallerMemberName]string PropertyName = null)
       {
          Contract.Assert(PropertyName != null);
          if (!Equals(BackingField, Value))
