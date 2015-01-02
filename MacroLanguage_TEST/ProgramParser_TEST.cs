@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Macro;
 using MacroLanguage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -121,13 +122,23 @@ namespace MacroLanguage_TEST
                   {
             IF(False);}");
          Assert.AreEqual(((IfStatement)((Block)programWithPosition.Body).Items[0]).Expression, ConstantExpressions.Create(false));
-      }  
+      }
 
       [TestMethod]
+      [ExcludeFromCodeCoverage]
       public void Program_TEST()
       {
          var emptyProgram = _parser.Parse("PROGRAM{}");
          Assert.AreEqual(emptyProgram.Body.GetType(), typeof(Block));
+
+         try
+         {
+            _parser.Parse("");
+            Assert.Fail();
+         }catch(ParseException)
+         {
+            // everything ok
+         }
       }
    }
 }

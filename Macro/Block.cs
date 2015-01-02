@@ -26,10 +26,11 @@ namespace Macro
          if(Args.NewItems != null)
             foreach (MacroBase newItem in Args.NewItems)
                newItem.MacroChanged += HandleItemMacroChanged;
+         RaiseMacroChanged(this, new EventArgs());
       }
       private void HandleItemMacroChanged(object Sender, EventArgs Args)
       {
-         RaiseMacroChanged();
+         RaiseMacroChanged(Sender, Args);
       }
 
       public override void Accept(IVisitor Visitor)

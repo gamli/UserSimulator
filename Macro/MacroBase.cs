@@ -25,11 +25,11 @@ namespace Macro
    public abstract class MacroBase : NotifyPropertyChangedBase
    {
       public event EventHandler MacroChanged;
-      protected void RaiseMacroChanged()
+      protected void RaiseMacroChanged(object Sender, EventArgs Args)
       {
          var handler = MacroChanged;
          if (handler != null)
-            handler(this, new EventArgs());
+            handler(Sender, Args);
       }
 
       public override bool SetPropertyValue<TProperty>(ref TProperty BackingField, TProperty Value, [CallerMemberName]string PropertyName = null)
@@ -39,16 +39,11 @@ namespace Macro
          if (valueChanged && typeof(MacroBase).IsAssignableFrom(typeof(TProperty)))
          {
             if (oldValue != null)
-               ((MacroBase)((object)oldValue)).MacroChanged -= HandleChildMacroChanged;
+               ((MacroBase)((object)oldValue)).MacroChanged -= RaiseMacroChanged;
             if (Value != null)
-               ((MacroBase)((object)Value)).MacroChanged += HandleChildMacroChanged;
+               ((MacroBase)((object)Value)).MacroChanged += RaiseMacroChanged;
          }
          return valueChanged;
-      }
-
-      private void HandleChildMacroChanged(object Sender, EventArgs Args)
-      {
-         RaiseMacroChanged();
       }
 
       protected MacroBase()
@@ -57,7 +52,7 @@ namespace Macro
       }
       private void HandlePropertyChanged(object Sender, PropertyChangedEventArgs Args)
       {
-         RaiseMacroChanged();
+         RaiseMacroChanged(this, Args);
       }
 
       public abstract void Accept(IVisitor Visitor);

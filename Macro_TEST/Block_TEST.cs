@@ -43,5 +43,22 @@ namespace Macro_TEST
          var programClone = new ProgramCloner(program).Clone();
          Assert.AreEqual(program, programClone);
       }
+
+      [TestMethod]
+      public void AddAndRemoveItem_TEST()
+      {
+         var block = new Block();
+         var constIntValue = 0;
+         block.MacroChanged += (Sender, Args) => constIntValue = Sender is ConstantExpression<int> ? ((ConstantExpression<int>)Sender).Value : 0;
+         var constInt = ConstantExpressions.Create(-1);
+         block.Items.Add(constInt);
+         constInt.Value = 0;
+         Assert.AreEqual(constIntValue, 0);
+         constInt.Value = -4711;
+         Assert.AreEqual(constIntValue, -4711);
+         block.Items.Remove(constInt);
+         constInt.Value = 4711;
+         Assert.AreEqual(constIntValue, 0);
+      }
    }
 }
