@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Common;
@@ -19,9 +21,45 @@ namespace Macro
          return Body.Equals(MacroWithBody.Body);
       }
    }
-   
+
    public abstract class MacroBase : NotifyPropertyChangedBase
    {
+      public event EventHandler MacroChanged;
+      protected void RaiseMacroChanged()
+      {
+         var handler = MacroChanged;
+         if (handler != null)
+            handler(this, new EventArgs());
+      }
+
+      public override bool SetPropertyValue<TProperty>(ref TProperty BackingField, TProperty Value, [CallerMemberName]string PropertyName = null)
+      {
+         var oldValue = BackingField;
+         var valueChanged = base.SetPropertyValue(ref BackingField, Value, PropertyName);
+         if (valueChanged && typeof(MacroBase).IsAssignableFrom(typeof(TProperty)))
+         {
+            if (oldValue != null)
+               ((MacroBase)((object)oldValue)).MacroChanged -= HandleChildMacroChanged;
+            if (Value != null)
+               ((MacroBase)((object)Value)).MacroChanged += HandleChildMacroChanged;
+         }
+         return valueChanged;
+      }
+
+      private void HandleChildMacroChanged(object Sender, EventArgs Args)
+      {
+         RaiseMacroChanged();
+      }
+
+      protected MacroBase()
+      {
+         PropertyChanged += HandlePropertyChanged;
+      }
+      private void HandlePropertyChanged(object Sender, PropertyChangedEventArgs Args)
+      {
+         RaiseMacroChanged();
+      }
+
       public abstract void Accept(IVisitor Visitor);
       public override bool Equals(object Other)
       {
