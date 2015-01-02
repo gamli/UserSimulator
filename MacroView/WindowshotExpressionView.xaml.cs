@@ -85,7 +85,7 @@ namespace MacroView
          timer.Start();
       }
 
-      private void _windowshot_MouseUp(object sender, MouseButtonEventArgs e)
+      private void WindowshotMouseUp(object sender, MouseButtonEventArgs e)
       {
          var mousePosition = e.GetPosition(_windowshot);
          _muh.X = mousePosition.X - _windowshot.ActualWidth / 2;
@@ -120,10 +120,5 @@ namespace MacroView
       }
 
       private System.Drawing.Image _windowshotImage;
-
-      private void _windowshot_LayoutUpdated(object sender, EventArgs e)
-      {
-
-      }
    }
 }

@@ -17,7 +17,7 @@
          <macroview:MacroBaseView DataContext="{Binding ImageUrlVM}"/>
       </StackPanel>
       <Grid>
-         <Image x:Name="_windowshot" Stretch="Uniform" MaxWidth="512" MaxHeight="512" MouseUp="_windowshot_MouseUp" LayoutUpdated="_windowshot_LayoutUpdated"/>
+         <Image x:Name="_windowshot" Stretch="Uniform" MaxWidth="512" MaxHeight="512" MouseUp="WindowshotMouseUp"/>
          <Border BorderThickness="2" BorderBrush="#E92088E4" x:Name="_kuh">
             <Border.RenderTransform>
                <TranslateTransform x:Name="_muh"/>
