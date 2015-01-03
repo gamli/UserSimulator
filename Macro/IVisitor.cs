@@ -33,5 +33,7 @@ namespace Macro
       void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression);
 
       void VisitIf(If If);
+
+      void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment);
    }
 }

@@ -60,6 +60,9 @@
     <Compile Include="IfView.xaml.cs">
       <DependentUpon>IfView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VariableAssignmentView.xaml.cs">
+      <DependentUpon>VariableAssignmentView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowshotView.xaml.cs">
       <DependentUpon>WindowshotView.xaml</DependentUpon>
     </Compile>
@@ -150,6 +153,10 @@
       <DependentUpon>ProgramView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="VariableAssignmentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WindowshotView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

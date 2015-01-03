@@ -106,22 +106,50 @@ namespace MacroLanguage_TEST
       [TestMethod]
       public void If_TEST()
       {
-         var programWithPosition =
+         var programWithIf =
             _parser.Parse(
                @"PROGRAM
                   {
             IF(True);}");
-         var block = programWithPosition.Body;
+         var block = programWithIf.Body;
          Assert.IsTrue(block is Block);
          var ifStatement = ((Block)block).Items[0];
          Assert.AreEqual(ifStatement.GetType(), typeof(If));
          Assert.AreEqual(((If)ifStatement).Expression, ConstantExpressions.Create(true));
-         programWithPosition =
+         programWithIf =
             _parser.Parse(
                @"PROGRAM
                   {
             IF(False);}");
-         Assert.AreEqual(((If)((Block)programWithPosition.Body).Items[0]).Expression, ConstantExpressions.Create(false));
+         Assert.AreEqual(((If)((Block)programWithIf.Body).Items[0]).Expression, ConstantExpressions.Create(false));
+      }
+
+      [TestMethod]
+      public void VariableAssignment_TEST()
+      {
+         VariableAssignment_TEST<bool>(Tuple.Create("True", true), Tuple.Create("False", false));
+         VariableAssignment_TEST<string>(Tuple.Create("\"4711\"", "4711"), Tuple.Create("\"-4711\"", "-4711"));
+         VariableAssignment_TEST<int>(Tuple.Create("4711", 4711), Tuple.Create("-4711", -4711));
+      }
+
+      private void VariableAssignment_TEST<T>(params Tuple<string, T>[] AssignmentExpressionsAndExpectedValues)
+      {
+         for (var i = 0; i < AssignmentExpressionsAndExpectedValues.Length; i++)
+            VariableAssignment_TEST(AssignmentExpressionsAndExpectedValues[i]);
+      }
+      private void VariableAssignment_TEST<T>(Tuple<string, T> AssignmentExpressionAndExpectedValue)
+      {
+         var programWithVariableAssignment =
+            _parser.Parse(
+                  @"PROGRAM
+                     {variableName123 = " + AssignmentExpressionAndExpectedValue.Item1 + ";}");
+         var block = programWithVariableAssignment.Body;
+         Assert.IsTrue(block is Block);
+         Assert.AreEqual(((Block)block).Items.Count, 1);
+         var variableAssignment = ((Block)block).Items[0];
+         Assert.AreEqual(variableAssignment.GetType(), typeof(VariableAssignment<T>));
+         Assert.AreEqual(((VariableAssignment<T>)variableAssignment).Symbol, "variableName123");
+         Assert.AreEqual(((VariableAssignment<T>)variableAssignment).Expression, ConstantExpressions.Create(AssignmentExpressionAndExpectedValue.Item2));
       }
 
       [TestMethod]

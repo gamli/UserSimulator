@@ -10,8 +10,8 @@ namespace MacroViewModel
 {
    public class IfVM : StatementWithBodyBaseVM<If>
    {
-      private NotifyingTransformedProperty<ExpressionBaseVM> _expressionVM;
-      public ExpressionBaseVM ExpressionVM
+      private NotifyingTransformedProperty<BooleanExpressionBaseVM> _expressionVM;
+      public BooleanExpressionBaseVM ExpressionVM
       {
          get
          {
@@ -23,10 +23,10 @@ namespace MacroViewModel
          : base(Model)
       {
          _expressionVM =
-            new NotifyingTransformedProperty<ExpressionBaseVM>(
+            new NotifyingTransformedProperty<BooleanExpressionBaseVM>(
                new[] { "Expression" }, "ExpressionVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Expression),
+               () => (BooleanExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Expression),
                VM => VM.Dispose());
       }
 

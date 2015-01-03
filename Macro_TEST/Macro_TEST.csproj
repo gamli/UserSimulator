@@ -60,6 +60,7 @@
     <Compile Include="If_TEST.cs" />
     <Compile Include="Constant_TEST.cs" />
     <Compile Include="MacroBase_TEST.cs" />
+    <Compile Include="VariableAssignment_TEST.cs" />
     <Compile Include="WindowshotExpression_TEST.cs" />
     <Compile Include="Move_TEST.cs" />
     <Compile Include="Pause_TEST.cs" />

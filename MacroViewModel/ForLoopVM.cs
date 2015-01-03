@@ -11,8 +11,8 @@ namespace MacroViewModel
 {
    public class ForLoopVM : StatementWithBodyBaseVM<ForLoop>
    {
-      private NotifyingTransformedProperty<ExpressionBaseVM> _repetitionCountVM;
-      public ExpressionBaseVM RepetitionCountVM
+      private NotifyingTransformedProperty<IntegerExpressionBaseVM> _repetitionCountVM;
+      public IntegerExpressionBaseVM RepetitionCountVM
       {
          get
          {
@@ -24,10 +24,10 @@ namespace MacroViewModel
          : base(Model)
       {
          _repetitionCountVM =
-            new NotifyingTransformedProperty<ExpressionBaseVM>(
+            new NotifyingTransformedProperty<IntegerExpressionBaseVM>(
                new[] { "RepetitionCount" }, "RepetitionCountVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.RepetitionCount),
+               () => (IntegerExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.RepetitionCount),
                VM => VM.Dispose());
       }
    }

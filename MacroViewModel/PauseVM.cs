@@ -11,8 +11,8 @@ namespace MacroViewModel
 {
    public class PauseVM : MacroBaseVM<Pause>
    {
-      private NotifyingTransformedProperty<ExpressionBaseVM> _durationVM;
-      public ExpressionBaseVM DurationVM
+      private NotifyingTransformedProperty<IntegerExpressionBaseVM> _durationVM;
+      public IntegerExpressionBaseVM DurationVM
       {
          get
          {
@@ -24,10 +24,10 @@ namespace MacroViewModel
          : base(Model)
       {
          _durationVM =
-            new NotifyingTransformedProperty<ExpressionBaseVM>(
+            new NotifyingTransformedProperty<IntegerExpressionBaseVM>(
                new[] { "Duration" }, "DurationVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Duration),
+               () => (IntegerExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Duration),
                VM => VM.Dispose());
       }
    }

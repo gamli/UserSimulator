@@ -219,6 +219,19 @@ namespace MacroLanguage_TEST
 }");
       }
 
+      [TestMethod]
+      public void VariableAssignment_TEST()
+      {
+         var ifProgram =
+            Program(new VariableAssignment<bool> { Symbol = "variableName", Expression = ConstantExpressions.Create(true) });
+         AssertOutput(
+            ifProgram,
+@"PROGRAM
+{
+   variableName = True;
+}");
+      }
+
       private Program Program(MacroBase Macro)
       {
          var program = Program();

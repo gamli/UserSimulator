@@ -8,7 +8,7 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class BooleanExpressionBaseVM : ExpressionBaseVM
+   public class BooleanExpressionBaseVM : ExpressionBaseVM<bool>
    {
       [ExcludeFromCodeCoverage]
       protected BooleanExpressionBaseVM(ExpressionBase<bool> Model)
@@ -18,7 +18,7 @@ namespace MacroViewModel
       }
    }
 
-   public class StringExpressionBaseVM : ExpressionBaseVM
+   public class StringExpressionBaseVM : ExpressionBaseVM<string>
    {
       [ExcludeFromCodeCoverage]
       protected StringExpressionBaseVM(ExpressionBase<string> Model)
@@ -28,7 +28,7 @@ namespace MacroViewModel
       }
    }
 
-   public class IntegerExpressionBaseVM : ExpressionBaseVM
+   public class IntegerExpressionBaseVM : ExpressionBaseVM<int>
    {
       [ExcludeFromCodeCoverage]
       protected IntegerExpressionBaseVM(ExpressionBase<int> Model)
@@ -38,10 +38,10 @@ namespace MacroViewModel
       }
    }
 
-   public class ExpressionBaseVM : MacroBaseVM<ExpressionBase>
+   public abstract class ExpressionBaseVM<T> : MacroBaseVM<ExpressionBase<T>>
    {
       [ExcludeFromCodeCoverage]
-      protected ExpressionBaseVM(ExpressionBase Model)
+      protected ExpressionBaseVM(ExpressionBase<T> Model)
          : base(Model)
       {
          // nothing to do

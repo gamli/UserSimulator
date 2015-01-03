@@ -75,6 +75,12 @@ namespace Macro_TEST
          VisitStatementWithBody(If);
       }
 
+      public void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment)
+      {
+         VariableAssignment.Expression.Accept(this);
+         Visit(VariableAssignment);
+      }
+
       private void VisitStatementWithBody(StatementWithBodyBase StatementWithBody)
       {
          BeginVisit(StatementWithBody);

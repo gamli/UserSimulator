@@ -48,6 +48,15 @@
          <DataTemplate DataType="{x:Type macrovm:IfVM}">
             <macroview:IfView/>
          </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:BooleanVariableAssignmentVM}">
+            <macroview:VariableAssignmentView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:StringVariableAssignmentVM}">
+            <macroview:VariableAssignmentView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:IntegerVariableAssignmentVM}">
+            <macroview:VariableAssignmentView/>
+         </DataTemplate>
       </Grid.Resources>
       <ContentPresenter Content="{Binding}"/>
    </Grid>

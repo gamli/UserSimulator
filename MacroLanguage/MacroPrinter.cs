@@ -47,7 +47,7 @@ namespace MacroLanguage
 
       public void VisitNoOp(NoOp NoOp)
       {
-         AppendStatement("");
+         AppendSingleLineStatement("");
       }
 
       public void VisitForLoop(ForLoop ForLoop)
@@ -123,20 +123,33 @@ namespace MacroLanguage
             Append(expressionValue == null ? "null" : expressionValue.ToString());         
       }
       
-      public void VisitIf(If IfStatement)
+      public void VisitIf(If If)
       {
          Append("IF(");
-         IfStatement.Expression.Accept(this);
+         If.Expression.Accept(this);
          Append(")");
-         AppendBody(IfStatement);
+         AppendBody(If);
       }
-
-      private void AppendFunctionCallStatement(string FunctionName, params ExpressionBase[] FunctionParameters)
+      
+      public void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment)
       {
-         AppendStatement(FunctionCall(FunctionName, FunctionParameters));
+         Append(VariableAssignment.Symbol);
+         Append(AssignmentSymbol());
+         VariableAssignment.Expression.Accept(this);
+         AppendSingleLineStatementDelimiter();
       }
 
-      private static string FunctionCall(string FunctionName, params ExpressionBase[] FunctionParameters)
+      private static string AssignmentSymbol()
+      {
+         return " = ";
+      }
+
+      private void AppendFunctionCallStatement(string FunctionName, params MacroBase[] FunctionParameters)
+      {
+         AppendSingleLineStatement(FunctionCall(FunctionName, FunctionParameters));
+      }
+
+      private static string FunctionCall(string FunctionName, params MacroBase[] FunctionParameters)
       {
          var printedFunctionParameters =
             FunctionParameters.Select(Param => Param == null ? "null" : new MacroPrinter(Param).Print());
@@ -148,9 +161,14 @@ namespace MacroLanguage
          return ", ";
       }
 
-      private void AppendStatement(string StatementText)
+      private void AppendSingleLineStatement(string StatementText)
       {
          Append(StatementText);
+         AppendSingleLineStatementDelimiter();
+      }
+
+      private void AppendSingleLineStatementDelimiter()
+      {
          Append(";");
       }
 

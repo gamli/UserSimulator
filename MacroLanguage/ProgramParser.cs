@@ -46,6 +46,8 @@ namespace MacroLanguage
 
       private static IRule Statement(IFluentParserConfigurator Config)
       {
+         var expression = Expression(Config);
+         var variableSymbol = VariableSymbol(Config);
          var statement = Config.Rule();
          statement
             .IsMadeUp.By(Block(Config, statement))
@@ -55,7 +57,8 @@ namespace MacroLanguage
             .Or.By(NoOp(Config))
             .Or.By(Pause(Config))
             .Or.By(Position(Config))
-            .Or.By(IfStatement(Config, statement));
+            .Or.By(If(Config, statement))
+            .Or.By(VariableAssignment(Config, expression, variableSymbol));
          return statement;
       }
 
@@ -162,7 +165,31 @@ namespace MacroLanguage
          return position;
       }
 
-      /*private static IRule Expression(IFluentParserConfigurator Config)
+      private static IRule VariableAssignment(IFluentParserConfigurator Config, IRule Expression, IExpressionConfigurator VariableSymbol)
+      {
+         var variableAssignment = Config.Rule();
+         variableAssignment
+            .IsMadeUp.By(VariableSymbol).As("Symbol")
+            .Followed.By(AssignmentSymbol())
+            .Followed.By(Expression).As("Expression")
+            .Followed.By(StatementEnd())
+            .WhenFound(
+               O =>
+                  {
+                     var assignment = Activator.CreateInstance(typeof(VariableAssignment<>).MakeGenericType(O.Expression.GetType().GetGenericArguments()[0]));
+                     assignment.Symbol = O.Symbol;
+                     assignment.Expression = O.Expression;
+                     return assignment;
+                  });
+         return variableAssignment;
+      }
+
+      private static string AssignmentSymbol()
+      {
+         return "=";
+      }
+
+      private static IRule Expression(IFluentParserConfigurator Config)
       {
          var expression = Config.Rule();
          expression
@@ -171,7 +198,7 @@ namespace MacroLanguage
             .Or.By(IntegerExpression(Config));
 
          return expression;
-      }*/
+      }
 
       private static IRule Windowshot(IFluentParserConfigurator Config)
       {
@@ -188,6 +215,7 @@ namespace MacroLanguage
             .WhenFound(O => new Windowshot { PositionX = O.PositionX, PositionY = O.PositionY, ImageUrl = O.ImageUrl });
          return windowshot;
       }
+
       private static IRule BooleanExpression(IFluentParserConfigurator Config)
       {
          var booleanExpression = Config.Rule();
@@ -241,7 +269,16 @@ namespace MacroLanguage
          return integerConstant;
       }
 
-      private static IRule IfStatement(IFluentParserConfigurator Config, IRule Statement)
+      private static IExpressionConfigurator VariableSymbol(IFluentParserConfigurator Config)
+      {
+         var symbol = Config.Expression();
+         symbol
+            .ThatMatches(@"[a-zA-Z0-9]+")
+            .AndReturns(Symbol => Symbol);
+         return symbol;
+      }
+
+      private static IRule If(IFluentParserConfigurator Config, IRule Statement)
       {
          var ifStatement = Config.Rule();
          ifStatement

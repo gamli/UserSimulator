@@ -60,6 +60,7 @@
     <Compile Include="MoveVM_TEST.cs" />
     <Compile Include="PositionVM_TEST.cs" />
     <Compile Include="PauseVM_TEST.cs" />
+    <Compile Include="VariableAssignmentVM_TEST.cs" />
     <Compile Include="WindowshotVM_TEST.cs" />
   </ItemGroup>
   <ItemGroup>

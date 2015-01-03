@@ -11,8 +11,8 @@ namespace MacroViewModel
 {
    public class MoveVM : MacroBaseVM<Move>
    {
-      private NotifyingTransformedProperty<ExpressionBaseVM> _translationXVM;
-      public ExpressionBaseVM TranslationXVM
+      private NotifyingTransformedProperty<IntegerExpressionBaseVM> _translationXVM;
+      public IntegerExpressionBaseVM TranslationXVM
       {
          get
          {
@@ -20,8 +20,8 @@ namespace MacroViewModel
          }
       }
 
-      private NotifyingTransformedProperty<ExpressionBaseVM> _translationYVM;
-      public ExpressionBaseVM TranslationYVM
+      private NotifyingTransformedProperty<IntegerExpressionBaseVM> _translationYVM;
+      public IntegerExpressionBaseVM TranslationYVM
       {
          get
          {
@@ -33,17 +33,17 @@ namespace MacroViewModel
          : base(Model)
       {
          _translationXVM =
-            new NotifyingTransformedProperty<ExpressionBaseVM>(
+            new NotifyingTransformedProperty<IntegerExpressionBaseVM>(
                new[] { "TranslationX" }, "TranslationXVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.TranslationX),
+               () => (IntegerExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.TranslationX),
                VM => VM.Dispose());
 
          _translationYVM =
-            new NotifyingTransformedProperty<ExpressionBaseVM>(
+            new NotifyingTransformedProperty<IntegerExpressionBaseVM>(
                new[] { "TranslationY" }, "TranslationYVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.TranslationY),
+               () => (IntegerExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.TranslationY),
                VM => VM.Dispose());
       }
    }

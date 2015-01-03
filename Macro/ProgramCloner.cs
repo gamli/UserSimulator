@@ -96,6 +96,11 @@ namespace Macro
             WithClone(new If { Expression = CloneExpression(If.Expression) }, () => If.Body.Accept(this));
          }
 
+         public void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment)
+         {
+            WithClone(new VariableAssignment<T> { Symbol = VariableAssignment.Symbol, Expression = CloneExpression(VariableAssignment.Expression) });
+         }
+
          private void WithClone(StatementBase MacroClone, Action Action = null)
          {
             if (Clone == null)

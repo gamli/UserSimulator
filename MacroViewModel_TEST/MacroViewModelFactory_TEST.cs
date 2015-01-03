@@ -23,6 +23,9 @@ namespace MacroViewModel_TEST
          AssertCreatesExpectedViewModelType(typeof(ConstantExpression<string>), typeof(ConstantStringExpressionVM));
          AssertCreatesExpectedViewModelType(typeof(ConstantExpression<int>), typeof(ConstantIntegerExpressionVM));
          AssertCreatesExpectedViewModelType(typeof(If), typeof(IfVM));
+         AssertCreatesExpectedViewModelType(typeof(VariableAssignment<bool>), typeof(BooleanVariableAssignmentVM));
+         AssertCreatesExpectedViewModelType(typeof(VariableAssignment<string>), typeof(StringVariableAssignmentVM));
+         AssertCreatesExpectedViewModelType(typeof(VariableAssignment<int>), typeof(IntegerVariableAssignmentVM));
          AssertCreatesExpectedViewModelType(typeof(Program), typeof(ProgramVM));
          Assert.AreEqual(MacroViewModelFactory.Instance.Create(null), null);
       }

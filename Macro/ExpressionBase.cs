@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public abstract class ExpressionBase<T> : ExpressionBase
-   {
-   }
-
-   public abstract class ExpressionBase : StatementBase
+   public abstract class ExpressionBase<T> : StatementBase
    {
    }
 }

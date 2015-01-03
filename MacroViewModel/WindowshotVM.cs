@@ -16,8 +16,8 @@ namespace MacroViewModel
 {
    public class WindowshotVM : BooleanExpressionBaseVM
    {
-      private NotifyingTransformedProperty<ExpressionBaseVM> _positionXVM;
-      public ExpressionBaseVM PositionXVM
+      private NotifyingTransformedProperty<IntegerExpressionBaseVM> _positionXVM;
+      public IntegerExpressionBaseVM PositionXVM
       {
          get
          {
@@ -25,8 +25,8 @@ namespace MacroViewModel
          }
       }
 
-      private NotifyingTransformedProperty<ExpressionBaseVM> _positionYVM;
-      public ExpressionBaseVM PositionYVM
+      private NotifyingTransformedProperty<IntegerExpressionBaseVM> _positionYVM;
+      public IntegerExpressionBaseVM PositionYVM
       {
          get
          {
@@ -34,8 +34,8 @@ namespace MacroViewModel
          }
       }
 
-      private NotifyingTransformedProperty<ExpressionBaseVM> _imageUrlYVM;
-      public ExpressionBaseVM ImageUrlVM
+      private NotifyingTransformedProperty<StringExpressionBaseVM> _imageUrlYVM;
+      public StringExpressionBaseVM ImageUrlVM
       {
          get
          {
@@ -47,24 +47,24 @@ namespace MacroViewModel
          : base(Model)
       {
          _positionXVM =
-            new NotifyingTransformedProperty<ExpressionBaseVM>(
+            new NotifyingTransformedProperty<IntegerExpressionBaseVM>(
                new[] { "PositionX" }, "PositionXVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.PositionX),
+               () => (IntegerExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.PositionX),
                VM => VM.Dispose());
 
          _positionYVM =
-            new NotifyingTransformedProperty<ExpressionBaseVM>(
+            new NotifyingTransformedProperty<IntegerExpressionBaseVM>(
                new[] { "PositionY" }, "PositionYVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.PositionY),
+               () => (IntegerExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.PositionY),
                VM => VM.Dispose());
 
          _imageUrlYVM =
-            new NotifyingTransformedProperty<ExpressionBaseVM>(
+            new NotifyingTransformedProperty<StringExpressionBaseVM>(
                new[] { "ImageUrl" }, "ImageUrlVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.ImageUrl),
+               () => (StringExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.ImageUrl),
                VM => VM.Dispose());
       }
    }

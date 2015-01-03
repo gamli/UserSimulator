@@ -31,6 +31,7 @@ namespace UserSimulator
       private class StatementVisitor : IVisitor
       {
          private readonly IntPtr _targetWindow;
+         private readonly Stack<Dictionary<string, object>> _contexts = new Stack<Dictionary<string, object>>();
 
          public StatementVisitor(IntPtr TargetWindow)
          {
@@ -44,6 +45,7 @@ namespace UserSimulator
 
          public void VisitBlock(Block Block)
          {
+            _contexts.Push(new Dictionary<string, object>());
             foreach (var item in Block.Items)
                item.Accept(this);
          }
@@ -93,25 +95,32 @@ namespace UserSimulator
             throw new Exception("Malformed program: Constant expression is not a statement");
          }
 
-         public void VisitIf(If IfStatement)
+         public void VisitIf(If If)
          {
-            if (EvaluateExpression<bool>(IfStatement.Expression))
-               IfStatement.Body.Accept(this);
+            if (EvaluateExpression<bool>(If.Expression))
+               If.Body.Accept(this);
+         }
+         
+         public void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment)
+         {
+            var context = _contexts.Peek();
+            if(context != null)
+               context[VariableAssignment.Symbol] = EvaluateExpression<T>(VariableAssignment.Expression);
          }
 
          private T EvaluateExpression<T>(ExpressionBase<T> Expression)
          {
-            return new ExpreesionEvaluator<T>(Expression, _targetWindow).Evaluate();
+            return new ExpressionEvaluator<T>(Expression, _targetWindow).Evaluate();
          }
       }
    }
 
-   public class ExpreesionEvaluator<TExpressionValue>
+   public class ExpressionEvaluator<TExpressionValue>
    {
       private readonly ExpressionBase<TExpressionValue> _expression;
       private ExpressionVisitor _expressionVisitor;
 
-      public ExpreesionEvaluator(ExpressionBase<TExpressionValue> Expression, IntPtr TargetWindow)
+      public ExpressionEvaluator(ExpressionBase<TExpressionValue> Expression, IntPtr TargetWindow)
       {
          _expression = Expression;
          _expressionVisitor = new ExpressionVisitor(TargetWindow);
@@ -143,7 +152,7 @@ namespace UserSimulator
 
          public void VisitProgram(Program Program)
          {
-            throw new Exception("Malformed program: Program is not an expression");
+            throw new Exception("Malformed program: Program-Statement is not an expression");
          }
 
          public void VisitBlock(Block Block)
@@ -216,9 +225,14 @@ namespace UserSimulator
             throw new Exception("Malformed program: If-Statement is not an expression");
          }
 
+         public void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment)
+         {
+            throw new Exception("Malformed program: VariableAssignment-Statement is not an expression");
+         }
+
          private T EvaluateExpression<T>(ExpressionBase<T> Expression)
          {
-            return new ExpreesionEvaluator<T>(Expression, _targetWindow).Evaluate();
+            return new ExpressionEvaluator<T>(Expression, _targetWindow).Evaluate();
          }
       }
    }

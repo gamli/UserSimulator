@@ -71,6 +71,15 @@ namespace MacroViewModel
                { typeof(If), Macro => 
                   new IfVM((If)Macro) },
 
+               { typeof(VariableAssignment<bool>), Macro => 
+                  new BooleanVariableAssignmentVM((VariableAssignment<bool>)Macro) },
+
+               { typeof(VariableAssignment<string>), Macro => 
+                  new StringVariableAssignmentVM((VariableAssignment<string>)Macro) },
+
+               { typeof(VariableAssignment<int>), Macro => 
+                  new IntegerVariableAssignmentVM((VariableAssignment<int>)Macro) },
+
                { typeof(Program), Macro => 
                   new ProgramVM((Program)Macro) },
             };
