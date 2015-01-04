@@ -9,19 +9,15 @@ namespace Macro
    public class Definition : SpecialFormBase
    {
       private Symbol _symbol;
-      public Symbol Symbol { get { return _symbol; } set { SetPropertyValue(ref _symbol, value, 0); } }
+      public Symbol Symbol { get { return _symbol; } set { SetPropertyValue(ref _symbol, value); } }
 
       private ExpressionBase _expression;
-      public ExpressionBase Expression { get { return _expression; } set { SetPropertyValue(ref _expression, value, 1); } }
+      public ExpressionBase Expression { get { return _expression; } set { SetPropertyValue(ref _expression, value); } }
 
       public Definition()
+         : base("define", "Symbol", "Expression")
       {
-         Expressions.CollectionChanged +=
-            (Sender, Arsg) => 
-               {
-                  Symbol = (Symbol)Expressions[0];
-                  Expression = Expressions[1];
-               };
+         // nothing to do
       }
 
       public override void Accept(IVisitor Visitor)

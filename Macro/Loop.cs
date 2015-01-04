@@ -10,12 +10,16 @@ namespace Macro
    public class Loop : SpecialFormBase
    {
       private ExpressionBase _condition;
-      [ExcludeFromCodeCoverage]
-      public ExpressionBase Condition { get { return _condition; } set { SetPropertyValue(ref _condition, value, 0); } }
+      public ExpressionBase Condition { get { return _condition; } set { SetPropertyValue(ref _condition, value); } }
 
       private ExpressionBase _body;
-      [ExcludeFromCodeCoverage]
-      public ExpressionBase Body { get { return _body; } set { SetPropertyValue(ref _body, value, 1); } }
+      public ExpressionBase Body { get { return _body; } set { SetPropertyValue(ref _body, value); } }
+
+      public Loop()
+         : base("loop", "Condition", "Body")
+      {
+         // nothing to do
+      }
 
       public override void Accept(IVisitor Visitor)
       {

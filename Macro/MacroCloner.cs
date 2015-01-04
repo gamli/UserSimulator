@@ -9,24 +9,13 @@ namespace Macro
 {
    public class MacroCloner
    {
-      public static MacroBase Clone(MacroBase Macro)
-      {
-         return new MacroCloner(Macro).Clone();
-      }
-
-      public MacroBase Clone()
+      public static TMacro Clone<TMacro>(TMacro Macro)
+         where TMacro : MacroBase
       {
          var programCloneVisitor = new CloneVisitor();
-         _macro.Accept(programCloneVisitor);
-         return (MacroBase)programCloneVisitor.Clone;
+         Macro.Accept(programCloneVisitor);
+         return (TMacro)programCloneVisitor.Clone;
       }
-
-      public MacroCloner(MacroBase Macro)
-      {
-         _macro = Macro;
-      }
-
-      MacroBase _macro;
 
       private class CloneVisitor : IVisitor
       {
@@ -63,7 +52,7 @@ namespace Macro
          private static void CloneListsExpressions(List List, List Clone)
          {
             foreach (var expression in List.Expressions)
-               Clone.Expressions.Add((ExpressionBase)MacroCloner.Clone(expression));
+               Clone.Expressions.Add(MacroCloner.Clone(expression));
          }
 
          public void VisitFunctionCall(FunctionCall FunctionCall)

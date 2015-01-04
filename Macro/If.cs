@@ -10,26 +10,18 @@ namespace Macro
    public class If : SpecialFormBase
    {
       private ExpressionBase _condition;
-      [ExcludeFromCodeCoverage]
-      public ExpressionBase Condition { get { return _condition; } set { SetPropertyValue(ref _condition, value, 0); } }
+      public ExpressionBase Condition { get { return _condition; } set { SetPropertyValue(ref _condition, value); } }
 
       private ExpressionBase _consequent;
-      [ExcludeFromCodeCoverage]
-      public ExpressionBase Consequent { get { return _consequent; } set { SetPropertyValue(ref _consequent, value, 1); } }
+      public ExpressionBase Consequent { get { return _consequent; } set { SetPropertyValue(ref _consequent, value); } }
 
       private ExpressionBase _alternative;
-      [ExcludeFromCodeCoverage]
-      public ExpressionBase Alternative { get { return _alternative; } set { SetPropertyValue(ref _alternative, value, 2); } }
+      public ExpressionBase Alternative { get { return _alternative; } set { SetPropertyValue(ref _alternative, value); } }
 
-      public If()
+      public If() 
+         : base("if", "Condition", "Consequent", "Alternative")
       {
-         Expressions.CollectionChanged +=
-            (Sender, Arsg) => 
-               {
-                  Condition = Expressions[0];
-                  Consequent = Expressions[1];
-                  Alternative = Expressions[2]; 
-               };
+         // nothing to do
       }
 
       public override void Accept(IVisitor Visitor)

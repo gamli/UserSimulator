@@ -10,13 +10,22 @@ namespace Macro
    public class FunctionCall : List
    {
       private ExpressionBase _function;
-      public ExpressionBase Function { get { return _function; } private set { SetPropertyValue(ref _function, value, 0); } }
+      public ExpressionBase Function 
+      { 
+         get { return _function; } 
+         private set 
+         {
+            if (SetPropertyValue(ref _function, value))
+               Expressions[0] = _function;
+         } 
+      }
 
       public ObservableCollection<ExpressionBase> Arguments { get; private set; }
 
       public FunctionCall()
       {
          Arguments = new ObservableCollection<ExpressionBase>();
+
          Expressions.CollectionChanged +=
             (Sender, Args) =>
                {
@@ -26,6 +35,8 @@ namespace Macro
                   foreach (var expression in Expressions.Skip(1))
                      Arguments.Add(expression);
                };
+
+         Expressions.Add(null);
       }
 
       public override void Accept(IVisitor Visitor)
