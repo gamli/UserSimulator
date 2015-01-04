@@ -47,17 +47,17 @@ namespace MacroView
                   var windowshotImageSource = ((BitmapImage)_windowshot.Source);
                   if (windowshotImageSource != null)
                   {
-                     if (windowshotMacro.PositionX is ConstantExpression<int>)
+                     if (windowshotMacro.PositionX is Constant)
                         _muh.X =
-                           ((ConstantExpression<int>)windowshotMacro.PositionX).Value
+                           (int)((Constant)windowshotMacro.PositionX).Value
                            * (_windowshot.ActualWidth / windowshotImageSource.PixelWidth)
                            - _windowshot.ActualWidth / 2;
                      else
                         _muh.X = 0;
 
-                     if (windowshotMacro.PositionY is ConstantExpression<int>)
+                     if (windowshotMacro.PositionY is Constant)
                         _muh.Y =
-                           ((ConstantExpression<int>)windowshotMacro.PositionY).Value
+                           (int)((Constant)windowshotMacro.PositionY).Value
                            * (_windowshot.ActualHeight / windowshotImageSource.PixelHeight)
                            - _windowshot.ActualHeight / 2;
                      else
@@ -112,10 +112,10 @@ namespace MacroView
                );
             using (var stream = File.OpenWrite(windowshotMacroImageUrl))
                windowshotMacroImage.Save(stream, ImageFormat.Bmp);
-            windowshotMacro.ImageUrl = ConstantExpressions.Create(windowshotMacroImageUrl);
+            windowshotMacro.ImageUrl = new Constant(windowshotMacroImageUrl);
          }
-         windowshotMacro.PositionX = ConstantExpressions.Create(mousePositionPixelX);
-         windowshotMacro.PositionY = ConstantExpressions.Create(mousePositionPixelY);
+         windowshotMacro.PositionX = new Constant(mousePositionPixelX);
+         windowshotMacro.PositionY = new Constant(mousePositionPixelY);
          GC.Collect();
       }
 

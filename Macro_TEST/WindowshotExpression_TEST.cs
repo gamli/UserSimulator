@@ -21,23 +21,27 @@ namespace Macro_TEST
       [TestMethod]
       public void Equals_TEST()
       {
-         var block = new Block();
-         var windowshot = 
-            new Windowshot 
+         var windowshot =
+            new Windowshot
+               {
+                  ImageUrl = new Constant("nonExistingTestImage"),
+                  PositionX = new Constant(13),
+                  PositionY = new Constant(17)
+               };
+         var ifStatement =
+            new If 
             { 
-               ImageUrl = ConstantExpressions.Create("nonExistingTestImage"),
-               PositionX = ConstantExpressions.Create(13),
-               PositionY = ConstantExpressions.Create(17)
+               Expression = windowshot,
+               Body = new Block()
             };
-         block.Items.Add(windowshot);
-         var program = new Program { Body = block };
+         var program = new Program { Body = ifStatement };
          var programClone = new ProgramCloner(program).Clone();
          Assert.AreEqual(program, programClone);
-         windowshot.PositionY = ConstantExpressions.Create(-17);
+         windowshot.PositionY = new Constant(-17);
          Assert.AreNotEqual(program, programClone);
-         windowshot.PositionX = ConstantExpressions.Create(-13);
+         windowshot.PositionX = new Constant(-13);
          Assert.AreNotEqual(program, programClone);
-         windowshot.ImageUrl = ConstantExpressions.Create("");
+         windowshot.ImageUrl = new Constant("");
          Assert.AreNotEqual(program, programClone);
       }
    }

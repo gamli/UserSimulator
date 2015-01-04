@@ -49,7 +49,6 @@
     <Compile Include="StatementBase.cs" />
     <Compile Include="VariableAssignment.cs" />
     <Compile Include="Windowshot.cs" />
-    <Compile Include="NoOp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="IVisitor.cs" />
     <Compile Include="MacroBase.cs" />

@@ -12,7 +12,6 @@ namespace Macro
    {
       public ObservableCollection<MacroBase> Items { get; private set; }
 
-
       public Block()
       {
          Items = new ObservableCollection<MacroBase>();

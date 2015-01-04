@@ -10,11 +10,11 @@ namespace Macro_TEST
       [TestMethod]
       public void Accept_TEST()
       {
-         var ifStatement = new If { Expression = ConstantExpressions.Create(true), Body = new NoOp() };
+         var ifStatement = new If { Expression = new Constant(true), Body = new Block() };
          var testVisitor = new MockVisitor();
          ifStatement.Accept(testVisitor);
          Assert.AreEqual(testVisitor.Macros.Count, 2);
-         Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(ConstantExpression<bool>));
+         Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(Constant));
          Assert.AreEqual(testVisitor.Macros[1].Macro.GetType(), typeof(If));
       }
 
@@ -22,12 +22,12 @@ namespace Macro_TEST
       public void Equals_TEST()
       {
          var block = new Block();
-         var ifStatement = new If { Expression = ConstantExpressions.Create(true), Body = new NoOp() };
+         var ifStatement = new If { Expression = new Constant(true), Body = new Block() };
          block.Items.Add(ifStatement);
          var program = new Program { Body = block };
          var programClone = new ProgramCloner(program).Clone();
          Assert.AreEqual(program, programClone);
-         ifStatement.Expression = ConstantExpressions.Create(false);
+         ifStatement.Expression = new Constant(false);
          Assert.AreNotEqual(program, programClone);
       }
    }

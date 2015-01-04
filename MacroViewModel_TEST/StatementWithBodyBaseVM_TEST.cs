@@ -35,7 +35,7 @@ namespace MacroViewModel_TEST
       {
          public MockMacro()
          {
-            Body = new NoOp();
+            Body = new Block();
          }
 
          public override void Accept(IVisitor Visitor)

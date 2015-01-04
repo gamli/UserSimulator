@@ -15,22 +15,22 @@ namespace Macro_TEST
          var macroChangedFired = false;
          mockStatement.MacroChanged += (Sender, Args) => macroChangedFired = true;
          Assert.IsFalse(macroChangedFired);
-         var position = new Position { X = ConstantExpressions.Create(4711), Y = ConstantExpressions.Create(-4711) };
+         var position = new Position { X = new Constant(4711), Y = new Constant(-4711) };
          var block = new Block();
          block.Items.Add(position);
          mockStatement.Body = block;
          Assert.IsTrue(macroChangedFired);
          macroChangedFired = false;
-         ((ConstantExpression<int>)position.X).Value = 0;
+         ((Constant)position.X).Value = 0;
          Assert.IsTrue(macroChangedFired);
          macroChangedFired = false;
-         position.X = ConstantExpressions.Create(4711);
+         position.X = new Constant(4711);
          Assert.IsTrue(macroChangedFired);
          macroChangedFired = false;
          mockStatement.Body = null;
          Assert.IsTrue(macroChangedFired);
          macroChangedFired = false;
-         position.X = ConstantExpressions.Create(0);
+         position.X = new Constant(0);
          Assert.IsFalse(macroChangedFired);
       }
 

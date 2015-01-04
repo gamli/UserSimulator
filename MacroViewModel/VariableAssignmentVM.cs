@@ -9,40 +9,10 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class BooleanVariableAssignmentVM : VariableAssignmentBaseVM<bool>
+   public class VariableAssignmentVM : MacroBaseVM<VariableAssignment>
    {
-      [ExcludeFromCodeCoverage]
-      public BooleanVariableAssignmentVM(VariableAssignment<bool> Model)
-         : base(Model)
-      {
-         // nothing to do
-      }
-   }
-
-   public class StringVariableAssignmentVM : VariableAssignmentBaseVM<string>
-   {
-      [ExcludeFromCodeCoverage]
-      public StringVariableAssignmentVM(VariableAssignment<string> Model)
-         : base(Model)
-      {
-         // nothing to do
-      }
-   }
-
-   public class IntegerVariableAssignmentVM : VariableAssignmentBaseVM<int>
-   {
-      [ExcludeFromCodeCoverage]
-      public IntegerVariableAssignmentVM(VariableAssignment<int> Model)
-         : base(Model)
-      {
-         // nothing to do
-      }
-   }
-
-   public class VariableAssignmentBaseVM<T> : MacroBaseVM<VariableAssignment<T>>
-   {
-      private NotifyingTransformedProperty<ExpressionBaseVM<T>> _expressionVM;
-      public ExpressionBaseVM<T> ExpressionVM
+      private NotifyingTransformedProperty<ExpressionBaseVM> _expressionVM;
+      public ExpressionBaseVM ExpressionVM
       {
          get
          {
@@ -50,14 +20,14 @@ namespace MacroViewModel
          }
       }
 
-      public VariableAssignmentBaseVM(VariableAssignment<T> Model)
+      public VariableAssignmentVM(VariableAssignment Model)
          : base(Model)
       {
          _expressionVM =
-            new NotifyingTransformedProperty<ExpressionBaseVM<T>>(
+            new NotifyingTransformedProperty<ExpressionBaseVM>(
                new[] { "Expression" }, "ExpressionVM",
                Model, this,
-               () => (ExpressionBaseVM<T>)MacroViewModelFactory.Instance.Create(Model.Expression),
+               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Expression),
                VM => VM.Dispose());
       }
    }

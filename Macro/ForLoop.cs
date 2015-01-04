@@ -9,9 +9,9 @@ namespace Macro
 {
    public class ForLoop : StatementWithBodyBase
    {
-      private ExpressionBase<int> _repetitionCount;
+      private ExpressionBase _repetitionCount;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase<int> RepetitionCount { get { return _repetitionCount; } set { SetPropertyValue(ref _repetitionCount, value); } }
+      public ExpressionBase RepetitionCount { get { return _repetitionCount; } set { SetPropertyValue(ref _repetitionCount, value); } }
 
       public override void Accept(IVisitor Visitor)
       {
@@ -21,7 +21,7 @@ namespace Macro
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
          var otherForLoop = (ForLoop)OtherMacro;
-         return RepetitionCount == otherForLoop.RepetitionCount && base.BodyEquals(otherForLoop);
+         return RepetitionCount.Equals(otherForLoop.RepetitionCount) && base.BodyEquals(otherForLoop);
       }
    }
 }

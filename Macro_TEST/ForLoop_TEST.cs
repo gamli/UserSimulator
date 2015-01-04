@@ -10,7 +10,7 @@ namespace Macro_TEST
       [TestMethod]
       public void Accept_TEST()
       {
-         var forLoop = new ForLoop { Body = new NoOp() };
+         var forLoop = new ForLoop { Body = new Block() };
          var testVisitor = new MockVisitor();
          forLoop.Accept(testVisitor);
          Assert.AreEqual(testVisitor.Macros.Count, 1);
@@ -21,12 +21,12 @@ namespace Macro_TEST
       public void Equals_TEST()
       {
          var block = new Block();
-         var forLoop = new ForLoop { RepetitionCount = ConstantExpressions.Create(4711), Body = new NoOp() };
+         var forLoop = new ForLoop { RepetitionCount = new Constant(4711), Body = new Block() };
          block.Items.Add(forLoop);
          var program = new Program { Body = block };
          var programClone = new ProgramCloner(program).Clone();
          Assert.AreEqual(program, programClone);
-         forLoop.RepetitionCount = ConstantExpressions.Create(-4711);
+         forLoop.RepetitionCount = new Constant(-4711);
          Assert.AreNotEqual(program, programClone);
       }
    }

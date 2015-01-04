@@ -50,35 +50,20 @@ namespace MacroViewModel
                { typeof(Move), Macro => 
                   new MoveVM((Move)Macro) },
 
-               { typeof(NoOp), Macro => 
-                  new NoOpVM((NoOp)Macro) },
-
                { typeof(Pause), Macro => 
                   new PauseVM((Pause)Macro) },
 
                { typeof(Position), Macro => 
                   new PositionVM((Position)Macro) },
 
-               { typeof(ConstantExpression<bool>), Macro => 
-                  new ConstantBooleanExpressionVM((ConstantExpression<bool>)Macro) },
-
-               { typeof(ConstantExpression<string>), Macro => 
-                  new ConstantStringExpressionVM((ConstantExpression<string>)Macro) },
-
-               { typeof(ConstantExpression<int>), Macro => 
-                  new ConstantIntegerExpressionVM((ConstantExpression<int>)Macro) },
+               { typeof(Constant), Macro => 
+                  new ConstantVM((Constant)Macro) },
 
                { typeof(If), Macro => 
                   new IfVM((If)Macro) },
 
-               { typeof(VariableAssignment<bool>), Macro => 
-                  new BooleanVariableAssignmentVM((VariableAssignment<bool>)Macro) },
-
-               { typeof(VariableAssignment<string>), Macro => 
-                  new StringVariableAssignmentVM((VariableAssignment<string>)Macro) },
-
-               { typeof(VariableAssignment<int>), Macro => 
-                  new IntegerVariableAssignmentVM((VariableAssignment<int>)Macro) },
+               { typeof(VariableAssignment), Macro => 
+                  new VariableAssignmentVM((VariableAssignment)Macro) },
 
                { typeof(Program), Macro => 
                   new ProgramVM((Program)Macro) },

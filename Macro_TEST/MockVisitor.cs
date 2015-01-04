@@ -29,11 +29,6 @@ namespace Macro_TEST
          EndVisit(Block);
       }
 
-      public void VisitNoOp(NoOp NoOp)
-      {
-         Visit(NoOp);
-      }
-
       public void VisitForLoop(ForLoop ForLoop)
       {
          VisitStatementWithBody(ForLoop);
@@ -64,9 +59,9 @@ namespace Macro_TEST
          Visit(LeftClick);
       }
 
-      public void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression)
+      public void VisitConstant(Constant Constant)
       {
-         Visit(ConstantExpression);
+         Visit(Constant);
       }
 
       public void VisitIf(If If)
@@ -75,7 +70,7 @@ namespace Macro_TEST
          VisitStatementWithBody(If);
       }
 
-      public void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment)
+      public void VisitVariableAssignment(VariableAssignment VariableAssignment)
       {
          VariableAssignment.Expression.Accept(this);
          Visit(VariableAssignment);

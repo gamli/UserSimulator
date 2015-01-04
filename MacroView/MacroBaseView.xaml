@@ -21,9 +21,6 @@
          <DataTemplate DataType="{x:Type macrovm:MoveVM}">
             <macroview:MoveView/>
          </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:NoOpVM}">
-            <macroview:NoOpView/>
-         </DataTemplate>
          <DataTemplate DataType="{x:Type macrovm:PauseVM}">
             <macroview:PauseView/>
          </DataTemplate>
@@ -36,25 +33,13 @@
          <DataTemplate DataType="{x:Type macrovm:WindowshotVM}">
             <macroview:WindowshotView/>
          </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:ConstantBooleanExpressionVM}">
-            <macroview:ConstantBooleanExpressionView/>
-         </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:ConstantStringExpressionVM}">
-            <macroview:ConstantStringExpressionView/>
-         </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:ConstantIntegerExpressionVM}">
-            <macroview:ConstantIntegerExpressionView/>
+         <DataTemplate DataType="{x:Type macrovm:ConstantVM}">
+            <macroview:ConstantView/>
          </DataTemplate>
          <DataTemplate DataType="{x:Type macrovm:IfVM}">
             <macroview:IfView/>
          </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:BooleanVariableAssignmentVM}">
-            <macroview:VariableAssignmentView/>
-         </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:StringVariableAssignmentVM}">
-            <macroview:VariableAssignmentView/>
-         </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:IntegerVariableAssignmentVM}">
+         <DataTemplate DataType="{x:Type macrovm:VariableAssignmentVM}">
             <macroview:VariableAssignmentView/>
          </DataTemplate>
       </Grid.Resources>

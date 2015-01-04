@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Windowshot : ExpressionBase<bool>
+   public class Windowshot : ExpressionBase
    {
-      private ExpressionBase<string> _imageUrl;
-      public ExpressionBase<string> ImageUrl { get { return _imageUrl; } set { SetPropertyValue(ref _imageUrl, value); } }
+      private ExpressionBase _imageUrl;
+      public ExpressionBase ImageUrl { get { return _imageUrl; } set { SetPropertyValue(ref _imageUrl, value); } }
 
-      private ExpressionBase<int> _positionX;
+      private ExpressionBase _positionX;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase<int> PositionX { get { return _positionX; } set { SetPropertyValue(ref _positionX, value); } }
+      public ExpressionBase PositionX { get { return _positionX; } set { SetPropertyValue(ref _positionX, value); } }
 
-      private ExpressionBase<int> _positionY;
+      private ExpressionBase _positionY;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase<int> PositionY { get { return _positionY; } set { SetPropertyValue(ref _positionY, value); } }
+      public ExpressionBase PositionY { get { return _positionY; } set { SetPropertyValue(ref _positionY, value); } }
 
       public override void Accept(IVisitor Visitor)
       {

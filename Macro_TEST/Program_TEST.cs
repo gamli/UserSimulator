@@ -11,7 +11,7 @@ namespace Macro_TEST
       public void Accept_TEST()
       {
          var block = new Block();
-         block.Items.Add(new NoOp());
+         block.Items.Add(new Block());
          var program = new Program { Body = block };
          var testVisitor = new MockVisitor();
          program.Accept(testVisitor);
@@ -20,7 +20,7 @@ namespace Macro_TEST
          Assert.AreEqual(testVisitor.Macros[0].Children.Count, 1);
          Assert.AreEqual(testVisitor.Macros[0].Children[0].Macro.GetType(), typeof(Block));
          Assert.AreEqual(testVisitor.Macros[0].Children[0].Children.Count, 1);
-         Assert.AreEqual(testVisitor.Macros[0].Children[0].Children[0].Macro.GetType(), typeof(NoOp));
+         Assert.AreEqual(testVisitor.Macros[0].Children[0].Children[0].Macro.GetType(), typeof(Block));
       }
 
       [TestMethod]

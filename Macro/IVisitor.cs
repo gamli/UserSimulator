@@ -16,8 +16,6 @@ namespace Macro
 
       void VisitBlock(Block Block);
 
-      void VisitNoOp(NoOp NoOp);
-
       void VisitForLoop(ForLoop ForLoop);
 
       void VisitMove(Move Move);
@@ -30,10 +28,10 @@ namespace Macro
 
       void VisitLeftClick(LeftClick LeftClick);
 
-      void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression);
+      void VisitConstant(Constant Constant);
 
       void VisitIf(If If);
 
-      void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment);
+      void VisitVariableAssignment(VariableAssignment VariableAssignment);
    }
 }

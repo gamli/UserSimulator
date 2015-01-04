@@ -50,11 +50,6 @@ namespace UserSimulator
                item.Accept(this);
          }
 
-         public void VisitNoOp(NoOp NoOp)
-         {
-            // nothing to do
-         }
-
          public void VisitForLoop(ForLoop ForLoop)
          {
             for (var i = 0; i < EvaluateExpression<int>(ForLoop.RepetitionCount); i++)
@@ -90,7 +85,7 @@ namespace UserSimulator
             Thread.Sleep(EvaluateExpression<int>(Pause.Duration));
          }
 
-         public void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression)
+         public void VisitConstant(Constant Constant)
          {
             throw new Exception("Malformed program: Constant expression is not a statement");
          }
@@ -101,42 +96,35 @@ namespace UserSimulator
                If.Body.Accept(this);
          }
          
-         public void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment)
+         public void VisitVariableAssignment(VariableAssignment VariableAssignment)
          {
             var context = _contexts.Peek();
             if(context != null)
-               context[VariableAssignment.Symbol] = EvaluateExpression<T>(VariableAssignment.Expression);
+               context[VariableAssignment.Symbol] = EvaluateExpression<object>(VariableAssignment.Expression);
          }
 
-         private T EvaluateExpression<T>(ExpressionBase<T> Expression)
+         private T EvaluateExpression<T>(ExpressionBase Expression)
          {
-            return new ExpressionEvaluator<T>(Expression, _targetWindow).Evaluate();
+            return (T)new ExpressionEvaluator(Expression, _targetWindow).Evaluate();
          }
       }
    }
 
-   public class ExpressionEvaluator<TExpressionValue>
+   public class ExpressionEvaluator
    {
-      private readonly ExpressionBase<TExpressionValue> _expression;
+      private readonly ExpressionBase _expression;
       private ExpressionVisitor _expressionVisitor;
 
-      public ExpressionEvaluator(ExpressionBase<TExpressionValue> Expression, IntPtr TargetWindow)
+      public ExpressionEvaluator(ExpressionBase Expression, IntPtr TargetWindow)
       {
          _expression = Expression;
          _expressionVisitor = new ExpressionVisitor(TargetWindow);
       }
 
-      public TExpressionValue Evaluate()
+      public object Evaluate()
       {
          _expression.Accept(_expressionVisitor);
-         if (_expressionVisitor.Value is TExpressionValue)
-            return (TExpressionValue)_expressionVisitor.Value;
-         else
-            throw new Exception(
-               string.Format(
-                  "Malformed program: Expected expression of type {0} and got expression of type {1}",
-                  typeof(TExpressionValue),
-                  _expressionVisitor.Value.GetType()));
+         return _expressionVisitor.Value;         
       }
 
       private class ExpressionVisitor : IVisitor
@@ -158,11 +146,6 @@ namespace UserSimulator
          public void VisitBlock(Block Block)
          {
             throw new Exception("Malformed program: Block-Statement is not an expression");
-         }
-
-         public void VisitNoOp(NoOp NoOp)
-         {
-            throw new Exception("Malformed program: NoOp-Statement is not an expression");
          }
 
          public void VisitForLoop(ForLoop ForLoop)
@@ -215,9 +198,9 @@ namespace UserSimulator
             throw new Exception("Malformed program: Pause-Statement is not an expression");
          }
 
-         public void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression)
+         public void VisitConstant(Constant Constant)
          {
-            Value = ConstantExpression.Value;
+            Value = Constant.Value;
          }
 
          public void VisitIf(If IfStatement)
@@ -225,14 +208,14 @@ namespace UserSimulator
             throw new Exception("Malformed program: If-Statement is not an expression");
          }
 
-         public void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment)
+         public void VisitVariableAssignment(VariableAssignment VariableAssignment)
          {
             throw new Exception("Malformed program: VariableAssignment-Statement is not an expression");
          }
 
-         private T EvaluateExpression<T>(ExpressionBase<T> Expression)
+         private TValue EvaluateExpression<TValue>(ExpressionBase Expression)
          {
-            return new ExpressionEvaluator<T>(Expression, _targetWindow).Evaluate();
+            return (TValue)new ExpressionEvaluator(Expression, _targetWindow).Evaluate();
          }
       }
    }

@@ -45,11 +45,6 @@ namespace Macro
                   });
          }
 
-         public void VisitNoOp(NoOp NoOp)
-         {
-            WithClone(new NoOp());
-         }
-
          public void VisitForLoop(ForLoop ForLoop)
          {
             WithClone(new ForLoop { RepetitionCount = ForLoop.RepetitionCount }, () => ForLoop.Body.Accept(this));
@@ -86,9 +81,9 @@ namespace Macro
             WithClone(new LeftClick());
          }
          
-         public void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression)
+         public void VisitConstant(Constant ConstantExpression)
          {
-            WithClone(new ConstantExpression<T> { Value = ConstantExpression.Value });
+            WithClone(new Constant(ConstantExpression.Value));
          }
 
          public void VisitIf(If If)
@@ -96,15 +91,14 @@ namespace Macro
             WithClone(new If { Expression = CloneExpression(If.Expression) }, () => If.Body.Accept(this));
          }
 
-         public void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment)
+         public void VisitVariableAssignment(VariableAssignment VariableAssignment)
          {
-            WithClone(new VariableAssignment<T> { Symbol = VariableAssignment.Symbol, Expression = CloneExpression(VariableAssignment.Expression) });
+            WithClone(new VariableAssignment { Symbol = VariableAssignment.Symbol, Expression = CloneExpression(VariableAssignment.Expression) });
          }
 
          private void WithClone(StatementBase MacroClone, Action Action = null)
          {
-            if (Clone == null)
-               Clone = MacroClone;
+            WithClone((MacroBase)MacroClone);
 
             if (_macroStack.Count > 0)
             {
@@ -128,13 +122,19 @@ namespace Macro
             if (putOnStack)
                _macroStack.Pop();
          }
+
+         private void WithClone(MacroBase MacroClone)
+         {
+            if (Clone == null)
+               Clone = MacroClone;
+         }
          private Stack<MacroBase> _macroStack = new Stack<MacroBase>();
 
-         private ExpressionBase<T> CloneExpression<T>(ExpressionBase<T> Expression)
+         private ExpressionBase CloneExpression(ExpressionBase Expression)
          {
             var cloneVisitor = new CloneVisitor();
             Expression.Accept(cloneVisitor);
-            return (ExpressionBase<T>)cloneVisitor.Clone;
+            return (ExpressionBase)cloneVisitor.Clone;
          }
       }
    }

@@ -21,12 +21,12 @@ namespace Macro_TEST
       public void Equals_TEST()
       {
          var block = new Block();
-         var move = new Move { TranslationX = ConstantExpressions.Create(4711), TranslationY = ConstantExpressions.Create(-4711) };
+         var move = new Move { TranslationX = new Constant(4711), TranslationY = new Constant(-4711) };
          block.Items.Add(move);
          var program = new Program { Body = block };
          var programClone = new ProgramCloner(program).Clone();
          Assert.AreEqual(program, programClone);
-         move.TranslationX = ConstantExpressions.Create(-4711);
+         move.TranslationX = new Constant(-4711);
          Assert.AreNotEqual(program, programClone);
       }
    }

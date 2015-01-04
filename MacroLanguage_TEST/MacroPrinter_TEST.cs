@@ -21,7 +21,6 @@ namespace MacroLanguage_TEST
    }
 }");
          var filledBlock = new Block();
-         filledBlock.Items.Add(new NoOp());
          filledBlock.Items.Add(new LeftClick());
          var filledBlockProgram =
             Program(filledBlock);
@@ -30,8 +29,7 @@ namespace MacroLanguage_TEST
 @"PROGRAM
 {
    {
-      ;
-      LEFT_CLICK();
+      LEFT_CLICK()
    }
 }");
       }
@@ -45,7 +43,7 @@ namespace MacroLanguage_TEST
             leftClickProgram,
 @"PROGRAM
 {
-   LEFT_CLICK();
+   LEFT_CLICK()
 }");
       }
 
@@ -53,16 +51,17 @@ namespace MacroLanguage_TEST
       public void ForLoop_TEST()
       {
          var emptyForLoopProgram =
-            Program(new ForLoop { RepetitionCount = ConstantExpressions.Create(4711), Body = new NoOp() });
+            Program(new ForLoop { RepetitionCount = new Constant(4711), Body = new Block() });
          AssertOutput(
             emptyForLoopProgram,
 @"PROGRAM
 {
    FOR(4711)
-      ;
+      {
+      }
 }");
          var forLoopWithBlockProgram =
-            Program(new ForLoop { RepetitionCount = ConstantExpressions.Create(4711), Body = new Block { } });
+            Program(new ForLoop { RepetitionCount = new Constant(4711), Body = new Block { } });
          AssertOutput(
             forLoopWithBlockProgram,
 @"PROGRAM
@@ -83,18 +82,19 @@ namespace MacroLanguage_TEST
                   Expression = 
                      new Windowshot 
                         { 
-                           PositionX = ConstantExpressions.Create(4711), 
-                           PositionY = ConstantExpressions.Create(-4711), 
-                           ImageUrl = ConstantExpressions.Create("nonExistingTestImage")
+                           PositionX = new Constant(4711), 
+                           PositionY = new Constant(-4711), 
+                           ImageUrl = new Constant("nonExisting\"TestImage")
                         },
-                  Body = new NoOp()
+                  Body = new Block()
                });
          AssertOutput(
             windowshotProgram,
 @"PROGRAM
 {
-   IF(WINDOWSHOT(4711, -4711, ""nonExistingTestImage""))
-      ;
+   IF(WINDOWSHOT(4711, -4711, ""nonExisting\""TestImage""))
+      {
+      }
 }");
          windowshotProgram =
             Program(
@@ -103,18 +103,19 @@ namespace MacroLanguage_TEST
                   Expression = 
                      new Windowshot 
                         { 
-                           PositionX = ConstantExpressions.Create(4711), 
-                           PositionY = ConstantExpressions.Create(-4711), 
-                           ImageUrl = ConstantExpressions.Create<string>(null)
+                           PositionX = new Constant(4711), 
+                           PositionY = new Constant(-4711), 
+                           ImageUrl = new Constant(null)
                         },
-                  Body = new NoOp()
+                  Body = new Block()
                });
          AssertOutput(
             windowshotProgram,
 @"PROGRAM
 {
    IF(WINDOWSHOT(4711, -4711, null))
-      ;
+      {
+      }
 }");
          windowshotProgram =
             Program(
@@ -123,18 +124,19 @@ namespace MacroLanguage_TEST
                   Expression =
                      new Windowshot
                      {
-                        PositionX = ConstantExpressions.Create(4711),
-                        PositionY = ConstantExpressions.Create(-4711),
-                        ImageUrl = null
+                        PositionX = new Constant(4711),
+                        PositionY = new Constant(-4711),
+                        ImageUrl = new Constant(null)
                      },
-                  Body = new NoOp()
+                  Body = new Block()
                });
          AssertOutput(
             windowshotProgram,
 @"PROGRAM
 {
    IF(WINDOWSHOT(4711, -4711, null))
-      ;
+      {
+      }
 }");
       }
 
@@ -145,26 +147,13 @@ namespace MacroLanguage_TEST
             Program(
                new Move 
                { 
-                  TranslationX = ConstantExpressions.Create(4711), 
-                  TranslationY = ConstantExpressions.Create(-4711) });
+                  TranslationX = new Constant(4711), 
+                  TranslationY = new Constant(-4711) });
          AssertOutput(
             moveProgram,
 @"PROGRAM
 {
-   MOVE(4711, -4711);
-}");
-      }
-
-      [TestMethod]
-      public void NoOp_TEST()
-      {
-         var noOpProgram =
-            Program(new NoOp());
-         AssertOutput(
-            noOpProgram,
-@"PROGRAM
-{
-   ;
+   MOVE(4711, -4711)
 }");
       }
 
@@ -172,12 +161,12 @@ namespace MacroLanguage_TEST
       public void Pause_TEST()
       {
          var pauseProgram =
-            Program(new Pause { Duration = ConstantExpressions.Create(4711) });
+            Program(new Pause { Duration = new Constant(4711) });
          AssertOutput(
             pauseProgram,
 @"PROGRAM
 {
-   PAUSE(4711);
+   PAUSE(4711)
 }");
       }
 
@@ -185,12 +174,12 @@ namespace MacroLanguage_TEST
       public void Position_TEST()
       {
          var positionProgram = 
-            Program(new Position { X = ConstantExpressions.Create(4711), Y = ConstantExpressions.Create(-4711) });
+            Program(new Position { X = new Constant(4711), Y = new Constant(-4711) });
          AssertOutput(
             positionProgram,
 @"PROGRAM
 {
-   POSITION(4711, -4711);
+   POSITION(4711, -4711)
 }");
       }
 
@@ -209,13 +198,14 @@ namespace MacroLanguage_TEST
       public void If_TEST()
       {
          var ifProgram =
-            Program(new If { Expression = ConstantExpressions.Create(true), Body = new NoOp() });
+            Program(new If { Expression = new Constant(true), Body = new Block() });
          AssertOutput(
             ifProgram,
 @"PROGRAM
 {
    IF(True)
-      ;
+      {
+      }
 }");
       }
 
@@ -223,12 +213,36 @@ namespace MacroLanguage_TEST
       public void VariableAssignment_TEST()
       {
          var ifProgram =
-            Program(new VariableAssignment<bool> { Symbol = "variableName", Expression = ConstantExpressions.Create(true) });
+            Program(new VariableAssignment { Symbol = "variableName", Expression = new Constant(true) });
          AssertOutput(
             ifProgram,
 @"PROGRAM
 {
-   variableName = True;
+   variableName = True
+}");
+         ifProgram =
+            Program(new VariableAssignment { Symbol = "variableName", Expression = new Constant("moooo") });
+         AssertOutput(
+            ifProgram,
+@"PROGRAM
+{
+   variableName = ""moooo""
+}");
+         ifProgram =
+            Program(new VariableAssignment { Symbol = "variableName", Expression = new Constant(-4711) });
+         AssertOutput(
+            ifProgram,
+@"PROGRAM
+{
+   variableName = -4711
+}");
+         ifProgram =
+            Program(new VariableAssignment { Symbol = "variableName", Expression = new Constant(-4711.5) });
+         AssertOutput(
+            ifProgram,
+@"PROGRAM
+{
+   variableName = -4711.5
 }");
       }
 
@@ -251,6 +265,7 @@ namespace MacroLanguage_TEST
          var output = Print(Program);
          var parser = new ProgramParser();
          var parsedProgram = parser.Parse(output);
+         Assert.AreEqual(Program, parsedProgram);
          Assert.AreEqual(output, ExpectedOutput);
       }
 

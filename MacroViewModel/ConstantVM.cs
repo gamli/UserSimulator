@@ -7,30 +7,10 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class ConstantBooleanExpressionVM : BooleanExpressionBaseVM
+   public class ConstantVM : ExpressionBaseVM
    {
       [ExcludeFromCodeCoverage]
-      public ConstantBooleanExpressionVM(ConstantExpression<bool> Model)
-         : base(Model)
-      {
-         // nothing to do
-      }
-   }
-
-   public class ConstantStringExpressionVM : StringExpressionBaseVM
-   {
-      [ExcludeFromCodeCoverage]
-      public ConstantStringExpressionVM(ConstantExpression<string> Model)
-         : base(Model)
-      {
-         // nothing to do
-      }
-   }
-
-   public class ConstantIntegerExpressionVM : IntegerExpressionBaseVM
-   {
-      [ExcludeFromCodeCoverage]
-      public ConstantIntegerExpressionVM(ConstantExpression<int> Model)
+      public ConstantVM(Constant Model)
          : base(Model)
       {
          // nothing to do

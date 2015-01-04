@@ -9,13 +9,13 @@ namespace Macro
 {
    public class Move : StatementBase
    {
-      private ExpressionBase<int> _translationX;
+      private ExpressionBase _translationX;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase<int> TranslationX { get { return _translationX; } set { SetPropertyValue(ref _translationX, value); } }
+      public ExpressionBase TranslationX { get { return _translationX; } set { SetPropertyValue(ref _translationX, value); } }
 
-      private ExpressionBase<int> _translationY;
+      private ExpressionBase _translationY;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase<int> TranslationY { get { return _translationY; } set { SetPropertyValue(ref _translationY, value); } }
+      public ExpressionBase TranslationY { get { return _translationY; } set { SetPropertyValue(ref _translationY, value); } }
 
       public override void Accept(IVisitor Visitor)
       {
@@ -25,7 +25,7 @@ namespace Macro
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
          var otherMove = (Move)OtherMacro;
-         return TranslationX == otherMove.TranslationX && TranslationY == otherMove.TranslationY;
+         return TranslationX.Equals(otherMove.TranslationX) && TranslationY.Equals(otherMove.TranslationY);
       }
    }
 }

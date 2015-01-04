@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,11 +44,6 @@ namespace MacroLanguage
          DecreaseIndent();
          AppendNewLine();
          Append("}");
-      }
-
-      public void VisitNoOp(NoOp NoOp)
-      {
-         AppendSingleLineStatement("");
       }
 
       public void VisitForLoop(ForLoop ForLoop)
@@ -113,14 +109,16 @@ namespace MacroLanguage
          AppendFunctionCallStatement("LEFT_CLICK");
       }
 
-      public void VisitConstantExpression<T>(ConstantExpression<T> ConstantExpression)
+      public void VisitConstant(Constant Constant)
       {
-         var expressionValue = ConstantExpression.Value;
+         var value = Constant.Value;
 
-         if (expressionValue is string)
-            Append("\"" + expressionValue + "\"");
+         if (value is string)
+            Append("\"" + ((string)value).Replace("\"", "\\\"") + "\"");
+         else if (value is double)
+            Append(((double)value).ToString(CultureInfo.InvariantCulture));
          else
-            Append(expressionValue == null ? "null" : expressionValue.ToString());         
+            Append(value == null ? "null" : value.ToString());         
       }
       
       public void VisitIf(If If)
@@ -131,12 +129,11 @@ namespace MacroLanguage
          AppendBody(If);
       }
       
-      public void VisitVariableAssignment<T>(VariableAssignment<T> VariableAssignment)
+      public void VisitVariableAssignment(VariableAssignment VariableAssignment)
       {
          Append(VariableAssignment.Symbol);
          Append(AssignmentSymbol());
          VariableAssignment.Expression.Accept(this);
-         AppendSingleLineStatementDelimiter();
       }
 
       private static string AssignmentSymbol()
@@ -146,7 +143,7 @@ namespace MacroLanguage
 
       private void AppendFunctionCallStatement(string FunctionName, params MacroBase[] FunctionParameters)
       {
-         AppendSingleLineStatement(FunctionCall(FunctionName, FunctionParameters));
+         Append(FunctionCall(FunctionName, FunctionParameters));
       }
 
       private static string FunctionCall(string FunctionName, params MacroBase[] FunctionParameters)
@@ -159,17 +156,6 @@ namespace MacroLanguage
       private static string ParameterSeperator()
       {
          return ", ";
-      }
-
-      private void AppendSingleLineStatement(string StatementText)
-      {
-         Append(StatementText);
-         AppendSingleLineStatementDelimiter();
-      }
-
-      private void AppendSingleLineStatementDelimiter()
-      {
-         Append(";");
       }
 
       private void Append(string Text)

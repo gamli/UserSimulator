@@ -9,9 +9,9 @@ namespace Macro
 {
    public class If : StatementWithBodyBase
    {
-      private ExpressionBase<bool> _expression;
+      private ExpressionBase _expression;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase<bool> Expression { get { return _expression; } set { SetPropertyValue(ref _expression, value); } }
+      public ExpressionBase Expression { get { return _expression; } set { SetPropertyValue(ref _expression, value); } }
 
       public override void Accept(IVisitor Visitor)
       {

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Macro;
 using Piglet.Parser;
@@ -21,12 +23,18 @@ namespace MacroLanguage
       {
          try
          {
-            return (Program)_parser.Parse(ProgramText);
+            var program = _parser.Parse(ProgramText); 
+            return (Program)program;
          }
          catch(Piglet.Parser.ParseException E)
          {
             _parser = CreateParser();
             throw new ParseException(E.Message, E) { LineNumber = E.LexerState.CurrentLineNumber };
+         }
+         catch (Piglet.Lexer.LexerException E)
+         {
+            _parser = CreateParser();
+            throw new ParseException(E.Message, E) { LineNumber = E.LineNumber};
          }
       }
 
@@ -36,152 +44,196 @@ namespace MacroLanguage
       {
          var config = ParserConfigurator();
 
-         config.Rule()
-            .IsMadeUp.By("PROGRAM")
-            .Followed.By(Statement(config)).As("Body")
-            .WhenFound(O => new Program { Body = O.Body });
+
+         var program = config.CreateNonTerminal();
+         program.DebugName = "PROGRAM-Stmt";
+         var statement = config.CreateNonTerminal();
+         statement.DebugName = "stmt";
+         var expression = config.CreateNonTerminal();
+         expression.DebugName = "expr";
+
+         program
+            .AddProduction("PROGRAM", statement)
+            .SetReduceFunction(ReduceProgram);
+         ConfigureStatement(config, expression, statement);   
+         ConfigureExpression(config, expression, statement);
 
          return config.CreateParser();
       }
 
-      private static IRule Statement(IFluentParserConfigurator Config)
+      private static Program ReduceProgram(object[] ParseResults)
       {
-         var expression = Expression(Config);
-         var variableSymbol = VariableSymbol(Config);
-         var statement = Config.Rule();
-         statement
-            .IsMadeUp.By(Block(Config, statement))
-            .Or.By(LeftClick(Config))
-            .Or.By(ForLoop(Config, statement))
-            .Or.By(Move(Config))
-            .Or.By(NoOp(Config))
-            .Or.By(Pause(Config))
-            .Or.By(Position(Config))
-            .Or.By(If(Config, statement))
-            .Or.By(VariableAssignment(Config, expression, variableSymbol));
-         return statement;
+         return new Program { Body = (StatementBase)ParseResults[1] };
       }
 
-      private static IRule Block(IFluentParserConfigurator Config, IRule Statement)
+      private static void ConfigureExpression(IParserConfigurator<object> Config, INonTerminal<object> Expression, INonTerminal<object> Statement)
+      {
+         ReduceToSelf(Expression.AddProduction(ConstantBoolean(Config)));
+         ReduceToSelf(Expression.AddProduction(ConstantString(Config)));
+         ReduceToSelf(Expression.AddProduction(ConstantInteger(Config)));
+         ReduceToSelf(Expression.AddProduction(ConstantDouble(Config)));
+         ReduceToSelf(Expression.AddProduction(Windowshot(Config, Expression)));
+         //Expression.AddProduction(Statement);
+      }
+
+      private static void ConfigureStatement(IParserConfigurator<object> Config, INonTerminal<object> Expression, INonTerminal<object> Statement)
       {
 
-         var block = Config.Rule();
+         ReduceToSelf(Statement.AddProduction(Windowshot(Config, Expression)));
+
+         var variableSymbol = VariableSymbol(Config);
+         ReduceToSelf(Statement.AddProduction(Block(Config, Statement)));
+         ReduceToSelf(Statement.AddProduction(LeftClick(Config)));
+         ReduceToSelf(Statement.AddProduction(ForLoop(Config, Expression, Statement)));
+         ReduceToSelf(Statement.AddProduction(Move(Config, Expression)));
+         ReduceToSelf(Statement.AddProduction(Pause(Config, Expression)));
+         ReduceToSelf(Statement.AddProduction(Position(Config, Expression)));
+         ReduceToSelf(Statement.AddProduction(If(Config, Expression, Statement)));
+         ReduceToSelf(Statement.AddProduction(VariableAssignment(Config, Expression, variableSymbol)));
+      }
+
+      private static INonTerminal<object> Block(IParserConfigurator<object> Config, INonTerminal<object> Statement)
+      {
+         var statements = Config.CreateNonTerminal();
+         statements.DebugName = "block-stmts";
+         statements
+            .AddProduction(statements, Statement)
+            .SetReduceFunction(ReduceBlockStatementList);
+         statements
+            .AddProduction()
+            .SetReduceFunction(ReduceEmptyBlockStatementList);
+
+         var block = Config.CreateNonTerminal();
+         block.DebugName = "block-stmt";
          block
-            .IsMadeUp.By("{")
-            .Followed.ByListOf(Statement).As("Items").ThatIs.Optional
-            .Followed.By("}")
-            .WhenFound(
-               O =>
-               {
-                  var bock = new Block();
-                  if (O.Items != null)
-                     foreach (var bockItem in O.Items)
-                        bock.Items.Add(bockItem);
-                  return bock;
-               });
+            .AddProduction(BlockBegin(), statements, BlockEnd())
+            .SetReduceFunction(ReduceBlock);
 
          return block;
       }
 
-      private static IRule LeftClick(IFluentParserConfigurator Config)
+      private static string BlockBegin()
       {
-         var leftClick = Config.Rule();
+         return "{";
+      }
+
+      private static string BlockEnd()
+      {
+         return "}";
+      }
+
+      private static object ReduceBlock(object[] ParseResults)
+      {
+         var block = new Block();
+         foreach (var bockItem in (IEnumerable<StatementBase>)ParseResults[1])
+            block.Items.Add(bockItem);
+         return block;
+      }
+
+      private static object ReduceEmptyBlockStatementList(object[] ParseResults)
+      {
+         return new List<StatementBase>();
+      }
+
+      private static object ReduceBlockStatementList(object[] ParseResults)
+      {
+         return ((IEnumerable<StatementBase>)ParseResults[0]).Concat(new[] { (StatementBase)ParseResults[1] });
+      }
+
+      private static INonTerminal<object> LeftClick(IParserConfigurator<object> Config)
+      {
+         var leftClick = Config.CreateNonTerminal();
+         leftClick.DebugName = "LEFT_CLICK-stmt";
          leftClick
-            .IsMadeUp.By("LEFT_CLICK")
-            .Followed.By(EmptyParameterList())
-            .Followed.By(StatementEnd())
-            .WhenFound(O => new LeftClick());
+            .AddProduction("LEFT_CLICK", BeginParameterList(), EndParameterList())
+            .SetReduceFunction(ReduceLeftClick);
 
          return leftClick;
       }
 
-      private static IRule ForLoop(IFluentParserConfigurator Config, IRule Statement)
+      private static LeftClick ReduceLeftClick(object[] ParseResults)
       {
-         var forLoop = Config.Rule();
+         return new LeftClick();
+      }
+
+      private static INonTerminal<object> ForLoop(IParserConfigurator<object> Config, INonTerminal<object> Expression, INonTerminal<object> Statement)
+      {
+         var forLoop = Config.CreateNonTerminal();
+         forLoop.DebugName = "FOR-stmt";
          forLoop
-            .IsMadeUp.By("FOR")
-            .Followed.By(BeginParameterList())
-            .Followed.By(IntegerExpression(Config)).As("RepetitionCount")
-            .Followed.By(EndParameterList())
-            .Followed.By(Statement).As("Body")
-            .WhenFound(O => new ForLoop { RepetitionCount = O.RepetitionCount, Body = O.Body });
+            .AddProduction("FOR", BeginParameterList(), Expression, EndParameterList(), Statement)
+            .SetReduceFunction(ReduceForLoop);
 
          return forLoop;
       }
 
-      private static IRule Move(IFluentParserConfigurator Config)
+      private static ForLoop ReduceForLoop(object[] ParseResults)
       {
-         var move = Config.Rule();
+         return new ForLoop { RepetitionCount = (ExpressionBase)ParseResults[2], Body = (StatementBase)ParseResults[4] };
+      }
+
+      private static INonTerminal<object> Move(IParserConfigurator<object> Config, INonTerminal<object> Expression)
+      {
+         var move = Config.CreateNonTerminal();
+         move.DebugName = "MOVE-stmt";
          move
-            .IsMadeUp.By("MOVE")
-            .Followed.By(BeginParameterList())
-            .Followed.By(IntegerExpression(Config)).As("TranslationX")
-            .Followed.By(ParameterSeperator())
-            .Followed.By(IntegerExpression(Config)).As("TranslationY")
-            .Followed.By(EndParameterList())
-            .Followed.By(StatementEnd())
-            .WhenFound(O => new Move { TranslationX = O.TranslationX, TranslationY = O.TranslationY });
+            .AddProduction("MOVE", BeginParameterList(), Expression, ParameterSeperator(), Expression, EndParameterList())
+            .SetReduceFunction(ReduceMove);
 
          return move;
       }
 
-      private static IRule NoOp(IFluentParserConfigurator Config)
+      private static Move ReduceMove(object[] ParseResults)
       {
-         var noOp = Config.Rule();
-         noOp
-            .IsMadeUp.By(StatementEnd())
-            .WhenFound(O => new NoOp());
-
-         return noOp;
+         return new Move { TranslationX = (ExpressionBase)ParseResults[2], TranslationY = (ExpressionBase)ParseResults[4] };
       }
 
-      private static IRule Pause(IFluentParserConfigurator Config)
+      private static INonTerminal<object> Pause(IParserConfigurator<object> Config, INonTerminal<object> Expression)
       {
-         var pause = Config.Rule();
+         var pause = Config.CreateNonTerminal();
+         pause.DebugName = "PAUSE-stmt";
          pause
-            .IsMadeUp.By("PAUSE")
-            .Followed.By(BeginParameterList())
-            .Followed.By(IntegerExpression(Config)).As("Duration")
-            .Followed.By(EndParameterList())
-            .Followed.By(StatementEnd())
-            .WhenFound(O => new Pause { Duration = O.Duration });
+            .AddProduction("PAUSE", BeginParameterList(), Expression, EndParameterList())
+            .SetReduceFunction(ReducePause);
 
          return pause;
       }
 
-      private static IRule Position(IFluentParserConfigurator Config)
+      private static Pause ReducePause(object[] ParseResults)
       {
-         var position = Config.Rule();
+         return new Pause { Duration = (ExpressionBase)ParseResults[2] };
+      }
+
+      private static INonTerminal<object> Position(IParserConfigurator<object> Config, INonTerminal<object> Expression)
+      {
+         var position = Config.CreateNonTerminal();
+         position.DebugName = "POSITION-stmt";
          position
-            .IsMadeUp.By("POSITION")
-            .Followed.By(BeginParameterList())
-            .Followed.By(IntegerExpression(Config)).As("X")
-            .Followed.By(ParameterSeperator())
-            .Followed.By(IntegerExpression(Config)).As("Y")
-            .Followed.By(EndParameterList())
-            .Followed.By(StatementEnd())
-            .WhenFound(O => new Position { X = O.X, Y = O.Y });
+            .AddProduction("POSITION", BeginParameterList(), Expression, ParameterSeperator(), Expression, EndParameterList())
+            .SetReduceFunction(ReducePosition);
 
          return position;
       }
 
-      private static IRule VariableAssignment(IFluentParserConfigurator Config, IRule Expression, IExpressionConfigurator VariableSymbol)
+      private static Position ReducePosition(object[] ParseResults)
       {
-         var variableAssignment = Config.Rule();
+         return new Position { X = (ExpressionBase)ParseResults[2], Y = (ExpressionBase)ParseResults[4] };
+      }
+
+      private static INonTerminal<object> VariableAssignment(IParserConfigurator<object> Config, INonTerminal<object> Expression, ITerminal<object> VariableSymbol)
+      {
+         var variableAssignment = Config.CreateNonTerminal();
+         variableAssignment.DebugName = "variable assignment-stmt";
          variableAssignment
-            .IsMadeUp.By(VariableSymbol).As("Symbol")
-            .Followed.By(AssignmentSymbol())
-            .Followed.By(Expression).As("Expression")
-            .Followed.By(StatementEnd())
-            .WhenFound(
-               O =>
-                  {
-                     var assignment = Activator.CreateInstance(typeof(VariableAssignment<>).MakeGenericType(O.Expression.GetType().GetGenericArguments()[0]));
-                     assignment.Symbol = O.Symbol;
-                     assignment.Expression = O.Expression;
-                     return assignment;
-                  });
+            .AddProduction(VariableSymbol, "=", Expression)
+            .SetReduceFunction(ReduceVariableAssignment);
+
          return variableAssignment;
+      }
+
+      private static VariableAssignment ReduceVariableAssignment(object[] ParseResults)
+      {
+         return new VariableAssignment { Symbol = (string)ParseResults[0], Expression = (ExpressionBase)ParseResults[2] };
       }
 
       private static string AssignmentSymbol()
@@ -189,117 +241,125 @@ namespace MacroLanguage
          return "=";
       }
 
-      private static IRule Expression(IFluentParserConfigurator Config)
+      private static ITerminal<object> ConstantBoolean(IParserConfigurator<object> Config)
       {
-         var expression = Config.Rule();
-         expression
-            .IsMadeUp.By(BooleanExpression(Config))
-            .Or.By(StringExpression(Config))
-            .Or.By(IntegerExpression(Config));
-
-         return expression;
+         var constant = Config.CreateTerminal("(True|False)", O => ReduceConstantBoolean(O), true);
+         constant.DebugName = "const bool-expr";
+         return constant;
       }
 
-      private static IRule Windowshot(IFluentParserConfigurator Config)
+      private static Constant ReduceConstantBoolean(string ParseResults)
       {
-         var windowshot = Config.Rule();
+         return new Constant(bool.Parse(ParseResults));
+      }
+
+      private static ITerminal<object> ConstantString(IParserConfigurator<object> Config)
+      {
+         var constant = Config.CreateTerminal("\"([^\"]|\\\\\")*\"|null", ReduceConstantString, true);
+         constant.DebugName = "const string-expr";
+         return constant;
+      }
+
+      private static Constant ReduceConstantString(string ParseResults)
+      {
+         if (ParseResults.Equals("null"))
+            return new Constant(null);
+         return new Constant(ParseResults.Substring(1, ParseResults.Length - 2).Replace("\\\"", "\""));
+      }
+
+      private static ITerminal<object> ConstantInteger(IParserConfigurator<object> Config)
+      {
+         var constant = Config.CreateTerminal(@"-?\d+", ReduceConstantInteger, true);
+         constant.DebugName = "const int-expr";
+         return constant;
+      }
+
+      private static Constant ReduceConstantInteger(string ParseResults)
+      {
+         return new Constant(int.Parse(ParseResults));
+      }
+
+      private static ITerminal<object> ConstantDouble(IParserConfigurator<object> Config)
+      {
+         var constant = Config.CreateTerminal(@"-?\d*\.\d+", ReduceConstantDouble, true);
+         constant.DebugName = "const double-expr";
+         return constant;
+      }
+
+      private static Constant ReduceConstantDouble(string ParseResults)
+      {
+         return new Constant(double.Parse(ParseResults, CultureInfo.InvariantCulture));
+      }
+
+      private static INonTerminal<object> Windowshot(IParserConfigurator<object> Config, INonTerminal<object> Expression)
+      {
+         var windowshot = Config.CreateNonTerminal();
+         windowshot.DebugName = "WINDOWSHOT-expr";
          windowshot
-            .IsMadeUp.By("WINDOWSHOT")
-            .Followed.By(BeginParameterList())
-            .Followed.By(IntegerExpression(Config)).As("PositionX")
-            .Followed.By(ParameterSeperator())
-            .Followed.By(IntegerExpression(Config)).As("PositionY")
-            .Followed.By(ParameterSeperator())
-            .Followed.By(StringExpression(Config)).As("ImageUrl")
-            .Followed.By(EndParameterList())
-            .WhenFound(O => new Windowshot { PositionX = O.PositionX, PositionY = O.PositionY, ImageUrl = O.ImageUrl });
+            .AddProduction("WINDOWSHOT",
+               BeginParameterList(), 
+               Expression, ParameterSeperator(), 
+               Expression, ParameterSeperator(), 
+               Expression, 
+               EndParameterList())
+            .SetReduceFunction(ReduceWindowshot);
+
+
          return windowshot;
       }
 
-      private static IRule BooleanExpression(IFluentParserConfigurator Config)
+      private static Windowshot ReduceWindowshot(object[] ParseResults)
       {
-         var booleanExpression = Config.Rule();
-         booleanExpression
-            .IsMadeUp.By(ConstantBooleanExpression(Config))
-            .Or.By(Windowshot(Config));
-         return booleanExpression;
-      }
-      private static IRule ConstantBooleanExpression(IFluentParserConfigurator Config)
-      {
-         var boolExpression = Config.Rule();
-         boolExpression
-            .IsMadeUp.By("True").WhenFound(_ => new ConstantExpression<bool> { Value = true })
-            .Or.By("False").WhenFound(_ => new ConstantExpression<bool> { Value = false });
-         return boolExpression;
+         return 
+            new Windowshot
+               {
+                  PositionX = (ExpressionBase)ParseResults[2],
+                  PositionY = (ExpressionBase)ParseResults[4],
+                  ImageUrl = (ExpressionBase)ParseResults[6]
+               };
       }
 
-      private static IRule StringExpression(IFluentParserConfigurator Config)
+      private static ITerminal<object> VariableSymbol(IParserConfigurator<object> Config)
       {
-         var stringExpression = Config.Rule();
-         stringExpression
-            .IsMadeUp.By(ConstantStringExpression(Config));
-         return stringExpression;
-      }
-      private static IRule ConstantStringExpression(IFluentParserConfigurator Config)
-      {
-         var stringConstant = Config.Rule();
-         stringConstant
-            .IsMadeUp.By(Config.QuotedString).As("Value")
-            .WhenFound(O => new ConstantExpression<string> { Value = O.Value })
-            .Or.By("null")
-            .WhenFound(O => new ConstantExpression<string> { Value = null });
-         return stringConstant;
+         var constant = Config.CreateTerminal(@"[a-zA-Z][a-zA-Z0-9]*", ReduceVariableSymbol);
+         constant.DebugName = "variable-smbl";
+         return constant;
       }
 
-      private static IRule IntegerExpression(IFluentParserConfigurator Config)
+      private static string ReduceVariableSymbol(string ParseResults)
       {
-         var integerExpression = Config.Rule();
-         integerExpression
-            .IsMadeUp.By(ConstantIntegerExpression(Config));
-         return integerExpression;
-      }
-      private static IRule ConstantIntegerExpression(IFluentParserConfigurator Config)
-      {
-         var integerConstant = Config.Rule();
-         integerConstant
-            .IsMadeUp.By<int>().As("Value")
-            .WhenFound(O => new ConstantExpression<int> { Value = O.Value })
-            .Or.By("-").Followed.By<int>().As("Value")
-            .WhenFound(O => new ConstantExpression<int> { Value = -O.Value });
-         return integerConstant;
+         return ParseResults;
       }
 
-      private static IExpressionConfigurator VariableSymbol(IFluentParserConfigurator Config)
+      private static INonTerminal<object> If(IParserConfigurator<object> Config, INonTerminal<object> Expression, INonTerminal<object> Statement)
       {
-         var symbol = Config.Expression();
-         symbol
-            .ThatMatches(@"[a-zA-Z0-9]+")
-            .AndReturns(Symbol => Symbol);
-         return symbol;
-      }
-
-      private static IRule If(IFluentParserConfigurator Config, IRule Statement)
-      {
-         var ifStatement = Config.Rule();
+         var ifStatement = Config.CreateNonTerminal();
+         ifStatement.DebugName = "if-stmt";
          ifStatement
-            .IsMadeUp.By("IF")
-            .Followed.By(BeginParameterList())
-            .Followed.By(BooleanExpression(Config)).As("Expression")
-            .Followed.By(EndParameterList())
-            .Followed.By(Statement).As("Body")
-            .WhenFound(O =>
-               new If { Expression = O.Expression, Body = O.Body });
+            .AddProduction("IF", BeginParameterList(), Expression, EndParameterList(), Statement)
+            .SetReduceFunction(ReduceIf);
+
          return ifStatement;
       }
 
-      private static IFluentParserConfigurator ParserConfigurator()
+      private static If ReduceIf(object[] ParseResults)
       {
-         return ParserFactory.Fluent();
+         return new If { Expression = (ExpressionBase)ParseResults[2], Body = (StatementBase)ParseResults[4] };
       }
 
-      private static string StatementEnd()
+      private static void ReduceToSelf(IProduction<object> Production)
       {
-         return ";";
+         Production.SetReduceFunction(ReduceToSelf);
+      }
+
+      private static object ReduceToSelf(object[] ParseResults)
+      {
+         return ParseResults[0];
+      }
+
+      private static IParserConfigurator<object> ParserConfigurator()
+      {
+         return ParserFactory.Configure<object>();
       }
 
       private static string EmptyParameterList()

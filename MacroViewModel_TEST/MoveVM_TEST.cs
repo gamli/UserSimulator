@@ -11,13 +11,13 @@ namespace MacroViewModel_TEST
       [TestMethod]
       public void TranslationVM_Property_TEST()
       {
-         var move = new Move { TranslationX = ConstantExpressions.Create(4711), TranslationY = ConstantExpressions.Create(-4711) };
+         var move = new Move { TranslationX = new Constant(4711), TranslationY = new Constant(-4711) };
          using (var moveVM = new MoveVM(move))
          {
             Assert.AreEqual(move.TranslationX, moveVM.TranslationXVM.Model);
             Assert.AreEqual(move.TranslationY, moveVM.TranslationYVM.Model);
-            move.TranslationX = ConstantExpressions.Create(1147);
-            move.TranslationY = ConstantExpressions.Create(-1147);
+            move.TranslationX = new Constant(1147);
+            move.TranslationY = new Constant(-1147);
             Assert.AreEqual(move.TranslationX, moveVM.TranslationXVM.Model);
             Assert.AreEqual(move.TranslationY, moveVM.TranslationYVM.Model);
          }

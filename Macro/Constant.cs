@@ -7,28 +7,30 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public static class ConstantExpressions
-   {  
-      public static ConstantExpression<T> Create<T>(T Value)
-      {
-         return new ConstantExpression<T> { Value = Value };
-      }
-   }
-
-   public class ConstantExpression<T> : ExpressionBase<T>
+   public class Constant : ExpressionBase
    {
-      private T _value;
+      private object _value;
       [ExcludeFromCodeCoverage]
-      public T Value { get { return _value; } set { SetPropertyValue(ref _value, value); } }
+      public object Value { get { return _value; } set { SetPropertyValue(ref _value, value); } }
+
+      public Constant()
+      {
+         // nothing to do
+      }
+
+      public Constant(object Value)
+      {
+         this.Value = Value;
+      }
 
       public override void Accept(IVisitor Visitor)
       {
-         Visitor.VisitConstantExpression(this);
+         Visitor.VisitConstant(this);
       }
 
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
-         var otherConstantExpression = (ConstantExpression<T>)OtherMacro;
+         var otherConstantExpression = (Constant)OtherMacro;
          return Value == null ? otherConstantExpression.Value == null : Value.Equals(otherConstantExpression.Value);
       }
    }

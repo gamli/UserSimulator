@@ -48,14 +48,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConstantIntegerExpressionView.xaml.cs">
-      <DependentUpon>ConstantIntegerExpressionView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ConstantStringExpressionView.xaml.cs">
-      <DependentUpon>ConstantStringExpressionView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ConstantBooleanExpressionView.xaml.cs">
-      <DependentUpon>ConstantBooleanExpressionView.xaml</DependentUpon>
+    <Compile Include="ConstantView.xaml.cs">
+      <DependentUpon>ConstantView.xaml</DependentUpon>
     </Compile>
     <Compile Include="IfView.xaml.cs">
       <DependentUpon>IfView.xaml</DependentUpon>
@@ -70,15 +64,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ConstantIntegerExpressionView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ConstantStringExpressionView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ConstantBooleanExpressionView.xaml">
+    <Page Include="ConstantView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -103,10 +89,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MoveView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="NoOpView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -139,9 +121,6 @@
     </Compile>
     <Compile Include="MoveView.xaml.cs">
       <DependentUpon>MoveView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="NoOpView.xaml.cs">
-      <DependentUpon>NoOpView.xaml</DependentUpon>
     </Compile>
     <Compile Include="PauseView.xaml.cs">
       <DependentUpon>PauseView.xaml</DependentUpon>

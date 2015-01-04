@@ -11,19 +11,18 @@ namespace MacroViewModel_TEST
       [TestMethod]
       public void ExpressionVM_Property_TEST()
       {
-         ExpressionVM_Property_TEST<bool, BooleanVariableAssignmentVM>(true, false);
-         ExpressionVM_Property_TEST<string, StringVariableAssignmentVM>("variableName1", "variableName2");
-         ExpressionVM_Property_TEST<int, IntegerVariableAssignmentVM>(4711, -4711);
+         ExpressionVM_Property_TEST(true, false);
+         ExpressionVM_Property_TEST("variableName1", "variableName2");
+         ExpressionVM_Property_TEST(4711, -4711);
       }
-      private void ExpressionVM_Property_TEST<T, TVM>(T Value1, T Value2)
-         where TVM : VariableAssignmentBaseVM<T>
+      private void ExpressionVM_Property_TEST<T>(T Value1, T Value2)
       {
-         var boolAssignment = new VariableAssignment<T> { Symbol = "variableName", Expression = ConstantExpressions.Create(Value1) };
-         using (var assignmentVM = (VariableAssignmentBaseVM<T>)typeof(TVM).GetConstructors()[0].Invoke(new []{ boolAssignment }))
+         var assignment = new VariableAssignment { Symbol = "variableName", Expression = new Constant(Value1) };
+         using (var assignmentVM = new VariableAssignmentVM(assignment))
          {
-            Assert.AreEqual(boolAssignment.Expression, assignmentVM.ExpressionVM.Model);
-            boolAssignment.Expression = ConstantExpressions.Create(Value2);
-            Assert.AreEqual(boolAssignment.Expression, assignmentVM.ExpressionVM.Model);
+            Assert.AreEqual(assignment.Expression, assignmentVM.ExpressionVM.Model);
+            assignment.Expression = new Constant(Value2);
+            Assert.AreEqual(assignment.Expression, assignmentVM.ExpressionVM.Model);
          }
       }
    }

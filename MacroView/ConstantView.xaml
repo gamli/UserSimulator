@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="MacroView.ConstantView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:macroview="clr-namespace:MacroView"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+   <UserControl.Resources>
+      <macroview:NumericConverter x:Key="numericConverter"/>
+      <DataTemplate x:Key="booleanTemplate" DataType="{x:Type system:Boolean}">
+         <CheckBox IsChecked="{Binding Value}" VerticalAlignment="Center"/>
+      </DataTemplate>
+      <DataTemplate x:Key="stringTemplate" DataType="{x:Type system:String}">
+         <StackPanel Orientation="Horizontal">
+            <TextBlock Text="&quot;"/>
+            <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent"/>
+            <TextBlock Text="&quot;"/>
+         </StackPanel>
+      </DataTemplate>
+      <DataTemplate x:Key="integerTemplate" DataType="{x:Type system:Int32}">
+         <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
+      </DataTemplate>
+      <DataTemplate x:Key="doubleTemplate" DataType="{x:Type system:Double}">
+         <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
+      </DataTemplate>
+   </UserControl.Resources>
+   <Grid Background="Transparent">
+      <Grid.Resources>
+         <macroview:ConstantViewTemplateSelector x:Key="contentTemplateSelector"/>
+      </Grid.Resources>
+      <ContentPresenter Content="{Binding Model}" ContentTemplateSelector="{StaticResource contentTemplateSelector}"/>
+   </Grid>
+</UserControl>

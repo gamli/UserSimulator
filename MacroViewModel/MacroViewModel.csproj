@@ -56,7 +56,6 @@
     <Compile Include="MacroViewModelFactory.cs" />
     <Compile Include="StatementWithBodyBaseVM.cs" />
     <Compile Include="MoveVM.cs" />
-    <Compile Include="NoOpVM.cs" />
     <Compile Include="PauseVM.cs" />
     <Compile Include="PositionVM.cs" />
     <Compile Include="ProgramVM.cs" />

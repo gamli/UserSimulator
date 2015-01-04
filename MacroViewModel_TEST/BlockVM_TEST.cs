@@ -13,8 +13,8 @@ namespace MacroViewModel_TEST
       public void Items_Property_TEST()
       {
          var block = new Block();
-         foreach(var noOp in Enumerable.Repeat(0, 8).Select(DummyParameter => new NoOp()))
-            block.Items.Add(noOp);
+         foreach(var childBlock in Enumerable.Repeat(0, 8).Select(DummyParameter => new Block()))
+            block.Items.Add(childBlock);
          using(var blockVM = new BlockVM(block))
          {
             Assert.AreEqual(block.Items.Count, blockVM.ItemsVM.Count);

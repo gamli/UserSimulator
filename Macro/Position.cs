@@ -9,13 +9,13 @@ namespace Macro
 {
    public class Position : StatementBase
    {
-      private ExpressionBase<int> _x;
+      private ExpressionBase _x;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase<int> X { get { return _x; } set { SetPropertyValue(ref _x, value); } }
+      public ExpressionBase X { get { return _x; } set { SetPropertyValue(ref _x, value); } }
 
-      private ExpressionBase<int> _y;
+      private ExpressionBase _y;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase<int> Y { get { return _y; } set { SetPropertyValue(ref _y, value); } }
+      public ExpressionBase Y { get { return _y; } set { SetPropertyValue(ref _y, value); } }
 
       public override void Accept(IVisitor Visitor)
       {
@@ -25,7 +25,7 @@ namespace Macro
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
          var otherPosition = (Position)OtherMacro;
-         return X == otherPosition.X && Y == otherPosition.Y;
+         return X.Equals(otherPosition.X) && Y.Equals(otherPosition.Y);
       }
    }
 }

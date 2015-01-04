@@ -52,7 +52,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Block_TEST.cs" />
-    <Compile Include="NoOp_TEST.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MockVisitor.cs" />
     <Compile Include="Click_TEST.cs" />
