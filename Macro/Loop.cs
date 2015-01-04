@@ -11,11 +11,11 @@ namespace Macro
    {
       private ExpressionBase _condition;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase Condition { get { return _condition; } set { SetPropertyValue(ref _condition, value); } }
+      public ExpressionBase Condition { get { return _condition; } set { SetPropertyValue(ref _condition, value, 0); } }
 
       private ExpressionBase _body;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase Body { get { return _body; } set { SetPropertyValue(ref _body, value); } }
+      public ExpressionBase Body { get { return _body; } set { SetPropertyValue(ref _body, value, 1); } }
 
       public override void Accept(IVisitor Visitor)
       {

@@ -11,15 +11,15 @@ namespace Macro
    {
       private ExpressionBase _condition;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase Condition { get { return _condition; } set { SetPropertyValue(ref _condition, value); } }
+      public ExpressionBase Condition { get { return _condition; } set { SetPropertyValue(ref _condition, value, 0); } }
 
       private ExpressionBase _consequent;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase Consequent { get { return _alternative; } set { SetPropertyValue(ref _alternative, value); } }
+      public ExpressionBase Consequent { get { return _consequent; } set { SetPropertyValue(ref _consequent, value, 1); } }
 
       private ExpressionBase _alternative;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase Alternative { get { return _alternative; } set { SetPropertyValue(ref _alternative, value); } }
+      public ExpressionBase Alternative { get { return _alternative; } set { SetPropertyValue(ref _alternative, value, 2); } }
 
       public If()
       {

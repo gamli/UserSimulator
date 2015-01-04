@@ -9,10 +9,10 @@ namespace Macro
    public class Definition : SpecialFormBase
    {
       private Symbol _symbol;
-      public Symbol Symbol { get { return _symbol; } set { SetPropertyValue(ref _symbol, value); } }
+      public Symbol Symbol { get { return _symbol; } set { SetPropertyValue(ref _symbol, value, 0); } }
 
       private ExpressionBase _expression;
-      public ExpressionBase Expression { get { return _expression; } set { SetPropertyValue(ref _expression, value); } }
+      public ExpressionBase Expression { get { return _expression; } set { SetPropertyValue(ref _expression, value, 1); } }
 
       public Definition()
       {

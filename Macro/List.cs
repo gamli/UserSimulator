@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,6 +42,15 @@ namespace Macro
       {
          var otherList = (List)OtherMacro;
          return Expressions.SequenceEqual(otherList.Expressions);
+      }
+
+      protected bool SetPropertyValue<TProperty>(ref TProperty BackingField, TProperty Value, int ListIndex, [CallerMemberName]string PropertyName = null)
+         where TProperty : ExpressionBase
+      {
+         var valueChanged = base.SetPropertyValue(ref BackingField, Value, PropertyName);
+         if (valueChanged)
+            Expressions[ListIndex] = Value;
+         return valueChanged;
       }
    }
 }
