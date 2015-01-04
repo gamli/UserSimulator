@@ -225,7 +225,7 @@ namespace MacroLanguage
          var variableAssignment = Config.CreateNonTerminal();
          variableAssignment.DebugName = "variable assignment-stmt";
          variableAssignment
-            .AddProduction(VariableSymbol, "=", Expression)
+            .AddProduction(VariableSymbol, AssignmentSymbol(), Expression)
             .SetReduceFunction(ReduceVariableAssignment);
 
          return variableAssignment;
@@ -360,11 +360,6 @@ namespace MacroLanguage
       private static IParserConfigurator<object> ParserConfigurator()
       {
          return ParserFactory.Configure<object>();
-      }
-
-      private static string EmptyParameterList()
-      {
-         return BeginParameterList() + EndParameterList();
       }
 
       private static string BeginParameterList()

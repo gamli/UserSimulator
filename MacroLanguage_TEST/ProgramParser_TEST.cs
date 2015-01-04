@@ -158,9 +158,19 @@ namespace MacroLanguage_TEST
 
          try
          {
-            _parser.Parse("");
+            _parser.Parse("PROGRAM");
             Assert.Fail();
          }catch(ParseException)
+         {
+            // everything ok
+         }
+
+         try
+         {
+            _parser.Parse(";");
+            Assert.Fail();
+         }
+         catch (ParseException)
          {
             // everything ok
          }

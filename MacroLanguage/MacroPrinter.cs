@@ -149,7 +149,7 @@ namespace MacroLanguage
       private static string FunctionCall(string FunctionName, params MacroBase[] FunctionParameters)
       {
          var printedFunctionParameters =
-            FunctionParameters.Select(Param => Param == null ? "null" : new MacroPrinter(Param).Print());
+            FunctionParameters.Select(Param => new MacroPrinter(Param).Print());
          return FunctionName + "(" + string.Join(ParameterSeperator(), printedFunctionParameters) + ")";
       }
 

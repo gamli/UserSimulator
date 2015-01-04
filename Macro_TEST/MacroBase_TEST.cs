@@ -34,9 +34,23 @@ namespace Macro_TEST
          Assert.IsFalse(macroChangedFired);
       }
 
+      [TestMethod]
+      public void Equals_TEST()
+      {
+         var mockStatement1 = new MockStatementWithMacroProperty { SomeProperty = true, Body = new Block() };
+         Assert.IsFalse(mockStatement1.Equals(null));
+         Assert.AreNotEqual(mockStatement1, 4711);
+         var mockStatement2 = new MockStatementWithMacroProperty { SomeProperty = false, Body = new Block() };
+         Assert.AreNotEqual(mockStatement1, mockStatement2);
+         mockStatement1.SomeProperty = false;
+         Assert.AreEqual(mockStatement1, mockStatement2);
+      }
+
       private class MockStatementWithMacroProperty : StatementWithBodyBase
       {
-         // nothing to add - base class's  Body is enough
+         private bool _someProperty;
+         [ExcludeFromCodeCoverage]
+         public bool SomeProperty { get { return _someProperty; } set { SetPropertyValue(ref _someProperty, value); } }
 
          [ExcludeFromCodeCoverage]
          public override void Accept(IVisitor Visitor)
@@ -44,10 +58,9 @@ namespace Macro_TEST
             throw new NotImplementedException();
          }
 
-         [ExcludeFromCodeCoverage]
          protected override bool MacroEquals(MacroBase OtherMacro)
          {
-            throw new NotImplementedException();
+            return SomeProperty == ((MockStatementWithMacroProperty)OtherMacro).SomeProperty && base.BodyEquals((MockStatementWithMacroProperty)OtherMacro);
          }
       }
    }
