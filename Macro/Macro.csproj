@@ -40,22 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Block.cs" />
-    <Compile Include="Click.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="ExpressionBase.cs" />
-    <Compile Include="ForLoop.cs" />
+    <Compile Include="Loop.cs" />
+    <Compile Include="FunctionCall.cs" />
     <Compile Include="If.cs" />
-    <Compile Include="StatementBase.cs" />
-    <Compile Include="VariableAssignment.cs" />
-    <Compile Include="Windowshot.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="List.cs" />
+    <Compile Include="SpecialFormBase.cs" />
+    <Compile Include="Symbol.cs" />
+    <Compile Include="Definition.cs" />
     <Compile Include="IVisitor.cs" />
     <Compile Include="MacroBase.cs" />
-    <Compile Include="Move.cs" />
-    <Compile Include="Pause.cs" />
-    <Compile Include="Position.cs" />
-    <Compile Include="ProgramCloner.cs" />
+    <Compile Include="MacroCloner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

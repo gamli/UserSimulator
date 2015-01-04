@@ -54,17 +54,11 @@
     <Compile Include="Block_TEST.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MockVisitor.cs" />
-    <Compile Include="Click_TEST.cs" />
-    <Compile Include="ForLoop_TEST.cs" />
+    <Compile Include="Loop_TEST.cs" />
     <Compile Include="If_TEST.cs" />
     <Compile Include="Constant_TEST.cs" />
     <Compile Include="MacroBase_TEST.cs" />
-    <Compile Include="VariableAssignment_TEST.cs" />
-    <Compile Include="WindowshotExpression_TEST.cs" />
-    <Compile Include="Move_TEST.cs" />
-    <Compile Include="Pause_TEST.cs" />
-    <Compile Include="Position_TEST.cs" />
-    <Compile Include="Program_TEST.cs" />
+    <Compile Include="Definition_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

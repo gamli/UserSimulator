@@ -6,23 +6,32 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class VariableAssignment : StatementBase
+   public class Definition : SpecialFormBase
    {
-      private string _symbol;
-      public string Symbol { get { return _symbol; } set { SetPropertyValue(ref _symbol, value); } }
+      private Symbol _symbol;
+      public Symbol Symbol { get { return _symbol; } set { SetPropertyValue(ref _symbol, value); } }
 
       private ExpressionBase _expression;
       public ExpressionBase Expression { get { return _expression; } set { SetPropertyValue(ref _expression, value); } }
 
+      public Definition()
+      {
+         Expressions.CollectionChanged +=
+            (Sender, Arsg) => 
+               {
+                  Symbol = (Symbol)Expressions[0];
+                  Expression = Expressions[1];
+               };
+      }
 
       public override void Accept(IVisitor Visitor)
       {
-          Visitor.VisitVariableAssignment(this);
+          Visitor.VisitDefinition(this);
       }
 
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
-         var other = (VariableAssignment)OtherMacro;
+         var other = (Definition)OtherMacro;
          return
             Symbol.Equals(other.Symbol) &&
             Expression.Equals(other.Expression);

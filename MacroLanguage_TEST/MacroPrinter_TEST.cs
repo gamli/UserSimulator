@@ -51,7 +51,7 @@ namespace MacroLanguage_TEST
       public void ForLoop_TEST()
       {
          var emptyForLoopProgram =
-            Program(new ForLoop { RepetitionCount = new Constant(4711), Body = new Block() });
+            Program(new Loop { Body = new Constant(4711), Body = new Block() });
          AssertOutput(
             emptyForLoopProgram,
 @"PROGRAM
@@ -61,7 +61,7 @@ namespace MacroLanguage_TEST
       }
 }");
          var forLoopWithBlockProgram =
-            Program(new ForLoop { RepetitionCount = new Constant(4711), Body = new Block { } });
+            Program(new Loop { Body = new Constant(4711), Body = new Block { } });
          AssertOutput(
             forLoopWithBlockProgram,
 @"PROGRAM
@@ -79,14 +79,14 @@ namespace MacroLanguage_TEST
             Program(
                new If
                {
-                  Expression = 
+                  Condition = 
                      new Windowshot 
                         { 
                            PositionX = new Constant(4711), 
                            PositionY = new Constant(-4711), 
                            ImageUrl = new Constant("nonExisting\"TestImage")
                         },
-                  Body = new Block()
+                  Alternative = new Block()
                });
          AssertOutput(
             windowshotProgram,
@@ -100,14 +100,14 @@ namespace MacroLanguage_TEST
             Program(
                new If
                {
-                  Expression = 
+                  Condition = 
                      new Windowshot 
                         { 
                            PositionX = new Constant(4711), 
                            PositionY = new Constant(-4711), 
                            ImageUrl = new Constant(null)
                         },
-                  Body = new Block()
+                  Alternative = new Block()
                });
          AssertOutput(
             windowshotProgram,
@@ -121,14 +121,14 @@ namespace MacroLanguage_TEST
             Program(
                new If
                {
-                  Expression =
+                  Condition =
                      new Windowshot
                      {
                         PositionX = new Constant(4711),
                         PositionY = new Constant(-4711),
                         ImageUrl = new Constant(null)
                      },
-                  Body = new Block()
+                  Alternative = new Block()
                });
          AssertOutput(
             windowshotProgram,
@@ -198,7 +198,7 @@ namespace MacroLanguage_TEST
       public void If_TEST()
       {
          var ifProgram =
-            Program(new If { Expression = new Constant(true), Body = new Block() });
+            Program(new If { Condition = new Constant(true), Alternative = new Block() });
          AssertOutput(
             ifProgram,
 @"PROGRAM
@@ -213,7 +213,7 @@ namespace MacroLanguage_TEST
       public void VariableAssignment_TEST()
       {
          var ifProgram =
-            Program(new VariableAssignment { Symbol = "variableName", Expression = new Constant(true) });
+            Program(new Definition { Symbol = "variableName", Expression = new Constant(true) });
          AssertOutput(
             ifProgram,
 @"PROGRAM
@@ -221,7 +221,7 @@ namespace MacroLanguage_TEST
    variableName = True
 }");
          ifProgram =
-            Program(new VariableAssignment { Symbol = "variableName", Expression = new Constant("moooo") });
+            Program(new Definition { Symbol = "variableName", Expression = new Constant("moooo") });
          AssertOutput(
             ifProgram,
 @"PROGRAM
@@ -229,7 +229,7 @@ namespace MacroLanguage_TEST
    variableName = ""moooo""
 }");
          ifProgram =
-            Program(new VariableAssignment { Symbol = "variableName", Expression = new Constant(-4711) });
+            Program(new Definition { Symbol = "variableName", Expression = new Constant(-4711) });
          AssertOutput(
             ifProgram,
 @"PROGRAM
@@ -237,7 +237,7 @@ namespace MacroLanguage_TEST
    variableName = -4711
 }");
          ifProgram =
-            Program(new VariableAssignment { Symbol = "variableName", Expression = new Constant(-4711.5) });
+            Program(new Definition { Symbol = "variableName", Expression = new Constant(-4711.5) });
          AssertOutput(
             ifProgram,
 @"PROGRAM

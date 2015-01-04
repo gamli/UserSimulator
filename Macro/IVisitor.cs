@@ -12,26 +12,18 @@ namespace Macro
 {
    public interface IVisitor
    {
-      void VisitProgram(Program Macro);
+      void VisitDefinition(Definition Definition);
 
-      void VisitBlock(Block Block);
-
-      void VisitForLoop(ForLoop ForLoop);
-
-      void VisitMove(Move Move);
-
-      void VisitPosition(Position Position);
-
-      void VisitPause(Pause Pause);
-
-      void VisitWindowshot(Windowshot Windowshot);
-
-      void VisitLeftClick(LeftClick LeftClick);
+      void VisitSymbol(Symbol Symbol);
 
       void VisitConstant(Constant Constant);
 
-      void VisitIf(If If);
+      void VisitList(List List);
 
-      void VisitVariableAssignment(VariableAssignment VariableAssignment);
+      void VisitFunctionCall(FunctionCall FunctionCall);
+
+      void VisitLoop(Loop Loop);
+
+      void VisitIf(If If);
    }
 }

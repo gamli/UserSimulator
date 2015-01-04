@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using IO;
 using Macro;
 using MacroLanguage;
+using MacroRuntime;
 using MacroViewModel;
 
 namespace UserSimulator

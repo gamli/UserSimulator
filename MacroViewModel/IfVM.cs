@@ -26,7 +26,7 @@ namespace MacroViewModel
             new NotifyingTransformedProperty<ExpressionBaseVM>(
                new[] { "Expression" }, "ExpressionVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Expression),
+               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Condition),
                VM => VM.Dispose());
       }
 

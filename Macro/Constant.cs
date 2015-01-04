@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class Constant : ExpressionBase
+   public class Constant : AtomicExpressionBase
    {
       private object _value;
-      [ExcludeFromCodeCoverage]
       public object Value { get { return _value; } set { SetPropertyValue(ref _value, value); } }
 
       public Constant()

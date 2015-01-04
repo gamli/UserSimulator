@@ -13,14 +13,14 @@ namespace MacroViewModel_TEST
       {
          AssertCreatesExpectedViewModelType(typeof(Block), typeof(BlockVM));
          AssertCreatesExpectedViewModelType(typeof(LeftClick), typeof(LeftClickVM));
-         AssertCreatesExpectedViewModelType(typeof(ForLoop), typeof(ForLoopVM));
+         AssertCreatesExpectedViewModelType(typeof(Loop), typeof(ForLoopVM));
          AssertCreatesExpectedViewModelType(typeof(Windowshot), typeof(WindowshotVM));
          AssertCreatesExpectedViewModelType(typeof(Move), typeof(MoveVM));
          AssertCreatesExpectedViewModelType(typeof(Pause), typeof(PauseVM));
          AssertCreatesExpectedViewModelType(typeof(Position), typeof(PositionVM));
          AssertCreatesExpectedViewModelType(typeof(Constant), typeof(ConstantVM));
          AssertCreatesExpectedViewModelType(typeof(If), typeof(IfVM));
-         AssertCreatesExpectedViewModelType(typeof(VariableAssignment), typeof(VariableAssignmentVM));
+         AssertCreatesExpectedViewModelType(typeof(Definition), typeof(VariableAssignmentVM));
          AssertCreatesExpectedViewModelType(typeof(Program), typeof(ProgramVM));
          Assert.AreEqual(MacroViewModelFactory.Instance.Create(null), null);
       }

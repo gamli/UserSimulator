@@ -37,9 +37,9 @@ namespace MacroLanguage_TEST
       {
          var programWithForLoop = _parser.Parse("PROGRAM FOR(4711){}");
          var forLoop = programWithForLoop.Body;
-         Assert.AreEqual(forLoop.GetType(), typeof(ForLoop));
-         Assert.AreEqual(((ForLoop)forLoop).RepetitionCount, new Constant(4711));
-         var forLoopBody = ((ForLoop)forLoop).Body;
+         Assert.AreEqual(forLoop.GetType(), typeof(Loop));
+         Assert.AreEqual(((Loop)forLoop).Body, new Constant(4711));
+         var forLoopBody = ((Loop)forLoop).Body;
          Assert.AreEqual(forLoopBody.GetType(), typeof(Block));
       }
 
@@ -49,7 +49,7 @@ namespace MacroLanguage_TEST
          var programWithIfWindowshot = _parser.Parse("PROGRAM IF(WINDOWSHOT(4711, -4711, \"nonExistingTestImage\")){}");
          var ifStatetment = programWithIfWindowshot.Body;
          Assert.AreEqual(ifStatetment.GetType(), typeof(If));
-         var windowshot = ((If)ifStatetment).Expression;
+         var windowshot = ((If)ifStatetment).Condition;
          Assert.AreEqual(windowshot.GetType(), typeof(Windowshot));
          Assert.AreEqual(
             windowshot, 
@@ -108,13 +108,13 @@ namespace MacroLanguage_TEST
          Assert.IsTrue(block is Block);
          var ifStatement = ((Block)block).Items[0];
          Assert.AreEqual(ifStatement.GetType(), typeof(If));
-         Assert.AreEqual(((If)ifStatement).Expression, new Constant(true));
+         Assert.AreEqual(((If)ifStatement).Condition, new Constant(true));
          programWithIf =
             _parser.Parse(
                @"PROGRAM
                   {
             IF(False){}}");
-         Assert.AreEqual(((If)((Block)programWithIf.Body).Items[0]).Expression, new Constant(false));
+         Assert.AreEqual(((If)((Block)programWithIf.Body).Items[0]).Condition, new Constant(false));
       }
 
       [TestMethod]
@@ -144,9 +144,9 @@ namespace MacroLanguage_TEST
          Assert.IsTrue(block is Block);
          Assert.AreEqual(((Block)block).Items.Count, 1);
          var variableAssignment = ((Block)block).Items[0];
-         Assert.AreEqual(variableAssignment.GetType(), typeof(VariableAssignment));
-         Assert.AreEqual(((VariableAssignment)variableAssignment).Symbol, "variableName123");
-         Assert.AreEqual(((VariableAssignment)variableAssignment).Expression, new Constant(AssignmentExpressionAndExpectedValue.Item2));
+         Assert.AreEqual(variableAssignment.GetType(), typeof(Definition));
+         Assert.AreEqual(((Definition)variableAssignment).Symbol, "variableName123");
+         Assert.AreEqual(((Definition)variableAssignment).Expression, new Constant(AssignmentExpressionAndExpectedValue.Item2));
       }
 
       [TestMethod]

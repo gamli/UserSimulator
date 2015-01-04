@@ -167,9 +167,9 @@ namespace MacroLanguage
          return forLoop;
       }
 
-      private static ForLoop ReduceForLoop(object[] ParseResults)
+      private static Loop ReduceForLoop(object[] ParseResults)
       {
-         return new ForLoop { RepetitionCount = (ExpressionBase)ParseResults[2], Body = (StatementBase)ParseResults[4] };
+         return new Loop { Body = (ExpressionBase)ParseResults[2], Body = (StatementBase)ParseResults[4] };
       }
 
       private static INonTerminal<object> Move(IParserConfigurator<object> Config, INonTerminal<object> Expression)
@@ -231,9 +231,9 @@ namespace MacroLanguage
          return variableAssignment;
       }
 
-      private static VariableAssignment ReduceVariableAssignment(object[] ParseResults)
+      private static Definition ReduceVariableAssignment(object[] ParseResults)
       {
-         return new VariableAssignment { Symbol = (string)ParseResults[0], Expression = (ExpressionBase)ParseResults[2] };
+         return new Definition { Symbol = (string)ParseResults[0], Expression = (ExpressionBase)ParseResults[2] };
       }
 
       private static string AssignmentSymbol()
@@ -344,7 +344,7 @@ namespace MacroLanguage
 
       private static If ReduceIf(object[] ParseResults)
       {
-         return new If { Expression = (ExpressionBase)ParseResults[2], Body = (StatementBase)ParseResults[4] };
+         return new If { Condition = (ExpressionBase)ParseResults[2], Alternative = (StatementBase)ParseResults[4] };
       }
 
       private static void ReduceToSelf(IProduction<object> Production)

@@ -10,7 +10,7 @@ namespace Macro_TEST
       [TestMethod]
       public void Accept_TEST()
       {
-         var ifStatement = new If { Expression = new Constant(true), Body = new Block() };
+         var ifStatement = new If { Condition = new Constant(true), Alternative = new Block() };
          var testVisitor = new MockVisitor();
          ifStatement.Accept(testVisitor);
          Assert.AreEqual(testVisitor.Macros.Count, 2);
@@ -22,12 +22,12 @@ namespace Macro_TEST
       public void Equals_TEST()
       {
          var block = new Block();
-         var ifStatement = new If { Expression = new Constant(true), Body = new Block() };
+         var ifStatement = new If { Condition = new Constant(true), Alternative = new Block() };
          block.Items.Add(ifStatement);
          var program = new Program { Body = block };
-         var programClone = new ProgramCloner(program).Clone();
+         var programClone = new MacroCloner(program).Clone();
          Assert.AreEqual(program, programClone);
-         ifStatement.Expression = new Constant(false);
+         ifStatement.Condition = new Constant(false);
          Assert.AreNotEqual(program, programClone);
       }
    }

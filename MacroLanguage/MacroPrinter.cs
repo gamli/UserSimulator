@@ -46,10 +46,10 @@ namespace MacroLanguage
          Append("}");
       }
 
-      public void VisitForLoop(ForLoop ForLoop)
+      public void VisitLoop(Loop ForLoop)
       {
          Append("FOR(");
-         ForLoop.RepetitionCount.Accept(this);
+         ForLoop.Body.Accept(this);
          Append(")");
          AppendBody(ForLoop);
       }
@@ -120,16 +120,38 @@ namespace MacroLanguage
          else
             Append(value == null ? "null" : value.ToString());         
       }
+
+      public void VisitSymbol(Symbol Symbol)
+      {
+         Append(Symbol.Value);
+      }
+
+      public void VisitList(List List)
+      {
+         Append("(");
+         foreach (var expression in List.Expressions.Take(List.Expressions.Count - 1))
+         {
+            expression.Accept(this);
+            Append(" ");
+         }
+         List.Expressions.Last().Accept(this);
+         Append(")");
+      }
+
+      public void VisitFunctionCall(FunctionCall FunctionCall)
+      {
+         VisitList(FunctionCall);
+      }
       
       public void VisitIf(If If)
       {
          Append("IF(");
-         If.Expression.Accept(this);
+         If.Condition.Accept(this);
          Append(")");
          AppendBody(If);
       }
       
-      public void VisitVariableAssignment(VariableAssignment VariableAssignment)
+      public void VisitDefinition(Definition VariableAssignment)
       {
          Append(VariableAssignment.Symbol);
          Append(AssignmentSymbol());

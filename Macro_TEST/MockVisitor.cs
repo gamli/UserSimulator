@@ -29,7 +29,7 @@ namespace Macro_TEST
          EndVisit(Block);
       }
 
-      public void VisitForLoop(ForLoop ForLoop)
+      public void VisitLoop(Loop ForLoop)
       {
          VisitStatementWithBody(ForLoop);
       }
@@ -63,14 +63,32 @@ namespace Macro_TEST
       {
          Visit(Constant);
       }
+      
+      public void VisitSymbol(Symbol Symbol)
+      {
+         Visit(Symbol);
+      }
+
+      public void VisitList(List List)
+      {
+         BeginVisit(List);
+         foreach (var expression in List.Expressions)
+            expression.Accept(this);
+         EndVisit(List);
+      }
+
+      public void VisitFunctionCall(FunctionCall FunctionCall)
+      {
+         throw new NotImplementedException();
+      }
 
       public void VisitIf(If If)
       {
-         If.Expression.Accept(this);
+         If.Condition.Accept(this);
          VisitStatementWithBody(If);
       }
 
-      public void VisitVariableAssignment(VariableAssignment VariableAssignment)
+      public void VisitDefinition(Definition VariableAssignment)
       {
          VariableAssignment.Expression.Accept(this);
          Visit(VariableAssignment);

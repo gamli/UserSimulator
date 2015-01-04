@@ -41,8 +41,8 @@ namespace MacroViewModel
                { typeof(LeftClick), Macro => 
                   new LeftClickVM((LeftClick)Macro) },
 
-               { typeof(ForLoop), Macro => 
-                  new ForLoopVM((ForLoop)Macro) },
+               { typeof(Loop), Macro => 
+                  new ForLoopVM((Loop)Macro) },
 
                { typeof(Windowshot), Macro => 
                   new WindowshotVM((Windowshot)Macro) },
@@ -62,8 +62,8 @@ namespace MacroViewModel
                { typeof(If), Macro => 
                   new IfVM((If)Macro) },
 
-               { typeof(VariableAssignment), Macro => 
-                  new VariableAssignmentVM((VariableAssignment)Macro) },
+               { typeof(Definition), Macro => 
+                  new VariableAssignmentVM((Definition)Macro) },
 
                { typeof(Program), Macro => 
                   new ProgramVM((Program)Macro) },

@@ -40,7 +40,7 @@ namespace Macro_TEST
          block.Items.Add(new Block());
          block.Items.Add(new Block());
          var program = new Program { Body = block };
-         var programClone = new ProgramCloner(program).Clone();
+         var programClone = new MacroCloner(program).Clone();
          Assert.AreEqual(program, programClone);
       }
 

@@ -7,11 +7,30 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public class If : StatementWithBodyBase
+   public class If : SpecialFormBase
    {
-      private ExpressionBase _expression;
+      private ExpressionBase _condition;
       [ExcludeFromCodeCoverage]
-      public ExpressionBase Expression { get { return _expression; } set { SetPropertyValue(ref _expression, value); } }
+      public ExpressionBase Condition { get { return _condition; } set { SetPropertyValue(ref _condition, value); } }
+
+      private ExpressionBase _consequent;
+      [ExcludeFromCodeCoverage]
+      public ExpressionBase Consequent { get { return _alternative; } set { SetPropertyValue(ref _alternative, value); } }
+
+      private ExpressionBase _alternative;
+      [ExcludeFromCodeCoverage]
+      public ExpressionBase Alternative { get { return _alternative; } set { SetPropertyValue(ref _alternative, value); } }
+
+      public If()
+      {
+         Expressions.CollectionChanged +=
+            (Sender, Arsg) => 
+               {
+                  Condition = Expressions[0];
+                  Consequent = Expressions[1];
+                  Alternative = Expressions[2]; 
+               };
+      }
 
       public override void Accept(IVisitor Visitor)
       {
@@ -21,7 +40,10 @@ namespace Macro
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
          var otherIf = (If)OtherMacro;
-         return Expression.Equals(otherIf.Expression) && base.BodyEquals(otherIf);
+         return 
+            Condition.Equals(otherIf.Condition) &&
+            Consequent.Equals(otherIf.Consequent) &&
+            Alternative.Equals(otherIf.Alternative);
       }
    }
 }

@@ -17,7 +17,7 @@ namespace MacroViewModel_TEST
       }
       private void ExpressionVM_Property_TEST<T>(T Value1, T Value2)
       {
-         var assignment = new VariableAssignment { Symbol = "variableName", Expression = new Constant(Value1) };
+         var assignment = new Definition { Symbol = "variableName", Expression = new Constant(Value1) };
          using (var assignmentVM = new VariableAssignmentVM(assignment))
          {
             Assert.AreEqual(assignment.Expression, assignmentVM.ExpressionVM.Model);
