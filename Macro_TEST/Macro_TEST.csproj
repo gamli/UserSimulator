@@ -60,6 +60,7 @@
     <Compile Include="MacroBase_TEST.cs" />
     <Compile Include="Definition_TEST.cs" />
     <Compile Include="FunctionCall_TEST.cs" />
+    <Compile Include="Quote_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

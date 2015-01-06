@@ -46,6 +46,7 @@
     <Compile Include="FunctionCall.cs" />
     <Compile Include="If.cs" />
     <Compile Include="List.cs" />
+    <Compile Include="Quote.cs" />
     <Compile Include="SpecialFormBase.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="Definition.cs" />
