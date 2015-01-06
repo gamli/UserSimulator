@@ -13,7 +13,8 @@ namespace Macro
 
       protected SpecialFormBase(string SpecialFormSymbol, params string[] SpecialProperties)
       {
-         Expressions.Add(new Symbol { Value = SpecialFormSymbol });
+         this.SpecialFormSymbol = new Symbol { Value = SpecialFormSymbol };
+         Expressions.Add(this.SpecialFormSymbol);
          for (var i = 0; i < SpecialProperties.Length; i++)
             Expressions.Add(null);
 
@@ -35,11 +36,14 @@ namespace Macro
 
       private void UpdateSpecialProperties(string[] SpecialProperties)
       {
-         Expressions[0] = this.SpecialFormSymbol;
+         if (!Equals(Expressions[0], SpecialFormSymbol))
+            Expressions[0] = SpecialFormSymbol;
          var index = 1;
          foreach (var specialProperty in SpecialProperties)
          {
-            Expressions[index] = (ExpressionBase)GetType().GetProperty(specialProperty).GetValue(this);
+            var propertyValue = (ExpressionBase)GetType().GetProperty(specialProperty).GetValue(this);
+            if(!Equals(Expressions[index], propertyValue))
+               Expressions[index] = propertyValue;
             index++;
          }
       }

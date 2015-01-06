@@ -8,27 +8,26 @@ namespace Macro_TEST
    public class If_TEST
    {
       [TestMethod]
-      public void Accept_TEST()
+      public void CloneAndEqualsAndAccept_TEST()
       {
-         var ifStatement = new If { Condition = new Constant(true), Alternative = new Block() };
-         var testVisitor = new MockVisitor();
-         ifStatement.Accept(testVisitor);
-         Assert.AreEqual(testVisitor.Macros.Count, 2);
-         Assert.AreEqual(testVisitor.Macros[0].Macro.GetType(), typeof(Constant));
-         Assert.AreEqual(testVisitor.Macros[1].Macro.GetType(), typeof(If));
-      }
+         var ifExpr = new If { Condition = new Constant(true), Consequent = new Constant(true), Alternative = new Constant(false) };
+         var clone = MacroCloner.Clone(ifExpr);
+         Assert.AreEqual(ifExpr, clone);
 
-      [TestMethod]
-      public void Equals_TEST()
-      {
-         var block = new Block();
-         var ifStatement = new If { Condition = new Constant(true), Alternative = new Block() };
-         block.Items.Add(ifStatement);
-         var program = new Program { Body = block };
-         var programClone = new MacroCloner(program).Clone();
-         Assert.AreEqual(program, programClone);
-         ifStatement.Condition = new Constant(false);
-         Assert.AreNotEqual(program, programClone);
+         ifExpr.Alternative = new Constant(true);
+         Assert.AreNotEqual(ifExpr, clone);
+         ifExpr.Alternative = new Constant(false);
+         Assert.AreEqual(ifExpr, clone);
+
+         ifExpr.Consequent = new Constant(false);
+         Assert.AreNotEqual(ifExpr, clone);
+         ifExpr.Consequent = new Constant(true);
+         Assert.AreEqual(ifExpr, clone);
+
+         ifExpr.Condition = new Constant(false);
+         Assert.AreNotEqual(ifExpr, clone);
+         ifExpr.Condition = new Constant(true);
+         Assert.AreEqual(ifExpr, clone);
       }
    }
 }

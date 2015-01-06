@@ -13,10 +13,11 @@ namespace Macro
       public ExpressionBase Function 
       { 
          get { return _function; } 
-         private set 
+         set 
          {
             if (SetPropertyValue(ref _function, value))
-               Expressions[0] = _function;
+               if(!Equals(Expressions[0], _function))
+                  Expressions[0] = _function;
          } 
       }
 

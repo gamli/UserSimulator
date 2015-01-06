@@ -22,10 +22,12 @@ namespace Macro
       {
          if (Args.OldItems != null)
             foreach (MacroBase oldItem in Args.OldItems)
-               oldItem.MacroChanged -= HandleItemMacroChanged;
+               if(oldItem != null)
+                  oldItem.MacroChanged -= HandleItemMacroChanged;
          if (Args.NewItems != null)
             foreach (MacroBase newItem in Args.NewItems)
-               newItem.MacroChanged += HandleItemMacroChanged;
+               if(newItem != null)
+                  newItem.MacroChanged += HandleItemMacroChanged;
          RaiseMacroChanged(this, new EventArgs());
       }
       private void HandleItemMacroChanged(object Sender, EventArgs Args)
