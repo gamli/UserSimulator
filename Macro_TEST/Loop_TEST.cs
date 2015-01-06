@@ -5,25 +5,25 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Macro_TEST
 {
    [TestClass]
-   public class Loop_TEST
+   public class Loop_TEST : List_TEST_Base
    {
       [TestMethod]
       public void CloneAndEqualsAndAccept_TEST()
       {
          var forLoop = new Loop { Condition = new Constant(true), Body = new Constant(4711) };
          var clone = MacroCloner.Clone(forLoop);
-         Assert.AreEqual(forLoop, clone);
+         AssertListsAreEqual(forLoop, clone);
 
 
          forLoop.Body = new Constant(-4711);
-         Assert.AreNotEqual(forLoop, clone);
+         AssertListsAreNotEqual(forLoop, clone);
          forLoop.Body = new Constant(4711);
-         Assert.AreEqual(forLoop, clone);
+         AssertListsAreEqual(forLoop, clone);
          
          forLoop.Condition = new Constant(false);
-         Assert.AreNotEqual(forLoop, clone);
+         AssertListsAreNotEqual(forLoop, clone);
          forLoop.Condition = new Constant(true);
-         Assert.AreEqual(forLoop, clone);
+         AssertListsAreEqual(forLoop, clone);
       }
    }
 }

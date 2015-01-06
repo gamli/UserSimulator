@@ -30,7 +30,7 @@ namespace Macro
          var other = (Definition)OtherMacro;
          return
             Symbol.Equals(other.Symbol) &&
-            Expression.Equals(other.Expression);
+            Expression.Equals(other.Expression) && base.MacroEquals(other);
       }
    }
 }

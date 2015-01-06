@@ -35,7 +35,7 @@ namespace Macro
          return 
             Condition.Equals(otherIf.Condition) &&
             Consequent.Equals(otherIf.Consequent) &&
-            Alternative.Equals(otherIf.Alternative);
+            Alternative.Equals(otherIf.Alternative) && base.MacroEquals(otherIf);
       }
    }
 }

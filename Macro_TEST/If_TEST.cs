@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Macro_TEST
 {
    [TestClass]
-   public class If_TEST
+   public class If_TEST : List_TEST_Base
    {
       [TestMethod]
       public void CloneAndEqualsAndAccept_TEST()
@@ -15,19 +15,19 @@ namespace Macro_TEST
          Assert.AreEqual(ifExpr, clone);
 
          ifExpr.Alternative = new Constant(true);
-         Assert.AreNotEqual(ifExpr, clone);
+         AssertListsAreNotEqual(ifExpr, clone);
          ifExpr.Alternative = new Constant(false);
-         Assert.AreEqual(ifExpr, clone);
+         AssertListsAreEqual(ifExpr, clone);
 
          ifExpr.Consequent = new Constant(false);
-         Assert.AreNotEqual(ifExpr, clone);
+         AssertListsAreNotEqual(ifExpr, clone);
          ifExpr.Consequent = new Constant(true);
-         Assert.AreEqual(ifExpr, clone);
+         AssertListsAreEqual(ifExpr, clone);
 
          ifExpr.Condition = new Constant(false);
-         Assert.AreNotEqual(ifExpr, clone);
+         AssertListsAreNotEqual(ifExpr, clone);
          ifExpr.Condition = new Constant(true);
-         Assert.AreEqual(ifExpr, clone);
+         AssertListsAreEqual(ifExpr, clone);
       }
    }
 }

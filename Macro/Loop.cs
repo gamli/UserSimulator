@@ -30,8 +30,8 @@ namespace Macro
       {
          var otherLoop = (Loop)OtherMacro;
          return 
-            Condition.Equals(otherLoop.Condition) && 
-            Body.Equals(otherLoop.Body);
+            Condition.Equals(otherLoop.Condition) &&
+            Body.Equals(otherLoop.Body) && base.MacroEquals(otherLoop);
       }
    }
 }

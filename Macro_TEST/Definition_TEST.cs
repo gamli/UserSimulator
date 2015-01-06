@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Macro_TEST
 {
    [TestClass]
-   public class Definition_TEST
+   public class Definition_TEST : List_TEST_Base
    {
       [TestMethod]
       public void CloneAndEqualsAndAccept_TEST()
@@ -15,15 +15,14 @@ namespace Macro_TEST
          Assert.AreEqual(definition, clone);
          
          definition.Expression = new Constant(false);
-         Assert.AreNotEqual(definition, clone);
+         AssertListsAreNotEqual(definition, clone);
          definition.Expression = new Constant(true);
-         Assert.AreEqual(definition, clone);
-         
+         AssertListsAreEqual(definition, clone);
 
          definition.Symbol.Value = "otherVarName";
-         Assert.AreNotEqual(definition, clone);
+         AssertListsAreNotEqual(definition, clone);
          definition.Symbol.Value = "varName";
-         Assert.AreEqual(definition, clone);
+         AssertListsAreEqual(definition, clone);
       }
    }
 }
