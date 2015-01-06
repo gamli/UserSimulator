@@ -75,6 +75,11 @@ namespace Macro
          {
             VisitListGeneric(If);
          }
+
+         public void VisitQuote(Quote Quote)
+         {
+            VisitListGeneric(Quote);
+         }
       }
    }
 }

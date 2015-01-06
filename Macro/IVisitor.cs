@@ -25,5 +25,7 @@ namespace Macro
       void VisitLoop(Loop Loop);
 
       void VisitIf(If If);
+
+      void VisitQuote(Quote Quote);
    }
 }
