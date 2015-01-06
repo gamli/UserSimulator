@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace MacroView
 {
    /// <summary>
-   /// Interaction logic for VariableAssignmentView.xaml
+   /// Interaction logic for BlockView.xaml
    /// </summary>
-   public partial class VariableAssignmentView : UserControl
+   public partial class ListView : UserControl
    {
-      public VariableAssignmentView()
+      public ListView()
       {
          InitializeComponent();
       }

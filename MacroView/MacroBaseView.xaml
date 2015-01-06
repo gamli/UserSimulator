@@ -9,38 +9,29 @@
              d:DesignHeight="300" d:DesignWidth="300">
    <Grid Background="Transparent">
       <Grid.Resources>
-         <DataTemplate DataType="{x:Type macrovm:BlockVM}">
-            <macroview:BlockView/>
-         </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:LeftClickVM}">
-            <macroview:LeftClickView/>
-         </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:ForLoopVM}">
-            <macroview:ForLoopView/>
-         </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:MoveVM}">
-            <macroview:MoveView/>
-         </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:PauseVM}">
-            <macroview:PauseView/>
-         </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:PositionVM}">
-            <macroview:PositionView/>
-         </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:ProgramVM}">
-            <macroview:ProgramView/>
-         </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:WindowshotVM}">
-            <macroview:WindowshotView/>
-         </DataTemplate>
          <DataTemplate DataType="{x:Type macrovm:ConstantVM}">
             <macroview:ConstantView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:DefinitionVM}">
+            <macroview:DefinitionView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:FunctionCallVM}">
+            <macroview:FunctionCallView/>
          </DataTemplate>
          <DataTemplate DataType="{x:Type macrovm:IfVM}">
             <macroview:IfView/>
          </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:VariableAssignmentVM}">
-            <macroview:VariableAssignmentView/>
+         <DataTemplate DataType="{x:Type macrovm:ListVM}">
+            <macroview:ListView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:LoopVM}">
+            <macroview:LoopView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:QuoteVM}">
+            <macroview:QuoteView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:SymbolVM}">
+            <macroview:SymbolView/>
          </DataTemplate>
       </Grid.Resources>
       <ContentPresenter Content="{Binding}"/>

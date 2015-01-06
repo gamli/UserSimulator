@@ -18,8 +18,8 @@ namespace UserSimulator
       private NotifyingTransformedProperty<ImageSource> _lastWindowshotVM;
       public ImageSource LastWindowshotVM { get { return _lastWindowshotVM.Value; } }
 
-      private NotifyingTransformedProperty<ProgramVM> _programVM;
-      public ProgramVM ProgramVM { get { return _programVM.Value; } }
+      private NotifyingTransformedProperty<ExpressionBaseVM> _expressionVM;
+      public ExpressionBaseVM ExpressionVM { get { return _expressionVM.Value; } }
 
       public UserSimulatorVM(UserSimulatorModel Model)
          : base(Model)
@@ -30,11 +30,11 @@ namespace UserSimulator
                Model, this,
                () => System.Windows.Application.Current.Dispatcher.Invoke(() => DrawingImage2WpfImageSource(Model.LastWindowshot)));
 
-         _programVM =
-            new NotifyingTransformedProperty<ProgramVM>(
-               new[] { "Program" }, "ProgramVM",
+         _expressionVM =
+            new NotifyingTransformedProperty<ExpressionBaseVM>(
+               new[] { "ExpressionBase" }, "ExpressionBaseVM",
                Model, this,
-               () => new ProgramVM(Model.Program),
+               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Expression),
                ViewModel => ViewModel.Dispose());
       }
 

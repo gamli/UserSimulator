@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
    <ItemsControl.ItemsPanel>
@@ -16,10 +17,8 @@
       <ControlTemplate>
          <Border Background="#FFDEF7DA" BorderBrush="#FFABEC92" CornerRadius="5" BorderThickness="3">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-               <TextBlock Text="{Binding FunctionName, ElementName=this}" FontWeight="ExtraBlack"/>
-               <TextBlock Text="(" FontWeight="ExtraBlack"/>
+               <macroview:MacroBaseView DataContext="{Binding FunctionVM}"/>
                <ItemsPresenter/>
-               <TextBlock Text=")" FontWeight="ExtraBlack"/>
             </StackPanel>
          </Border>
       </ControlTemplate>

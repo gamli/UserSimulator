@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace MacroView
 {
    /// <summary>
-   /// Interaction logic for Move.xaml
+   /// Interaction logic for PauseView.xaml
    /// </summary>
-   public partial class MoveView : UserControl
+   public partial class QuoteView : UserControl
    {
-      public MoveView()
+      public QuoteView()
       {
          InitializeComponent();
       }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -24,7 +25,8 @@ namespace MacroRuntime
 
       protected override object SymbolNotFoundGetValue(Symbol Symbol)
       {
-         throw new Exception("Symbol >>" + Symbol.Value + "<< is not defined");
+         var exceptionMessage = "Symbol >>" + Symbol.Value + "<< is not defined";
+         return Try(() => { throw new Exception(exceptionMessage); }, exceptionMessage);
       }
 
       private object MouseMove(object TranslationX, object TranslationY)
@@ -59,22 +61,49 @@ namespace MacroRuntime
       {
          return Try(() => Thread.Sleep((int)Milliseconds), string.Format("Could not sleep for {0} milliseconds", Milliseconds));
       }
-      private object VisitLeftClick()
+
+      private object LeftClick()
       {
-         Mouse.LeftClick();
+         return Try(() => Mouse.LeftClick(), "Could not left click");
       }
 
       private object Windowshot(object X, object Y, object ImageUrl)
       {
-         Thread.Sleep((int)Milliseconds);
-         return GetValue(NIL_SYMBOL);
+         return
+            Try(
+               () =>
+                  {
+                     using (var image = new Bitmap((string)ImageUrl))
+                     using (var windowContent = Window.Capture(_targetWindow))
+                     using (var clippedWindowContent = new Bitmap(image.Width, image.Height))
+                     using (var clippedWindowContentGraphics = Graphics.FromImage(clippedWindowContent))
+                     {
+                        clippedWindowContentGraphics.DrawImage(
+                           windowContent,
+                           0, 0,
+                           new Rectangle(
+                              (int)X - image.Width / 2, (int)Y - image.Width / 2,
+                              image.Width, image.Height),
+                           GraphicsUnit.Pixel
+                           );
+
+                        for (var x = 0; x < image.Width; x++)
+                           for (var y = 0; y < image.Height; y++)
+                              if (image.GetPixel(x, y) != clippedWindowContent.GetPixel(x, y))
+                              {
+                                 return false;
+                              }
+                     }
+                     return true;
+                  },
+               string.Format("Could not take windowshot of {0} at position ({1}, {2})", ImageUrl, X, Y));
       }
 
       private object Try(Action Action, string ExceptionMessage, object ReturnValue = null)
       {
          if (ReturnValue == null)
             ReturnValue = GetValue(NIL_SYMBOL);
-         return Try(() => { Action(); return ReturnValue }, ExceptionMessage);
+         return Try(() => { Action(); return ReturnValue; }, ExceptionMessage);
       }
 
       private object Try(Func<object> Function, string ExceptionMessage)

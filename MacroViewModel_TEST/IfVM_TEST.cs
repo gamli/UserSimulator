@@ -9,14 +9,38 @@ namespace MacroViewModel_TEST
    public class IfVM_TEST
    {
       [TestMethod]
-      public void ExpressionVM_Property_TEST()
+      public void ConditionVM_Property_TEST()
       {
-         var ifStatement = new If { Condition = new Constant(true), Alternative = new Block() };
-         using (var forLoopVM = new IfVM(ifStatement))
+         var ifExpression = new If { Condition = new Constant(true), Consequent = new Constant(4711), Alternative = new Constant(-4711) };
+         using (var ifVM = new IfVM(ifExpression))
          {
-            Assert.AreEqual(ifStatement.Condition, forLoopVM.ExpressionVM.Model);
-            ifStatement.Condition = new Constant(false);
-            Assert.AreEqual(ifStatement.Condition, forLoopVM.ExpressionVM.Model);
+            Assert.AreEqual(ifExpression.Condition, ifVM.ConditionVM.Model);
+            ifExpression.Condition = new Constant(false);
+            Assert.AreEqual(ifExpression.Condition, ifVM.ConditionVM.Model);
+         }
+      }
+
+      [TestMethod]
+      public void ConsequentVM_Property_TEST()
+      {
+         var ifExpression = new If { Condition = new Constant(true), Consequent = new Constant(4711), Alternative = new Constant(-4711) };
+         using (var ifVM = new IfVM(ifExpression))
+         {
+            Assert.AreEqual(ifExpression.Consequent, ifVM.ConsequentVM.Model);
+            ifExpression.Consequent = new Constant(-4711);
+            Assert.AreEqual(ifExpression.Consequent, ifVM.ConsequentVM.Model);
+         }
+      }
+
+      [TestMethod]
+      public void AlternativeVM_Property_TEST()
+      {
+         var ifExpression = new If { Condition = new Constant(true), Consequent = new Constant(4711), Alternative = new Constant(-4711) };
+         using (var ifVM = new IfVM(ifExpression))
+         {
+            Assert.AreEqual(ifExpression.Alternative, ifVM.AlternativeVM.Model);
+            ifExpression.Alternative = new Constant(4711);
+            Assert.AreEqual(ifExpression.Alternative, ifVM.AlternativeVM.Model);
          }
       }
    }

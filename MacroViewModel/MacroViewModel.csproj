@@ -44,21 +44,17 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlockVM.cs" />
-    <Compile Include="ClickVM.cs" />
+    <Compile Include="ListVM.cs" />
+    <Compile Include="SymbolVM.cs" />
     <Compile Include="ConstantVM.cs" />
     <Compile Include="ExpressionBaseVM.cs" />
-    <Compile Include="ForLoopVM.cs" />
+    <Compile Include="LoopVM.cs" />
     <Compile Include="IfVM.cs" />
-    <Compile Include="VariableAssignmentVM.cs" />
-    <Compile Include="WindowshotVM.cs" />
     <Compile Include="MacroBaseVM.cs" />
     <Compile Include="MacroViewModelFactory.cs" />
-    <Compile Include="StatementWithBodyBaseVM.cs" />
-    <Compile Include="MoveVM.cs" />
-    <Compile Include="PauseVM.cs" />
-    <Compile Include="PositionVM.cs" />
-    <Compile Include="ProgramVM.cs" />
+    <Compile Include="DefinitionVM.cs" />
+    <Compile Include="QuoteVM.cs" />
+    <Compile Include="FunctionCallVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -17,7 +17,7 @@ namespace MacroRuntime
          Messages = new ObservableCollection<string>();
       }
 
-      private ObservableCollection<string> Messages { get; private set; }
+      public ObservableCollection<string> Messages { get; private set; }
 
       private string _lastMessage;
       public string LastMessage { get { return _lastMessage; } set { SetPropertyValue(ref _lastMessage, value); } }

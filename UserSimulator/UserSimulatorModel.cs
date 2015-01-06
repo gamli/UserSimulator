@@ -36,14 +36,14 @@ namespace UserSimulator
       private IntPtr _lastWindow;
       public IntPtr LastWindow { get { return _lastWindow; } set { SetPropertyValue(ref _lastWindow, value); } }
 
-      private Program _program;
-      public Program Program
+      private ExpressionBase _expression;
+      public ExpressionBase Expression
       {
-         get { return _program; }
+         get { return _expression; }
          set
          {
-            var oldProgram = _program;
-            if (SetPropertyValue(ref _program, value))
+            var oldProgram = _expression;
+            if (SetPropertyValue(ref _expression, value))
             {
                if (oldProgram != null)
                   oldProgram.MacroChanged -= HandleProgramChanged;
@@ -59,21 +59,21 @@ namespace UserSimulator
       }
       private void HandleProgramChanged()
       {
-         SetPropertyValue(ref _programText, new MacroPrinter(_program).Print(), "ProgramText");
+         SetPropertyValue(ref _expressionText, MacroPrinter.Print(_expression), "ProgramText");
       }
 
 
-      private string _programText;
-      public string ProgramText
+      private string _expressionText;
+      public string ExpressionText
       {
-         get { return _programText; }
+         get { return _expressionText; }
          set 
          {
-            if (SetPropertyValue(ref _programText, value))
+            if (SetPropertyValue(ref _expressionText, value))
             { 
                try
                {
-                  Program = _parser.Parse(_programText);
+                  Expression = (ExpressionBase)_parser.Parse(_expressionText);
                   ParserError = "Parsing successfull";
                }
                catch (ParseException E)
@@ -83,7 +83,7 @@ namespace UserSimulator
             }
          }
       }
-      ProgramParser _parser = new ProgramParser();
+      MacroParser _parser = new MacroParser();
 
       private string _parserError;
       public string ParserError { get { return _parserError; } set { SetPropertyValue(ref _parserError, value); } }
@@ -93,7 +93,9 @@ namespace UserSimulator
       {
          LastWindowshot = 
             Bitmap.FromStream(Application.GetResourceStream(new Uri("pack://application:,,,/UserSimulator;component/Resources/ErrorScreenshot.png")).Stream);
-         Program = new Program { Body = new Block() };
+         var initialFunction = new FunctionCall { Function = new Symbol("print") };
+         initialFunction.Expressions.Add(new Constant("Hello World"));
+         Expression = initialFunction;         
          UpdateWindowshot();
          _timer = new Timer(ScreenshotInterval);
          _timer.Elapsed += (Sender, Args) => UpdateWindowshot();

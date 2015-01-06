@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace MacroView
 {
    /// <summary>
-   /// Interaction logic for BlockView.xaml
+   /// Interaction logic for ForLoopView.xaml
    /// </summary>
-   public partial class BlockView : UserControl
+   public partial class LoopView : UserControl
    {
-      public BlockView()
+      public LoopView()
       {
          InitializeComponent();
       }

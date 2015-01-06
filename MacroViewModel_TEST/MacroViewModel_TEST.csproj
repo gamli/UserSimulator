@@ -50,18 +50,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ProgramVM_TEST.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MacroViewModelFactory_TEST.cs" />
-    <Compile Include="BlockVM_TEST.cs" />
-    <Compile Include="StatementWithBodyBaseVM_TEST.cs" />
-    <Compile Include="ForLoopVM_TEST.cs" />
+    <Compile Include="ListVM_TEST.cs" />
+    <Compile Include="LoopVM_TEST.cs" />
     <Compile Include="IfVM_TEST.cs" />
-    <Compile Include="MoveVM_TEST.cs" />
-    <Compile Include="PositionVM_TEST.cs" />
-    <Compile Include="PauseVM_TEST.cs" />
-    <Compile Include="VariableAssignmentVM_TEST.cs" />
-    <Compile Include="WindowshotVM_TEST.cs" />
+    <Compile Include="FunctionCallVM_TEST.cs" />
+    <Compile Include="DefinitionVM_TEST.cs" />
+    <Compile Include="QuoteVM_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

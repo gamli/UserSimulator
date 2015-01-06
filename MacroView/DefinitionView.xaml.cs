@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace MacroView
 {
    /// <summary>
-   /// Interaction logic for LeftClickView.xaml
+   /// Interaction logic for PositionView.xaml
    /// </summary>
-   public partial class LeftClickView : UserControl
+   public partial class DefinitionView : UserControl
    {
-      public LeftClickView()
+      public DefinitionView()
       {
          InitializeComponent();
       }

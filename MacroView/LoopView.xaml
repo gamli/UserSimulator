@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MacroView.MoveView"
+﻿<UserControl x:Class="MacroView.LoopView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,12 +6,11 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <StackPanel Orientation="Horizontal">
-      <Image Source="/MacroView;component/Resources/MoveIcon.png" Width="24" Height="24"/>
-      <TextBlock Text="("/>
-      <macroview:MacroBaseView DataContext="{Binding TranslationXVM}"/>
-      <TextBlock Text=","/>
-      <macroview:MacroBaseView DataContext="{Binding TranslationYVM}"/>
-      <TextBlock Text=")"/>
+   <StackPanel>
+      <StackPanel Orientation="Horizontal">
+         <Image Source="/MacroView;component/Resources/ForLoopIcon.png" Width="24" Height="24"/>
+         <macroview:MacroBaseView HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5 0 0 0" DataContext="{Binding ConditionVM}"/>
+      </StackPanel>
+      <macroview:MacroBaseView DataContext="{Binding BodyVM}" Margin="24 0 0 0"/>
    </StackPanel>
 </UserControl>

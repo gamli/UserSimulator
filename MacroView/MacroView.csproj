@@ -54,13 +54,7 @@
     <Compile Include="IfView.xaml.cs">
       <DependentUpon>IfView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VariableAssignmentView.xaml.cs">
-      <DependentUpon>VariableAssignmentView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WindowshotView.xaml.cs">
-      <DependentUpon>WindowshotView.xaml</DependentUpon>
-    </Compile>
-    <Page Include="BlockView.xaml">
+    <Page Include="ListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -68,7 +62,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ForLoopView.xaml">
+    <Page Include="LoopView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -80,66 +74,43 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LeftClickView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MacroBaseView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MoveView.xaml">
+    <Page Include="SymbolView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PauseView.xaml">
+    <Page Include="QuoteView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PositionView.xaml">
+    <Page Include="DefinitionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ProgramView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="BlockView.xaml.cs">
-      <DependentUpon>BlockView.xaml</DependentUpon>
+    <Compile Include="ListView.xaml.cs">
+      <DependentUpon>ListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ForLoopView.xaml.cs">
-      <DependentUpon>ForLoopView.xaml</DependentUpon>
+    <Compile Include="LoopView.xaml.cs">
+      <DependentUpon>LoopView.xaml</DependentUpon>
     </Compile>
     <Compile Include="FunctionCallView.xaml.cs">
       <DependentUpon>FunctionCallView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LeftClickView.xaml.cs">
-      <DependentUpon>LeftClickView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MacroBaseView.xaml.cs">
       <DependentUpon>MacroBaseView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MoveView.xaml.cs">
-      <DependentUpon>MoveView.xaml</DependentUpon>
+    <Compile Include="SymbolView.xaml.cs">
+      <DependentUpon>SymbolView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PauseView.xaml.cs">
-      <DependentUpon>PauseView.xaml</DependentUpon>
+    <Compile Include="QuoteView.xaml.cs">
+      <DependentUpon>QuoteView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PositionView.xaml.cs">
-      <DependentUpon>PositionView.xaml</DependentUpon>
+    <Compile Include="DefinitionView.xaml.cs">
+      <DependentUpon>DefinitionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ProgramView.xaml.cs">
-      <DependentUpon>ProgramView.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="VariableAssignmentView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WindowshotView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

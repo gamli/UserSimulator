@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MacroView.PositionView"
+﻿<UserControl x:Class="MacroView.DefinitionView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,10 +8,8 @@
              d:DesignHeight="300" d:DesignWidth="300">
    <StackPanel Orientation="Horizontal">
       <Image Source="/MacroView;component/Resources/PositionIcon.png" Width="24" Height="24"/>
-      <TextBlock Text="("/>
-      <macroview:MacroBaseView DataContext="{Binding XVM}"/>
-      <TextBlock Text=","/>
-      <macroview:MacroBaseView DataContext="{Binding YVM}"/>
-      <TextBlock Text=")"/>
+      <macroview:MacroBaseView DataContext="{Binding Symbol}"/>
+      <TextBlock Text="=" Margin="5 0 5 0"/>
+      <macroview:MacroBaseView DataContext="{Binding Expression}"/>
    </StackPanel>
 </UserControl>

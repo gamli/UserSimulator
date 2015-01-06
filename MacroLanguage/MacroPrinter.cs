@@ -10,62 +10,80 @@ namespace MacroLanguage
 {
    public class MacroPrinter : IVisitor
    {
+      public static string Print(MacroBase Macro)
+      {
+         return new MacroPrinter(Macro).Print();
+      }
+
       private StringBuilder _sb;
       private MacroBase _macro;
 
-      public MacroPrinter(MacroBase Macro)
+      private MacroPrinter(MacroBase Macro)
       {
          _sb = new StringBuilder();
          _macro = Macro;
       }
 
-      public string Print()
+      private string Print()
       {
          _macro.Accept(this);
          return _sb.ToString();
       }
 
-      public void VisitProgram(Program Program)
+      public void VisitConstant(Constant Constant)
       {
-         Append("PROGRAM");
-         AppendNewLine();
-         Program.Body.Accept(this);
+         var value = Constant.Value;
+
+         if (value is string)
+            Append("\"" + ((string)value).Replace("\"", "\\\"") + "\"");
+         else if (value is double)
+            Append(((double)value).ToString(CultureInfo.InvariantCulture));
+         else
+            Append(value == null ? "null" : value.ToString());
       }
 
-      public void VisitBlock(Block Block)
+      public void VisitDefinition(Definition Definition)
       {
-         Append("{");
-         IncreaseIndent();
-         foreach (var item in Block.Items)
+         VisitList(Definition);
+      }
+
+      public void VisitFunctionCall(FunctionCall FunctionCall)
+      {
+         VisitList(FunctionCall);
+      }
+
+      public void VisitIf(If If)
+      {
+         VisitList(If);
+      }
+
+      public void VisitList(List List)
+      {
+         Append("(");
+         foreach (var expression in List.Expressions.Take(List.Expressions.Count - 1))
          {
-            AppendNewLine();
-            item.Accept(this);
+            expression.Accept(this);
+            Append(" ");
          }
-         DecreaseIndent();
-         AppendNewLine();
-         Append("}");
-      }
-
-      public void VisitLoop(Loop ForLoop)
-      {
-         Append("FOR(");
-         ForLoop.Body.Accept(this);
+         List.Expressions.Last().Accept(this);
          Append(")");
-         AppendBody(ForLoop);
       }
 
-      public void VisitWindowshot(Windowshot Windowshot)
+      public void VisitLoop(Loop Loop)
       {
-         Append(FunctionCall("WINDOWSHOT", Windowshot.PositionX, Windowshot.PositionY, Windowshot.ImageUrl));
+         VisitList(Loop);
       }
 
-      private void AppendBody(StatementWithBodyBase StatementWithBody)
+      public void VisitQuote(Quote Quote)
       {
-         IncreaseIndent();
-         AppendNewLine();
-         StatementWithBody.Body.Accept(this);
-         DecreaseIndent();
+         VisitList(Quote);
       }
+
+      public void VisitSymbol(Symbol Symbol)
+      {
+         Append(Symbol.Value);
+      }
+
 
       private void AppendNewLine()
       {
@@ -88,75 +106,6 @@ namespace MacroLanguage
          _currentIndent--;
       }
       private int _currentIndent;
-
-      public void VisitMove(Move Move)
-      {
-         AppendFunctionCallStatement("MOVE", Move.TranslationX, Move.TranslationY);
-      }
-
-      public void VisitPosition(Position Position)
-      {
-         AppendFunctionCallStatement("POSITION", Position.X, Position.Y);
-      }
-
-      public void VisitPause(Pause Pause)
-      {
-         AppendFunctionCallStatement("PAUSE", Pause.Duration);
-      }
-
-      public void VisitLeftClick(LeftClick LeftClick)
-      {
-         AppendFunctionCallStatement("LEFT_CLICK");
-      }
-
-      public void VisitConstant(Constant Constant)
-      {
-         var value = Constant.Value;
-
-         if (value is string)
-            Append("\"" + ((string)value).Replace("\"", "\\\"") + "\"");
-         else if (value is double)
-            Append(((double)value).ToString(CultureInfo.InvariantCulture));
-         else
-            Append(value == null ? "null" : value.ToString());         
-      }
-
-      public void VisitSymbol(Symbol Symbol)
-      {
-         Append(Symbol.Value);
-      }
-
-      public void VisitList(List List)
-      {
-         Append("(");
-         foreach (var expression in List.Expressions.Take(List.Expressions.Count - 1))
-         {
-            expression.Accept(this);
-            Append(" ");
-         }
-         List.Expressions.Last().Accept(this);
-         Append(")");
-      }
-
-      public void VisitFunctionCall(FunctionCall FunctionCall)
-      {
-         VisitList(FunctionCall);
-      }
-      
-      public void VisitIf(If If)
-      {
-         Append("IF(");
-         If.Condition.Accept(this);
-         Append(")");
-         AppendBody(If);
-      }
-      
-      public void VisitDefinition(Definition VariableAssignment)
-      {
-         Append(VariableAssignment.Symbol);
-         Append(AssignmentSymbol());
-         VariableAssignment.Expression.Accept(this);
-      }
 
       private static string AssignmentSymbol()
       {

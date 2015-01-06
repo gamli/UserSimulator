@@ -11,17 +11,14 @@ namespace MacroViewModel_TEST
       [TestMethod]
       public void Create_TEST()
       {
-         AssertCreatesExpectedViewModelType(typeof(Block), typeof(BlockVM));
-         AssertCreatesExpectedViewModelType(typeof(LeftClick), typeof(LeftClickVM));
-         AssertCreatesExpectedViewModelType(typeof(Loop), typeof(ForLoopVM));
-         AssertCreatesExpectedViewModelType(typeof(Windowshot), typeof(WindowshotVM));
-         AssertCreatesExpectedViewModelType(typeof(Move), typeof(MoveVM));
-         AssertCreatesExpectedViewModelType(typeof(Pause), typeof(PauseVM));
-         AssertCreatesExpectedViewModelType(typeof(Position), typeof(PositionVM));
          AssertCreatesExpectedViewModelType(typeof(Constant), typeof(ConstantVM));
+         AssertCreatesExpectedViewModelType(typeof(Definition), typeof(DefinitionVM));
+         AssertCreatesExpectedViewModelType(typeof(FunctionCall), typeof(FunctionCallVM));
          AssertCreatesExpectedViewModelType(typeof(If), typeof(IfVM));
-         AssertCreatesExpectedViewModelType(typeof(Definition), typeof(VariableAssignmentVM));
-         AssertCreatesExpectedViewModelType(typeof(Program), typeof(ProgramVM));
+         AssertCreatesExpectedViewModelType(typeof(List), typeof(ListVM));
+         AssertCreatesExpectedViewModelType(typeof(Loop), typeof(LoopVM));
+         AssertCreatesExpectedViewModelType(typeof(Quote), typeof(QuoteVM));
+         AssertCreatesExpectedViewModelType(typeof(Symbol), typeof(SymbolVM));
          Assert.AreEqual(MacroViewModelFactory.Instance.Create(null), null);
       }
 

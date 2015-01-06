@@ -9,7 +9,7 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class VariableAssignmentVM : MacroBaseVM<Definition>
+   public class QuoteVM : ExpressionBaseVM
    {
       private NotifyingTransformedProperty<ExpressionBaseVM> _expressionVM;
       public ExpressionBaseVM ExpressionVM
@@ -20,7 +20,7 @@ namespace MacroViewModel
          }
       }
 
-      public VariableAssignmentVM(Definition Model)
+      public QuoteVM(Quote Model)
          : base(Model)
       {
          _expressionVM =

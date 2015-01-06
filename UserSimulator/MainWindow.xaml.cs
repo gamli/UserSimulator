@@ -38,7 +38,7 @@ namespace UserSimulator
          _model = new UserSimulatorModel();
          _model.PropertyChanged += (Sender, Args) => { 
             if (Args.PropertyName == "ProgramText")
-               _codeEditor.Document.Text = _model.ProgramText;
+               _codeEditor.Document.Text = _model.ExpressionText;
          };
          _viewModel = new UserSimulatorVM(_model);
          DataContext = _viewModel;
@@ -48,7 +48,7 @@ namespace UserSimulator
 
       private void CodeEditorLostFocus(object sender, RoutedEventArgs e)
       {
-         _model.ProgramText = _codeEditor.Text;
+         _model.ExpressionText = _codeEditor.Text;
       }
 
       private void InitializeProgram()
@@ -72,19 +72,19 @@ PROGRAM
 }
 ";
          if (File.Exists("data"))
-            _model.ProgramText = File.ReadAllText("data");         
+            _model.ExpressionText = File.ReadAllText("data");         
          else
-            _model.ProgramText = program;
+            _model.ExpressionText = program;
       }
 
       private void ButtonExecuteClick(object sender, RoutedEventArgs e)
       {
-         new ProgramInterpreter(_model.Program, _model.LastWindow).Start();
+         new ExpressionEvaluator(new RuntimeContext(_model.LastWindow)).Evaluate(_model.Expression);
       }
 
       private void ButtonSaveClick(object sender, RoutedEventArgs e)
       {
-         File.WriteAllText("data", _model.ProgramText);
+         File.WriteAllText("data", _model.ExpressionText);
       }
    }
 }

@@ -11,95 +11,28 @@ namespace MacroRuntime
 {
    public class ExpressionEvaluator
    {
-      private readonly ExpressionBase _expression;
-      private ExpressionVisitor _expressionVisitor;
-      private ContextBase _context;
+      ExpressionVisitor _visitor;
 
-      public ExpressionEvaluator(ContextBase Context = null)
+      public ExpressionEvaluator(ContextBase Context)
       {
-
-         _expression = Expression;
-         _expressionVisitor = new ExpressionVisitor(TargetWindow, Context);
+         _visitor = new ExpressionVisitor(Context);
       }
 
       public object Evaluate(ExpressionBase Expression)
       {
-         _expression.Accept(_expressionVisitor);
-         return _expressionVisitor.Value;
+         Expression.Accept(_visitor);
+         return _visitor.Value;
       }
 
       private class ExpressionVisitor : IVisitor
       {
          public object Value { get; private set; }
 
-         private readonly IntPtr _targetWindow;
          private ContextBase _context;
 
-         public ExpressionVisitor(IntPtr TargetWindow, ContextBase Context)
+         public ExpressionVisitor(ContextBase Context)
          {
-            _targetWindow = TargetWindow;
             _context = Context;
-         }
-
-         public void VisitProgram(Program Program)
-         {
-            throw new Exception("Malformed program: Program-Statement is not an expression");
-         }
-
-         public void VisitBlock(Block Block)
-         {
-            throw new Exception("Malformed program: Block-Statement is not an expression");
-         }
-
-         public void VisitLoop(Loop ForLoop)
-         {
-            throw new Exception("Malformed program: For-Statement is not an expression");
-         }
-
-         public void VisitWindowshot(Windowshot Windowshot)
-         {
-            using (var image = new Bitmap(EvaluateExpression<string>(Windowshot.ImageUrl)))
-            using (var windowContent = Window.Capture(_targetWindow))
-            using (var clippedWindowContent = new Bitmap(image.Width, image.Height))
-            using (var clippedWindowContentGraphics = Graphics.FromImage(clippedWindowContent))
-            {
-               clippedWindowContentGraphics.DrawImage(
-                  windowContent,
-                  0, 0,
-                  new Rectangle(
-                     EvaluateExpression<int>(Windowshot.PositionX) - image.Width / 2, EvaluateExpression<int>(Windowshot.PositionY) - image.Width / 2,
-                     image.Width, image.Height),
-                  GraphicsUnit.Pixel
-                  );
-
-               for (var x = 0; x < image.Width; x++)
-                  for (var y = 0; y < image.Height; y++)
-                     if (image.GetPixel(x, y) != clippedWindowContent.GetPixel(x, y))
-                     {
-                        Value = false;
-                        return;
-                     }
-            }
-            Value = true;
-         }
-
-         public void VisitMove(Move Move)
-         {
-            throw new Exception("Malformed program: Move-Statement is not an expression");
-         }
-
-         public void VisitPosition(Position Position)
-         {
-            throw new Exception("Malformed program: Position-Statement is not an expression");
-         }
-         public void VisitLeftClick(LeftClick LeftClick)
-         {
-            throw new Exception("Malformed program: LeftClick-Statement is not an expression");
-         }
-
-         public void VisitPause(Pause Pause)
-         {
-            throw new Exception("Malformed program: Pause-Statement is not an expression");
          }
 
          public void VisitConstant(Constant Constant)
@@ -107,36 +40,51 @@ namespace MacroRuntime
             Value = Constant.Value;
          }
 
+         public void VisitDefinition(Definition Definition)
+         {
+            var evaluatedExpression = EvaluateExpression<object>(Definition.Expression);
+            _context.SetValue(Definition.Symbol, evaluatedExpression);
+            Value = evaluatedExpression;
+         }
+
+         public void VisitFunctionCall(FunctionCall FunctionCall)
+         {
+            var function = (Func<object, IEnumerable<object>>)_context.GetValue(EvaluateExpression<Symbol>(FunctionCall.Function));
+            Value = function(FunctionCall.Arguments.Select(EvaluateExpression<object>));
+         }
+
+         public void VisitIf(If If)
+         {
+            if (EvaluateExpression<bool>(If.Condition))
+               Value = EvaluateExpression<object>(If.Consequent);
+            else
+               Value = EvaluateExpression<object>(If.Alternative);
+         }
+
+         public void VisitList(List List)
+         {
+            Value = List;
+         }
+
+         public void VisitLoop(Loop Loop)
+         {
+            while (EvaluateExpression<bool>(Loop.Condition))
+               Value = EvaluateExpression<object>(Loop.Body);
+         }
+
+         public void VisitQuote(Quote Quote)
+         {
+            Value = Quote.Expression;
+         }
+
          public void VisitSymbol(Symbol Symbol)
          {
             Value = _context.GetValue(Symbol);
          }
 
-         public void VisitList(List List)
-         {
-            foreach (var expression in List.Expressions.Take(List.Expressions.Count - 1))
-               expression.Accept(this);
-            Value = new ExpressionEvaluator(List.Expressions.Last(), _targetWindow, _contexts).Evaluate();
-         }
-
-         public void VisitFunctionCall(FunctionCall FunctionCall)
-         {
-            throw new NotImplementedException();
-         }
-
-         public void VisitIf(If IfStatement)
-         {
-            throw new Exception("Malformed program: If-Statement is not an expression");
-         }
-
-         public void VisitDefinition(Definition VariableAssignment)
-         {
-            throw new Exception("Malformed program: VariableAssignment-Statement is not an expression");
-         }
-
          private TValue EvaluateExpression<TValue>(ExpressionBase Expression)
          {
-            return (TValue)new ExpressionEvaluator(Expression, _targetWindow, _contexts).Evaluate();
+            return (TValue)new ExpressionEvaluator(new HierarchicalContext(_context)).Evaluate(Expression);
          }
       }
    }
