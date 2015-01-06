@@ -51,14 +51,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Block_TEST.cs" />
+    <Compile Include="List_TEST.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MockVisitor.cs" />
     <Compile Include="Loop_TEST.cs" />
     <Compile Include="If_TEST.cs" />
     <Compile Include="Constant_TEST.cs" />
     <Compile Include="MacroBase_TEST.cs" />
     <Compile Include="Definition_TEST.cs" />
+    <Compile Include="FunctionCall_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
