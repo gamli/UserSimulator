@@ -126,7 +126,8 @@ namespace MacroLanguage
 
       private static IParserConfigurator<object> ParserConfigurator()
       {
-         return ParserFactory.Configure<object>();
+         var config = ParserFactory.Configure<object>();
+         return config;
       }
 
       private static ITerminal<object> ConstantBoolean(IParserConfigurator<object> Config)

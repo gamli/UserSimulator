@@ -19,7 +19,7 @@ namespace MacroRuntime
          }
          catch(ArgumentException E)
          {
-            string exceptionMessage = string.Format("Symbol >>{0}<< is already defined", Symbol.Value);
+            string exceptionMessage = string.Format("Symbol >>{0}<< is already defined (did you mean 'set!' instead of 'define'?)", Symbol.Value);
             throw new RuntimeException(exceptionMessage, Symbol, this, E);
          }
       }
@@ -28,7 +28,7 @@ namespace MacroRuntime
       {
          if (!_values.ContainsKey(Symbol.Value))
          {
-            string exceptionMessage = string.Format("Symbol >>{0}<< is not defined", Symbol.Value);
+            string exceptionMessage = string.Format("Symbol >>{0}<< is not defined (did you mean 'define' instead of 'set!'?)", Symbol.Value);
             throw new RuntimeException(exceptionMessage, Symbol, this);
          }
          _values[Symbol.Value] = Value;

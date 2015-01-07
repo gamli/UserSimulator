@@ -46,6 +46,8 @@ namespace Macro
       public abstract void Accept(IVisitor Visitor);
       public override bool Equals(object Other)
       {
+         if (Other == this)
+            return true;
          if (Other == null || Other.GetType() != GetType())
             return false;
          return MacroEquals((MacroBase)Other);

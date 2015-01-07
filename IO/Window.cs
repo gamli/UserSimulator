@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
@@ -10,6 +11,7 @@ using ScreenShotDemo;
 
 namespace IO
 {
+   [ExcludeFromCodeCoverage]
    public static class Window
    {
       public static Image Capture(IntPtr WindowHandle)

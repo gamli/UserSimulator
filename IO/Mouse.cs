@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace IO
 {
+   [ExcludeFromCodeCoverage]
    public static class Mouse
    {
       public static MousePoint Position

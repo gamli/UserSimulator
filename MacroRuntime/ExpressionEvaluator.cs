@@ -11,17 +11,32 @@ namespace MacroRuntime
 {
    public class ExpressionEvaluator
    {
-      ExpressionVisitor _visitor;
+      private ExpressionVisitor _visitor;
+      private ContextBase _context;
 
       public ExpressionEvaluator(ContextBase Context)
       {
+         _context = Context;
          _visitor = new ExpressionVisitor(Context);
       }
 
       public object Evaluate(ExpressionBase Expression)
       {
-         Expression.Accept(_visitor);
-         return _visitor.Value;
+         try
+         {
+            Expression.Accept(_visitor);
+            return _visitor.Value;
+         }
+         catch (RuntimeException E)
+         {
+            Logger.Instance.Log("ExpressionEvaluator.Evaluate: " + E.Message);
+            throw;
+         }
+         catch (Exception E)
+         {
+            Logger.Instance.Log("ExpressionEvaluator.Evaluate: " + E.Message);
+            throw new RuntimeException("Unknown exception", Expression, _context, E);
+         }
       }
 
       private class ExpressionVisitor : IVisitor
@@ -49,8 +64,9 @@ namespace MacroRuntime
 
          public void VisitFunctionCall(FunctionCall FunctionCall)
          {
-            var function = (Func<object, IEnumerable<object>>)_context.GetValue(EvaluateExpression<Symbol>(FunctionCall.Function));
-            Value = function(FunctionCall.Arguments.Select(EvaluateExpression<object>).ToList());
+            var function = EvaluateExpression<Func<List<object>, object>>(FunctionCall.Function);
+            var args = FunctionCall.Arguments.Select(EvaluateExpression<object>).ToList();
+            Value = function(args);
          }
 
          public void VisitIf(If If)
