@@ -73,7 +73,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="UserSimulatorModel.cs" />
-    <Compile Include="UserSimulatorViewModel.cs" />
+    <Compile Include="UserSimulatorVM.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
