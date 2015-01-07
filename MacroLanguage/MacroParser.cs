@@ -212,19 +212,18 @@ namespace MacroLanguage
          ifWithAlternative.SetPrecedence(IF_WITH_ALTERNATIVE_PRECEDENCE);
          ReduceToSelf(ifWithAlternative);
 
-         var ifWithoutAlternative =
-            ifExpression.AddProduction(ListGeneric(Config, "if-without-alternative-expr", ReduceIf, "if", Expression, Expression));
-         ifWithoutAlternative.SetPrecedence(IF_WITHOUT_PRECEDENCE);
-         ReduceToSelf(ifWithoutAlternative);
-
          return ifExpression;
       }
 
       private static If ReduceIf(object[] ParseResults)
       {
-         var ifExpression = new If { Condition = (ExpressionBase)ParseResults[2], Consequent = (ExpressionBase)ParseResults[3] };
-         if(ParseResults.Length > 5)
-            ifExpression.Alternative = (ExpressionBase)ParseResults[4];
+         var ifExpression = 
+            new If 
+               { 
+                  Condition = (ExpressionBase)ParseResults[2], 
+                  Consequent = (ExpressionBase)ParseResults[3], 
+                  Alternative = (ExpressionBase)ParseResults[4] 
+               };
          return ifExpression;
       }
 

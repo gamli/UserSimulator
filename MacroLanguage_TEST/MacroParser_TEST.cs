@@ -64,6 +64,16 @@ namespace MacroLanguage_TEST
          {
             // everything ok
          }
+
+         try
+         {
+            _parser.Parse("(if True consequent)");
+            Assert.Fail();
+         }
+         catch (ParseException)
+         {
+            // everything ok
+         }
       }
    }
 }
