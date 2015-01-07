@@ -100,10 +100,6 @@ namespace MacroLanguage
          ifExpression.SetPrecedence(IF_PRECEDENCE);
          ReduceToSelf(ifExpression);
 
-         //var list = expression.AddProduction(List(config, expressions));
-         //list.SetPrecedence(LIST_PRECEDENCE);
-         //ReduceToSelf(list);
-
          var loop = expression.AddProduction(Loop(config, expression));
          loop.SetPrecedence(LOOP_PRECEDENCE);
          ReduceToSelf(loop);

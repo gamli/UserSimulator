@@ -45,13 +45,6 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(new If { Condition = new Constant(true), Consequent = new Constant("Consequent"), Alternative = new Constant("Alternative") });
          text.Append(" (if True \"Consequent\" \"Alternative\")");
 
-         /*var list = new List();
-         list.Expressions.Add(new Constant(-4711.1147));
-         list.Expressions.Add(new Constant(true));
-         list.Expressions.Add(new Constant("4711"));
-         macro.Expressions.Add(list);
-         text.Append(" (-4711.1147 True \"4711\")");*/
-
          macro.Expressions.Add(new Loop { Condition = new Constant(true), Body = new FunctionCall { Function = new Symbol("fun") } });
          text.Append(" (loop True (fun))");
 
