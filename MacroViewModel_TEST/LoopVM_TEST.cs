@@ -14,9 +14,9 @@ namespace MacroViewModel_TEST
          var forLoop = new Loop { Condition = new Constant(true), Body = new List() };
          using(var forLoopVM = new LoopVM(forLoop))
          {
-            Assert.AreEqual(forLoop.Body, forLoopVM.BodyVM.Model);
+            Assert.AreEqual(forLoop.Condition, forLoopVM.ConditionVM.Model);
             forLoop.Condition = new Constant(false);
-            Assert.AreEqual(forLoop.Body, forLoopVM.BodyVM.Model);
+            Assert.AreEqual(forLoop.Condition, forLoopVM.ConditionVM.Model);
          }
       }
 

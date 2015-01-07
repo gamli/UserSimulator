@@ -45,5 +45,10 @@ namespace Macro
          var otherList = (List)OtherMacro;
          return Expressions.SequenceEqual(otherList.Expressions);
       }
+
+      public override string ToString()
+      {
+         return "(" + string.Join(" ", Expressions) + ")";
+      }
    }
 }

@@ -10,8 +10,8 @@ namespace Macro_TEST
       [TestMethod]
       public void Constructor_TEST()
       {
-         var block = new List();
-         Assert.IsNotNull(block.Expressions);
+         var list = new List();
+         Assert.IsNotNull(list.Expressions);
       }
 
       [TestMethod]

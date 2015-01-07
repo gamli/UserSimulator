@@ -54,6 +54,16 @@ namespace MacroLanguage_TEST
          {
             // everything ok
          }
+
+         try
+         {
+            _parser.Parse("}");
+            Assert.Fail();
+         }
+         catch (ParseException)
+         {
+            // everything ok
+         }
       }
    }
 }

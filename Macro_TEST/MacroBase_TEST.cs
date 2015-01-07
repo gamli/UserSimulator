@@ -54,5 +54,20 @@ namespace Macro_TEST
             return Equals(SomeProperty, ((MockExpressionWithSomeProperty)OtherMacro).SomeProperty);
          }
       }
+
+      [TestMethod]
+      public void ToString_TEST()
+      {
+         var list = new List();
+         list.Expressions.Add(new Symbol("aSymbol"));
+         list.Expressions.Add(new Constant("a string"));
+         list.Expressions.Add(new Constant(4711));
+         list.Expressions.Add(new Constant(-4711.1174));
+         list.Expressions.Add(new Constant(true));
+         var functionCall = new FunctionCall { Function = new Symbol("aFunctionCall") };
+         functionCall.Expressions.Add(new Quote { Expression = new Symbol("aQuotedSymbol") });
+         list.Expressions.Add(functionCall);
+         Assert.AreEqual("(aSymbol \"a string\" 4711 -4711.1174 True (aFunctionCall (quote aQuotedSymbol)))", list.ToString());
+      }
    }
 }

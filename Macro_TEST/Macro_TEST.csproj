@@ -61,6 +61,7 @@
     <Compile Include="Definition_TEST.cs" />
     <Compile Include="FunctionCall_TEST.cs" />
     <Compile Include="Quote_TEST.cs" />
+    <Compile Include="SpecialFormBase_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

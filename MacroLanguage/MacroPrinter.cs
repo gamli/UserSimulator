@@ -84,51 +84,6 @@ namespace MacroLanguage
          Append(Symbol.Value);
       }
 
-
-      private void AppendNewLine()
-      {
-         _sb.Append("\r\n");
-         Indent();
-      }
-
-      private void Indent()
-      {
-         for (var i = 0; i < _currentIndent; i++)
-            _sb.Append("   ");
-      }
-
-      private void IncreaseIndent()
-      {
-         _currentIndent++;
-      }
-      private void DecreaseIndent()
-      {
-         _currentIndent--;
-      }
-      private int _currentIndent;
-
-      private static string AssignmentSymbol()
-      {
-         return " = ";
-      }
-
-      private void AppendFunctionCallStatement(string FunctionName, params MacroBase[] FunctionParameters)
-      {
-         Append(FunctionCall(FunctionName, FunctionParameters));
-      }
-
-      private static string FunctionCall(string FunctionName, params MacroBase[] FunctionParameters)
-      {
-         var printedFunctionParameters =
-            FunctionParameters.Select(Param => new MacroPrinter(Param).Print());
-         return FunctionName + "(" + string.Join(ParameterSeperator(), printedFunctionParameters) + ")";
-      }
-
-      private static string ParameterSeperator()
-      {
-         return ", ";
-      }
-
       private void Append(string Text)
       {
          _sb.Append(Text);

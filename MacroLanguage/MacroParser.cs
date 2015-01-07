@@ -228,19 +228,6 @@ namespace MacroLanguage
          return ifExpression;
       }
 
-      private static INonTerminal<object> List(IParserConfigurator<object> Config, INonTerminal<object> Expressions)
-      {
-         return ListGeneric(Config, "list-expr", ReduceList, Expressions);
-      }
-
-      private static List ReduceList(object[] ParseResults)
-      {
-         var list = new List();
-         foreach (var listElement in (IEnumerable<object>)ParseResults[1])
-            list.Expressions.Add((ExpressionBase)listElement);
-         return list;
-      }
-
       private static INonTerminal<object> Loop(IParserConfigurator<object> Config, INonTerminal<object> Expression)
       {
          return ListGeneric(Config, "loop-expr", ReduceLoop, "loop", Expression, Expression);

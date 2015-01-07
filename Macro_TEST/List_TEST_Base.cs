@@ -25,7 +25,7 @@ namespace Macro_TEST
          var clone2 = MacroCloner.Clone(List2);
          clone2.Expressions.Add(null);
 
-         return List1.Expressions.SequenceEqual(List2.Expressions) && Equals(List1, List2) && !Equals(clone1, clone2);
+         return Equals(List1, List2) && !Equals(clone1, clone2) && List1.Expressions.SequenceEqual(List2.Expressions);
       }
    }
 }

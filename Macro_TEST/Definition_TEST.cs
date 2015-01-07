@@ -13,7 +13,12 @@ namespace Macro_TEST
          var definition = new Definition { Symbol = new Symbol("varName"), Expression = new Constant(true) };
          var clone = MacroCloner.Clone(definition);
          Assert.AreEqual(definition, clone);
-         
+
+         definition.Expressions.Add(new Constant("not allowed"));
+         AssertListsAreNotEqual(definition, clone);
+         definition.Expressions.RemoveAt(definition.Expressions.Count - 1);
+         AssertListsAreEqual(definition, clone);
+
          definition.Expression = new Constant(false);
          AssertListsAreNotEqual(definition, clone);
          definition.Expression = new Constant(true);
