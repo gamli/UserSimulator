@@ -22,7 +22,7 @@
 
       <!-- first row -->
 
-      <Grid DataContext="{Binding ProgramVM}" Grid.Row="0" Grid.Column="0">
+      <Grid DataContext="{Binding ExpressionVM}" Grid.Row="0" Grid.Column="0">
          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <macroview:MacroBaseView/>
          </ScrollViewer>

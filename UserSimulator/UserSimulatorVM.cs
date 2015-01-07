@@ -32,7 +32,7 @@ namespace UserSimulator
 
          _expressionVM =
             new NotifyingTransformedProperty<ExpressionBaseVM>(
-               new[] { "ExpressionBase" }, "ExpressionBaseVM",
+               new[] { "Expression" }, "ExpressionVM",
                Model, this,
                () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Expression),
                ViewModel => ViewModel.Dispose());
