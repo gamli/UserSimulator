@@ -26,7 +26,7 @@ namespace MacroRuntime
       protected override object SymbolNotFoundGetValue(Symbol Symbol)
       {
          var exceptionMessage = "Symbol >>" + Symbol.Value + "<< is not defined";
-         return Try(() => { throw new Exception(exceptionMessage); }, exceptionMessage);
+         return Try(() => { throw new RuntimeException(exceptionMessage, Symbol, this); }, exceptionMessage);
       }
 
       private object MouseMove(object TranslationX, object TranslationY)
@@ -112,12 +112,16 @@ namespace MacroRuntime
          {
             return Function();
          }
+         catch(RuntimeException)
+         {
+            throw;
+         }
          catch (Exception E)
          {
             var descriptionSeparator = new string('=', ExceptionMessage.Length);
             var messageSeparator = new string('-', E.Message.Length);
             Logger.Instance.Log(string.Format("{0}\n\n{1}\n{2}", ExceptionMessage, descriptionSeparator, E.Message, messageSeparator, E.StackTrace));
-            throw;
+            throw new RuntimeException("Unknown exception", null, this, E);
          }
       }
    }

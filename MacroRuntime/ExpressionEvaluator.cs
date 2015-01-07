@@ -43,14 +43,14 @@ namespace MacroRuntime
          public void VisitDefinition(Definition Definition)
          {
             var evaluatedExpression = EvaluateExpression<object>(Definition.Expression);
-            _context.SetValue(Definition.Symbol, evaluatedExpression);
+            _context.DefineValue(Definition.Symbol, evaluatedExpression);
             Value = evaluatedExpression;
          }
 
          public void VisitFunctionCall(FunctionCall FunctionCall)
          {
             var function = (Func<object, IEnumerable<object>>)_context.GetValue(EvaluateExpression<Symbol>(FunctionCall.Function));
-            Value = function(FunctionCall.Arguments.Select(EvaluateExpression<object>));
+            Value = function(FunctionCall.Arguments.Select(EvaluateExpression<object>).ToList());
          }
 
          public void VisitIf(If If)
@@ -63,7 +63,7 @@ namespace MacroRuntime
 
          public void VisitList(List List)
          {
-            Value = List;
+            throw new RuntimeException("Cannot evaluate list", List, _context);
          }
 
          public void VisitLoop(Loop Loop)
