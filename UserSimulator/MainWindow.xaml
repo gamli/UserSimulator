@@ -24,7 +24,10 @@
 
       <Grid DataContext="{Binding ExpressionVM}" Grid.Row="0" Grid.Column="0">
          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <macroview:MacroBaseView/>
+            <StackPanel>
+               <macroview:MacroBaseView/>
+               <macroview:MacroBaseView x:Name="_moo"/>
+            </StackPanel>
          </ScrollViewer>
       </Grid>
 

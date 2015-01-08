@@ -8,9 +8,10 @@
              d:DesignHeight="300" d:DesignWidth="300">
    <StackPanel>
       <StackPanel Orientation="Horizontal">
-         <Image Source="/MacroView;component/Resources/IfStatementIcon.png" Width="24" Height="24"/>
-         <macroview:MacroBaseView DataContext="{Binding ExpressionVM}" Margin="5, 0, 0, 0"/>
+         <Image Source="/MacroView;component/Resources/IfIcon.png" Width="24" Height="24"/>
+         <macroview:MacroBaseView DataContext="{Binding ConditionVM}" Margin="5, 0, 0, 0"/>
       </StackPanel>
-      <macroview:MacroBaseView DataContext="{Binding BodyVM}" Margin="24, 0, 0, 0"/>
+      <macroview:MacroBaseView DataContext="{Binding ConsequentVM}" Margin="24, 0, 0, 0"/>
+      <macroview:MacroBaseView DataContext="{Binding AlternativeVM}" Margin="24, 0, 0, 0"/>
    </StackPanel>
 </UserControl>

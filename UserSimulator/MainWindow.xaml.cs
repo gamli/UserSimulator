@@ -36,8 +36,8 @@ namespace UserSimulator
          InitializeComponent();
 
          _model = new UserSimulatorModel();
-         _model.PropertyChanged += (Sender, Args) => { 
-            if (Args.PropertyName == "ProgramText")
+         _model.PropertyChanged += (Sender, Args) => {
+            if (Args.PropertyName == "ExpressionText")
                _codeEditor.Document.Text = _model.ExpressionText;
          };
          _viewModel = new UserSimulatorVM(_model);
@@ -53,33 +53,14 @@ namespace UserSimulator
 
       private void InitializeProgram()
       {
-         const string program =
-@"
-PROGRAM
-{
-   FOR(30)
-      {
-         IF_WINDOWSHOT(0, 0, null)
-            {
-               POSITION(750, 375);
-               PAUSE(100);
-               LEFT_CLICK();
-               PAUSE(100);
-               POSITION(0, 0);
-            }
-         PAUSE(1000);
-      }
-}
-";
          if (File.Exists("data"))
-            _model.ExpressionText = File.ReadAllText("data");         
-         else
-            _model.ExpressionText = program;
+            _model.ExpressionText = File.ReadAllText("data");
+         _codeEditor.Document.Text = _model.ExpressionText;
       }
 
       private void ButtonExecuteClick(object sender, RoutedEventArgs e)
       {
-         new ExpressionEvaluator(new RuntimeContext(_model.LastWindow)).Evaluate(_model.Expression);
+         _moo.DataContext = new ExpressionEvaluator(new RuntimeContext(_model.LastWindow)).Evaluate(_model.Expression);
       }
 
       private void ButtonSaveClick(object sender, RoutedEventArgs e)

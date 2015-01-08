@@ -42,24 +42,24 @@ namespace UserSimulator
          get { return _expression; }
          set
          {
-            var oldProgram = _expression;
+            var oldExpression = _expression;
             if (SetPropertyValue(ref _expression, value))
             {
-               if (oldProgram != null)
-                  oldProgram.MacroChanged -= HandleProgramChanged;
+               if (oldExpression != null)
+                  oldExpression.MacroChanged -= HandleExpressionChanged;
                if (value != null)
-                  value.MacroChanged += HandleProgramChanged;
-               HandleProgramChanged();
+                  value.MacroChanged += HandleExpressionChanged;
+               HandleExpressionChanged();
             }
          }
       }
-      private void HandleProgramChanged(object Sender, EventArgs Args)
+      private void HandleExpressionChanged(object Sender, EventArgs Args)
       {
-         HandleProgramChanged();
+         HandleExpressionChanged();
       }
-      private void HandleProgramChanged()
+      private void HandleExpressionChanged()
       {
-         SetPropertyValue(ref _expressionText, MacroPrinter.Print(_expression), "ProgramText");
+         SetPropertyValue(ref _expressionText, MacroPrinter.Print(_expression));
       }
 
 

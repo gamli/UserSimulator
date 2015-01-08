@@ -6,8 +6,8 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <StackPanel Orientation="Horizontal">
-      <TextBlock Text="'" FontSize="24"/>
-      <macroview:MacroBaseView DataContext="{Binding ExpressionVM}"/>
+   <StackPanel>
+      <TextBlock Text="quote" FontStyle="Italic"/>
+      <macroview:MacroBaseView DataContext="{Binding ExpressionVM}" FontStyle="Italic"/>
    </StackPanel>
 </UserControl>

@@ -7,9 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
    <StackPanel Orientation="Horizontal">
-      <Image Source="/MacroView;component/Resources/PositionIcon.png" Width="24" Height="24"/>
-      <macroview:MacroBaseView DataContext="{Binding Symbol}"/>
-      <TextBlock Text="=" Margin="5 0 5 0"/>
-      <macroview:MacroBaseView DataContext="{Binding Expression}"/>
+      <macroview:MacroBaseView DataContext="{Binding SymbolVM}" VerticalAlignment="Top"/>
+      <Image Source="/MacroView;component/Resources/PositionIcon.png" Width="24" Height="24" VerticalAlignment="Top"/>
+      <macroview:MacroBaseView DataContext="{Binding ExpressionVM}" VerticalAlignment="Top"/>
    </StackPanel>
 </UserControl>
