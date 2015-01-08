@@ -63,6 +63,7 @@ namespace Common_TEST
                12345678,
                BoxedIntValue => releaseCounter++))
          {
+            Assert.AreEqual(3, transformedCollection.Transformed.Count);
             try
             {
                testCollection.Move(0, 1);
@@ -77,6 +78,7 @@ namespace Common_TEST
 
       [TestMethod]
       [ExcludeFromCodeCoverage]
+      [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
       public void IllegalCollectionChangedEventArgs_TEST()
       {
          var testCollection = new ObservableCollection<object> { 0 };
@@ -88,10 +90,10 @@ namespace Common_TEST
                12345678,
                BoxedIntValue => releaseCounter++))
          {
-            var eventName = "CollectionChanged";
-            var eventInfo = testCollection.GetType().GetEvent(eventName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.AreEqual(1, transformedCollection.Transformed.Count);
+            const string EVENT_NAME = "CollectionChanged";
             var eventDelegate =
-               (MulticastDelegate)testCollection.GetType().GetField(eventName, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(testCollection);
+               (MulticastDelegate)testCollection.GetType().GetField(EVENT_NAME, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(testCollection);
 
             Assert.IsNotNull(eventDelegate);
 
@@ -105,10 +107,10 @@ namespace Common_TEST
                   handler.Method.Invoke(handler.Target, new object[] { testCollection, illegalEventArgs });
                Assert.Fail();
             }
-            catch (TargetInvocationException Ex)
+            catch (TargetInvocationException ex)
             {
                // everything ok
-               Assert.AreEqual(Ex.InnerException.GetType(), typeof(ArgumentException));
+               Assert.AreEqual(ex.InnerException.GetType(), typeof(ArgumentException));
             }
          }
       }

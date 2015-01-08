@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Common;
 
 namespace Common_TEST
@@ -14,7 +10,7 @@ namespace Common_TEST
          return new MockWithTransformedProperty(TestNotifyPropertyChanged, Release);
       }
 
-      private TransformedProperty<bool> _isYourNameHugo;
+      private readonly TransformedProperty<bool> _isYourNameHugo;
       public bool IsYourNameHugo { get { return _isYourNameHugo.Value; } }
 
       public MockWithTransformedProperty(MockNotifyPropertyChanged TestNotifyPropertyChanged, Action<bool> Release)

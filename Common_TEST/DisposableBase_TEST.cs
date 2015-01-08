@@ -1,5 +1,4 @@
-﻿using System;
-using Common;
+﻿using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Common_TEST

@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Macro;
 
 namespace MacroView
@@ -20,7 +10,7 @@ namespace MacroView
    /// <summary>
    /// Interaction logic for ConstantExpressionView.xaml
    /// </summary>
-   public partial class ConstantView : UserControl
+   public partial class ConstantView
    {
       public ConstantView()
       {
@@ -32,7 +22,7 @@ namespace MacroView
       public override DataTemplate SelectTemplate(object Constant, DependencyObject Container)
       {
          FrameworkElement element = Container as FrameworkElement;
-         if (element != null && Constant != null && Constant is Constant)
+         if (element != null && Constant is Constant)
          {
             var constantValueType = ((Constant)Constant).Value.GetType();
             if (constantValueType == typeof(bool))

@@ -2,11 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common
 {
@@ -32,14 +27,13 @@ namespace Common
          return _transform();
       }
 
-      private HashSet<string> _sourcePropertyNames;
+      private readonly HashSet<string> _sourcePropertyNames;
       protected string _targetPropertyName;
       private readonly INotifyPropertyChanged _sourcePropertyOwner;
       private readonly Func<T> _transform;
       private readonly Action<T> _release;
       private void SourcePropertyOwnerPropertyChanged(object Sender, PropertyChangedEventArgs Args)
       {
-         Contract.Equals(Sender, _sourcePropertyOwner);
          if (!_sourcePropertyNames.Contains(Args.PropertyName))
             return;
          UpdateValueFromSource();

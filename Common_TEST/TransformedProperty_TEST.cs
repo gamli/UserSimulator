@@ -1,6 +1,4 @@
-﻿using System;
-using Common;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Common_TEST
 {
@@ -33,6 +31,7 @@ namespace Common_TEST
       {
          var testModel = MockNotifyPropertyChanged.Create();
          var releaseCounter = 0;
+         // ReSharper disable once UnusedVariable - testObject is implicitly used through releaseCounter
          using (var testObject = MockWithTransformedProperty.Create(testModel, BoolValue => releaseCounter++))
          {
             Assert.AreEqual(releaseCounter, 0);

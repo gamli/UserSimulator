@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using IO;
 using Macro;
 
@@ -14,7 +10,7 @@ namespace MacroRuntime
 {
    public class RuntimeContext : ContextBase
    {
-      private IntPtr _targetWindow;
+      private readonly IntPtr _targetWindow;
 
       public RuntimeContext(IntPtr TargetWindow)
       {

@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using Common;
 using IO;
 using Macro;
 using MacroLanguage;
+using Window = IO.Window;
 
 namespace UserSimulator
 {
@@ -18,9 +14,8 @@ namespace UserSimulator
    {
       private bool _disposed;
 
-      private Timer _timer;
+      private readonly Timer _timer;
 
-      private object _lastScreenshotLocker = new object();
       private Image _lastWindowshot;
       public Image LastWindowshot
       {
@@ -76,14 +71,15 @@ namespace UserSimulator
                   Expression = (ExpressionBase)_parser.Parse(_expressionText);
                   ParserError = "Parsing successfull";
                }
-               catch (ParseException E)
+               catch (ParseException e)
                {
-                  ParserError = "(LINE: " + E.LineNumber + ") " + E.Message;
+                  ParserError = "(LINE: " + e.LineNumber + ") " + e.Message;
                }
             }
          }
       }
-      MacroParser _parser = new MacroParser();
+
+      readonly MacroParser _parser = new MacroParser();
 
       private string _parserError;
       public string ParserError { get { return _parserError; } set { SetPropertyValue(ref _parserError, value); } }
@@ -91,8 +87,12 @@ namespace UserSimulator
 
       public UserSimulatorModel(int ScreenshotInterval = 100)
       {
-         LastWindowshot = 
-            Bitmap.FromStream(Application.GetResourceStream(new Uri("pack://application:,,,/UserSimulator;component/Resources/ErrorScreenshot.png")).Stream);
+         var screenshotErrorImage =
+            Application.GetResourceStream(
+               new Uri("pack://application:,,,/UserSimulator;component/Resources/ErrorScreenshot.png"));
+         if (screenshotErrorImage != null)
+            LastWindowshot =
+               Image.FromStream(screenshotErrorImage.Stream);
          var initialFunction = new FunctionCall { Function = new Symbol("print") };
          initialFunction.Expressions.Add(new Constant("Hello World"));
          Expression = initialFunction;         
@@ -107,8 +107,8 @@ namespace UserSimulator
          if (!Keyboard.IsControlKeyDown())
             return;
          var mousePosition = Mouse.Position;
-         LastWindow = Desktop.WindowHandle(mousePosition.X, mousePosition.Y);
-         LastWindowshot = IO.Window.Capture(LastWindow);
+         LastWindow = Desktop.WindowHandle(mousePosition.MouseX, mousePosition.MouseY);
+         LastWindowshot = Window.Capture(LastWindow);
       }
 
       public void Dispose()

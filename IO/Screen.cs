@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using ScreenShotDemo;
 
@@ -22,7 +17,7 @@ namespace IO
       {
          get
          {
-            return Screen.PrimaryWidth;
+            return (int) SystemParameters.PrimaryScreenWidth;
          }
       }
 
@@ -30,7 +25,7 @@ namespace IO
       {
          get
          {
-            return Screen.PrimaryHeight;
+            return (int)SystemParameters.PrimaryScreenHeight;
          }
       }
    }

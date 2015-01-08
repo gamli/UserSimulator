@@ -1,35 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using IO;
-using Macro;
-using MacroLanguage;
 using MacroRuntime;
-using MacroViewModel;
 
 namespace UserSimulator
 {
    /// <summary>
    /// Interaction logic for MainWindow.xaml
    /// </summary>
-   public partial class MainWindow : System.Windows.Window
+   public partial class MainWindow
    {
       private readonly UserSimulatorModel _model;
-      private readonly UserSimulatorVM _viewModel;
 
       public MainWindow()
       {
@@ -40,13 +20,13 @@ namespace UserSimulator
             if (Args.PropertyName == "ExpressionText")
                _codeEditor.Document.Text = _model.ExpressionText;
          };
-         _viewModel = new UserSimulatorVM(_model);
-         DataContext = _viewModel;
+         var viewModel = new UserSimulatorVM(_model);
+         DataContext = viewModel;
 
          InitializeProgram();         
       }
 
-      private void CodeEditorLostFocus(object sender, RoutedEventArgs e)
+      private void CodeEditorLostFocus(object Sender, RoutedEventArgs E)
       {
          _model.ExpressionText = _codeEditor.Text;
       }
@@ -58,12 +38,12 @@ namespace UserSimulator
          _codeEditor.Document.Text = _model.ExpressionText;
       }
 
-      private void ButtonExecuteClick(object sender, RoutedEventArgs e)
+      private void ButtonExecuteClick(object Sender, RoutedEventArgs E)
       {
          _moo.DataContext = new ExpressionEvaluator(new RuntimeContext(_model.LastWindow)).Evaluate(_model.Expression);
       }
 
-      private void ButtonSaveClick(object sender, RoutedEventArgs e)
+      private void ButtonSaveClick(object Sender, RoutedEventArgs E)
       {
          File.WriteAllText("data", _model.ExpressionText);
       }

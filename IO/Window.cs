@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using ScreenShotDemo;
 
 namespace IO
@@ -21,7 +17,7 @@ namespace IO
 
 
       [DllImport("user32.dll")]
-      static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+      static extern int GetWindowText(IntPtr HWnd, StringBuilder Text, int Count);
       public static string Text(IntPtr WindowHandle)
       {
          const int MAX_LENGTH = 4096;
@@ -32,7 +28,7 @@ namespace IO
       }
 
       [DllImport("user32.dll")]
-      private static extern bool ScreenToClient(IntPtr hWnd, ref Point lpPoint);
+      private static extern bool ScreenToClient(IntPtr HWnd, ref Point LpPoint);
       public static void ScreenToClient(IntPtr WindowHandle, int ScreenX, int ScreenY, out int ClientX, out int ClientY)
       {
          var point = new Point { X = ScreenX, Y = ScreenY };
@@ -41,7 +37,7 @@ namespace IO
          ClientY = point.Y;
       }
       [DllImport("user32.dll")]
-      private static extern bool ClientToScreen(IntPtr hWnd, ref Point lpPoint);
+      private static extern bool ClientToScreen(IntPtr HWnd, ref Point LpPoint);
       public static void ClientToScreen(IntPtr WindowHandle, int ClientX, int ClientY, out int ScreenX, out int ScreenY)
       {
          var point = new Point { X = ClientX, Y = ClientY };

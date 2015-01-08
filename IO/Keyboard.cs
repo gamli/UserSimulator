@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 
 namespace IO
 {
@@ -16,7 +12,7 @@ namespace IO
       }
       private const int KEY_PRESSED = 0x8000;
       private const int VK_CONTROL = 0x11;
-      [System.Runtime.InteropServices.DllImport("user32.dll")]
-      static extern short GetKeyState(int key);
+      [DllImport("user32.dll")]
+      static extern short GetKeyState(int Key);
    }
 }

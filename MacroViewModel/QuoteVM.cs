@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Common;
+﻿using Common;
 using Macro;
 
 namespace MacroViewModel
 {
    public class QuoteVM : ExpressionBaseVM
    {
-      private NotifyingTransformedProperty<ExpressionBaseVM> _expressionVM;
+      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _expressionVM;
       public ExpressionBaseVM ExpressionVM
       {
          get

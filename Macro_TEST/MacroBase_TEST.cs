@@ -41,7 +41,7 @@ namespace Macro_TEST
       {
          private bool _someProperty;
          [ExcludeFromCodeCoverage]
-         public bool SomeProperty { get { return _someProperty; } set { SetPropertyValue(ref _someProperty, value); } }
+         public bool SomeProperty { private get { return _someProperty; } set { SetPropertyValue(ref _someProperty, value); } }
 
          [ExcludeFromCodeCoverage]
          public override void Accept(IVisitor Visitor)

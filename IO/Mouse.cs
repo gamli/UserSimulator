@@ -18,7 +18,7 @@ namespace IO
          }
          set
          {
-            SetCursorPos(value.X, value.Y);
+            SetCursorPos(value.MouseX, value.MouseY);
          }
       }
 
@@ -26,12 +26,12 @@ namespace IO
       {
          get
          {
-            return Position.X;
+            return Position.MouseX;
          }
          set
          {
             var position = Position;
-            position.X = value;
+            position.MouseX = value;
             Position = position;
          }
       }
@@ -40,20 +40,14 @@ namespace IO
       {
          get
          {
-            return Position.Y;
+            return Position.MouseY;
          }
          set
          {
             var position = Position;
-            position.Y = value;
+            position.MouseY = value;
             Position = position;
          }
-      }
-
-      public static void LeftClick(int X, int Y)
-      {
-         Position = new MousePoint(X, Y);
-         LeftClick();
       }
 
       public static void LeftClick()
@@ -66,8 +60,8 @@ namespace IO
          var position = Position;
          mouse_event(
             (int)MouseEventFlags,
-            position.X,
-            position.Y,
+            position.MouseX,
+            position.MouseY,
             0,
             0);
       }
@@ -76,21 +70,21 @@ namespace IO
       private static extern bool SetCursorPos(int X, int Y);
 
       [DllImport("user32.dll")]
-      private static extern bool GetCursorPos(out MousePoint lpMousePoint);
+      private static extern bool GetCursorPos(out MousePoint LpMousePoint);
 
       [DllImport("user32.dll")]
-      private static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
+      private static extern void mouse_event(int DwFlags, int Dx, int Dy, int DwData, int DwExtraInfo);
 
       [StructLayout(LayoutKind.Sequential)]
       public struct MousePoint
       {
-         public int X;
-         public int Y;
+         public int MouseX;
+         public int MouseY;
 
-         public MousePoint(int x, int y)
+         public MousePoint(int MouseX, int MouseY)
          {
-            X = x;
-            Y = y;
+            this.MouseX = MouseX;
+            this.MouseY = MouseY;
          }
       }
 

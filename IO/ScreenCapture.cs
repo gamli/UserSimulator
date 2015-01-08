@@ -2,16 +2,19 @@
 // stolen from http://www.developerfusion.com/code/4630/capture-a-screen-shot/
 
 using System;
-using System.Runtime.InteropServices;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
+
+// ReSharper disable once CheckNamespace
 namespace ScreenShotDemo
 {
    /// <summary>
    /// Provides functions to capture the entire screen, or a particular window, and save it to a file.
    /// </summary>
    [ExcludeFromCodeCoverage]
+   [SuppressMessage("ReSharper", "InconsistentNaming")]
    public class ScreenCapture
    {
       /// <summary>
@@ -81,7 +84,8 @@ namespace ScreenShotDemo
       /// <summary>
       /// Helper class containing Gdi32 API functions
       /// </summary>
-      private class GDI32
+      [SuppressMessage("ReSharper", "InconsistentNaming")]
+      private static class GDI32
       {
 
          public const int SRCCOPY = 0x00CC0020; // BitBlt dwRop parameter
@@ -105,7 +109,9 @@ namespace ScreenShotDemo
       /// <summary>
       /// Helper class containing User32 API functions
       /// </summary>
-      private class User32
+      [SuppressMessage("ReSharper", "InconsistentNaming")]
+      [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
+      private static class User32
       {
          [StructLayout(LayoutKind.Sequential)]
          public struct RECT

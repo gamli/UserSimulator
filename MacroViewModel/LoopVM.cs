@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Common;
+﻿using Common;
 using Macro;
 
 namespace MacroViewModel
 {
    public class LoopVM : ExpressionBaseVM
    {
-      private NotifyingTransformedProperty<ExpressionBaseVM> _conditionVM;
+      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _conditionVM;
       public ExpressionBaseVM ConditionVM
       {
          get
@@ -20,7 +14,7 @@ namespace MacroViewModel
          }
       }
       
-      private NotifyingTransformedProperty<ExpressionBaseVM> _bodyVM;
+      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _bodyVM;
       public ExpressionBaseVM BodyVM
       {
          get

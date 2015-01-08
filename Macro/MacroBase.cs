@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Common;
 
 namespace Macro
@@ -23,6 +19,7 @@ namespace Macro
       public override bool SetPropertyValue<TProperty>(ref TProperty BackingField, TProperty Value, [CallerMemberName]string PropertyName = null)
       {
          var oldValue = BackingField;
+         // ReSharper disable once ExplicitCallerInfoArgument we are not the caller of the method - our caller is
          var valueChanged = base.SetPropertyValue(ref BackingField, Value, PropertyName);
          if (valueChanged && typeof(MacroBase).IsAssignableFrom(typeof(TProperty)))
          {

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Macro;
 
 namespace MacroLanguage
@@ -15,8 +12,8 @@ namespace MacroLanguage
          return new MacroPrinter(Macro).Print();
       }
 
-      private StringBuilder _sb;
-      private MacroBase _macro;
+      private readonly StringBuilder _sb;
+      private readonly MacroBase _macro;
 
       private MacroPrinter(MacroBase Macro)
       {
@@ -34,8 +31,9 @@ namespace MacroLanguage
       {
          var value = Constant.Value;
 
-         if (value is string)
-            Append("\"" + ((string)value).Replace("\"", "\\\"") + "\"");
+         var stringValue = value as string;
+         if (stringValue != null)
+            Append("\"" + stringValue.Replace("\"", "\\\"") + "\"");
          else if (value is double)
             Append(((double)value).ToString(CultureInfo.InvariantCulture));
          else

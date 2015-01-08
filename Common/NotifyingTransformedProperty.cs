@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common
 {
    public class NotifyingTransformedProperty<TTargetProperty> : TransformedProperty<TTargetProperty>
    {
-      private NotifyPropertyChangedBase _targetPropertyOwner;
+      private readonly NotifyPropertyChangedBase _targetPropertyOwner;
       public NotifyingTransformedProperty(
          string[] SourcePropertyNames, string TargetPropertyName,
          INotifyPropertyChanged SourcePropertyOwner, NotifyPropertyChangedBase TargetPropertyOwner,

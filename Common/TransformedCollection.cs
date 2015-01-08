@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common
 {
    public class TransformedCollection<TSource, T> : DisposableBase
    {
-      private ObservableCollection<TSource> _source;
-      private Func<TSource, T> _selector;
-      private T _sourceNullValue;
-      private Action<T> _release;
-      private ObservableCollection<T> _transformed;
+      private readonly ObservableCollection<TSource> _source;
+      private readonly Func<TSource, T> _selector;
+      private readonly T _sourceNullValue;
+      private readonly Action<T> _release;
+      private readonly ObservableCollection<T> _transformed;
       public ReadOnlyObservableCollection<T> Transformed { get; private set; }
 
       public TransformedCollection(
@@ -70,8 +66,8 @@ namespace Common
                Contract.Assert(Args.OldStartingIndex > -1);
                Contract.Assert(Args.NewItems.Count > -1);
                Contract.Assert(Args.NewStartingIndex > -1);
-               Contract.Equals(Args.OldItems.Count, Args.NewItems.Count);
-               Contract.Equals(Args.OldStartingIndex, Args.NewStartingIndex);
+               Contract.Assert(Equals(Args.OldItems.Count, Args.NewItems.Count));
+               Contract.Assert(Equals(Args.OldStartingIndex, Args.NewStartingIndex));
 
                for (var i = 0; i < Args.NewItems.Count; i++)
                {

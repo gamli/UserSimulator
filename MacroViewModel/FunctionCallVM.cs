@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using Common;
 using Macro;
 
@@ -12,7 +6,7 @@ namespace MacroViewModel
 {
    public class FunctionCallVM : ListVM
    {
-      private NotifyingTransformedProperty<ExpressionBaseVM> _function;
+      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _function;
       public ExpressionBaseVM FunctionVM
       {
          get
@@ -21,7 +15,7 @@ namespace MacroViewModel
          }
       }
 
-      private TransformedCollection<ExpressionBase, ExpressionBaseVM> _argumentsVM;
+      private readonly TransformedCollection<ExpressionBase, ExpressionBaseVM> _argumentsVM;
       public ReadOnlyObservableCollection<ExpressionBaseVM> ArgumentsVM { get { return _argumentsVM.Transformed; } }
 
       public FunctionCallVM(FunctionCall Model)

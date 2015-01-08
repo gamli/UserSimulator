@@ -1,5 +1,4 @@
-﻿using System;
-using Macro;
+﻿using Macro;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Macro_TEST
@@ -28,7 +27,12 @@ namespace Macro_TEST
       {
          var list = new List();
          var constIntValue = 0;
-         list.MacroChanged += (Sender, Args) => constIntValue = Sender is Constant && ((Constant)Sender).Value is int ? (int)((Constant)Sender).Value : 0;         
+         list.MacroChanged +=
+            (Sender, Args) =>
+               {
+                  var constant = Sender as Constant;
+                  constIntValue = constant != null && constant.Value is int ? (int) constant.Value : 0;
+               };         
          var constInt = new Constant(-1);
 
          list.Expressions.Add(constInt);

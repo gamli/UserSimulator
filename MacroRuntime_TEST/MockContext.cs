@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Macro;
+﻿using Macro;
 using MacroRuntime;
 
 namespace MacroRuntime_TEST
 {
    class MockContext : ContextBase
    {
-      public static object DEFAULT_VALUE = new Symbol("MockContext: DEFAULT_VALUE");
+      public static readonly object DefautlValue = new Symbol("MockContext: DefautlValue");
 
       protected override object SymbolNotFoundGetValue(Symbol Symbol)
       {
-         return DEFAULT_VALUE;
+         return DefautlValue;
       }
    }
 }

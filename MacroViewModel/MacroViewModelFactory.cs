@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Macro;
 
 namespace MacroViewModel
 {
    public class MacroViewModelFactory
    {
-      private static MacroViewModelFactory _instance = new MacroViewModelFactory();
+      private static readonly MacroViewModelFactory INSTANCE = new MacroViewModelFactory();
       public static MacroViewModelFactory Instance
       {
          get
          {
-            return _instance;
+            return INSTANCE;
          }
       }
       

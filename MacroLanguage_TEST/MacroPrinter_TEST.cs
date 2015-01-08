@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using Macro;
+﻿using Macro;
 using MacroLanguage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

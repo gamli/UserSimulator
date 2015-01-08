@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Macro;
+﻿using Macro;
 
 namespace MacroRuntime
 {
    public class HierarchicalContext : ContextBase
    {
-      private ContextBase _parentContext;
+      private readonly ContextBase _parentContext;
 
       public HierarchicalContext(ContextBase ParentContext)
       {

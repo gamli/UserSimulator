@@ -10,20 +10,20 @@
    <UserControl.Resources>
       <macroview:NumericConverter x:Key="numericConverter"/>
       <DataTemplate x:Key="booleanTemplate" DataType="{x:Type system:Boolean}">
-         <CheckBox IsChecked="{Binding Value}" VerticalAlignment="Center"/>
+         <CheckBox IsChecked="{Binding Path=.}" VerticalAlignment="Center"/>
       </DataTemplate>
       <DataTemplate x:Key="stringTemplate" DataType="{x:Type system:String}">
          <StackPanel Orientation="Horizontal">
             <TextBlock Text="&quot;"/>
-            <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent"/>
+            <TextBox Text="{Binding Path=., UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent"/>
             <TextBlock Text="&quot;"/>
          </StackPanel>
       </DataTemplate>
       <DataTemplate x:Key="integerTemplate" DataType="{x:Type system:Int32}">
-         <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
+         <TextBox Text="{Binding Path=., UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
       </DataTemplate>
       <DataTemplate x:Key="doubleTemplate" DataType="{x:Type system:Double}">
-         <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
+         <TextBox Text="{Binding Path=., UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
       </DataTemplate>
    </UserControl.Resources>
    <Grid Background="Transparent">

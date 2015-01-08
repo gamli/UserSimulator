@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using Common;
 using Macro;
 
@@ -11,7 +6,7 @@ namespace MacroViewModel
 {
    public class ListVM : ExpressionBaseVM
    {
-      private TransformedCollection<ExpressionBase, ExpressionBaseVM> _expressionsVM;
+      private readonly TransformedCollection<ExpressionBase, ExpressionBaseVM> _expressionsVM;
       public ReadOnlyObservableCollection<ExpressionBaseVM> ExpressionsVM { get { return _expressionsVM.Transformed; } }
 
       public ListVM(List Model)

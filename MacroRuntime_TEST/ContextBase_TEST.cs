@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Macro;
 using MacroRuntime;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -55,7 +54,7 @@ namespace MacroRuntime_TEST
       public void GetValue_TEST()
       {
          var context = new MockContext();
-         Assert.AreSame(MockContext.DEFAULT_VALUE, context.GetValue(new Symbol("undefinedVar")));
+         Assert.AreSame(MockContext.DefautlValue, context.GetValue(new Symbol("undefinedVar")));
       }
    }
 }

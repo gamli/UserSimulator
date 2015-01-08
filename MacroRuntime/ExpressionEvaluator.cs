@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IO;
 using Macro;
 
 namespace MacroRuntime
 {
    public class ExpressionEvaluator
    {
-      private ExpressionVisitor _visitor;
-      private ContextBase _context;
+      private readonly ExpressionVisitor _visitor;
+      private readonly ContextBase _context;
 
       public ExpressionEvaluator(ContextBase Context)
       {
@@ -27,15 +23,15 @@ namespace MacroRuntime
             Expression.Accept(_visitor);
             return _visitor.Value;
          }
-         catch (RuntimeException E)
+         catch (RuntimeException e)
          {
-            Logger.Instance.Log("ExpressionEvaluator.Evaluate: " + E.Message);
+            Logger.Instance.Log("ExpressionEvaluator.Evaluate: " + e.Message);
             throw;
          }
-         catch (Exception E)
+         catch (Exception e)
          {
-            Logger.Instance.Log("ExpressionEvaluator.Evaluate: " + E.Message);
-            throw new RuntimeException("Unknown exception", Expression, _context, E);
+            Logger.Instance.Log("ExpressionEvaluator.Evaluate: " + e.Message);
+            throw new RuntimeException("Unknown exception", Expression, _context, e);
          }
       }
 
@@ -43,7 +39,7 @@ namespace MacroRuntime
       {
          public object Value { get; private set; }
 
-         private ContextBase _context;
+         private readonly ContextBase _context;
 
          public ExpressionVisitor(ContextBase Context)
          {
@@ -71,10 +67,8 @@ namespace MacroRuntime
 
          public void VisitIf(If If)
          {
-            if (EvaluateExpression<bool>(If.Condition))
-               Value = EvaluateExpression<object>(If.Consequent);
-            else
-               Value = EvaluateExpression<object>(If.Alternative);
+            var consequentOrAlternative = EvaluateExpression<bool>(If.Condition) ? If.Consequent : If.Alternative;
+            Value = EvaluateExpression<object>(consequentOrAlternative);
          }
 
          public void VisitList(List List)

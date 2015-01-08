@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using Macro;
+﻿using Macro;
 using MacroRuntime;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -14,7 +12,7 @@ namespace MacroRuntime_TEST
       {
          var mockContext = new MockContext();
          var hierarchicalContext = new HierarchicalContext(mockContext);
-         Assert.AreSame(MockContext.DEFAULT_VALUE, hierarchicalContext.GetValue(new Symbol("undefinedVar")));
+         Assert.AreSame(MockContext.DefautlValue, hierarchicalContext.GetValue(new Symbol("undefinedVar")));
       }
    }
 }

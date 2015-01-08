@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Macro;
 
 namespace MacroRuntime
 {
    public abstract class ContextBase
    {
-      private Dictionary<string, object> _values = new Dictionary<string, object>();
+      private readonly Dictionary<string, object> _values = new Dictionary<string, object>();
 
       public void DefineValue(Symbol Symbol, object Value)
       {
@@ -17,10 +14,10 @@ namespace MacroRuntime
          {
             _values.Add(Symbol.Value, Value);
          }
-         catch(ArgumentException E)
+         catch(ArgumentException e)
          {
             string exceptionMessage = string.Format("Symbol >>{0}<< is already defined (did you mean 'set!' instead of 'define'?)", Symbol.Value);
-            throw new RuntimeException(exceptionMessage, Symbol, this, E);
+            throw new RuntimeException(exceptionMessage, Symbol, this, e);
          }
       }
 

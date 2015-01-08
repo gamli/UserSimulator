@@ -1,5 +1,4 @@
-﻿using System;
-using Macro;
+﻿using Macro;
 using MacroViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using Macro;
+﻿using Macro;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Macro_TEST

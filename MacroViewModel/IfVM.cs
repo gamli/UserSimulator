@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Common;
+﻿using Common;
 using Macro;
 
 namespace MacroViewModel
 {
    public class IfVM : ExpressionBaseVM
    {
-      private NotifyingTransformedProperty<ExpressionBaseVM> _conditionVM;
+      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _conditionVM;
       public ExpressionBaseVM ConditionVM
       {
          get
@@ -19,7 +14,7 @@ namespace MacroViewModel
          }
       }
 
-      private NotifyingTransformedProperty<ExpressionBaseVM> _consequentVM;
+      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _consequentVM;
       public ExpressionBaseVM ConsequentVM
       {
          get
@@ -28,7 +23,7 @@ namespace MacroViewModel
          }
       }
 
-      private NotifyingTransformedProperty<ExpressionBaseVM> _alternativeVM;
+      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _alternativeVM;
       public ExpressionBaseVM AlternativeVM
       {
          get

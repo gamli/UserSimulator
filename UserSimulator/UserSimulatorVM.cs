@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Common;
@@ -15,10 +11,10 @@ namespace UserSimulator
 {
    class UserSimulatorVM : ViewModelBase<UserSimulatorModel>
    {
-      private NotifyingTransformedProperty<ImageSource> _lastWindowshotVM;
+      private readonly NotifyingTransformedProperty<ImageSource> _lastWindowshotVM;
       public ImageSource LastWindowshotVM { get { return _lastWindowshotVM.Value; } }
 
-      private NotifyingTransformedProperty<ExpressionBaseVM> _expressionVM;
+      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _expressionVM;
       public ExpressionBaseVM ExpressionVM { get { return _expressionVM.Value; } }
 
       public UserSimulatorVM(UserSimulatorModel Model)
@@ -28,7 +24,7 @@ namespace UserSimulator
             new NotifyingTransformedProperty<ImageSource>(
                new[] { "LastWindowshot" }, "LastWindowshotVM",
                Model, this,
-               () => System.Windows.Application.Current.Dispatcher.Invoke(() => DrawingImage2WpfImageSource(Model.LastWindowshot)));
+               () => Application.Current.Dispatcher.Invoke(() => DrawingImage2WpfImageSource(Model.LastWindowshot)));
 
          _expressionVM =
             new NotifyingTransformedProperty<ExpressionBaseVM>(

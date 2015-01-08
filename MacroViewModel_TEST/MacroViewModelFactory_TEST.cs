@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Macro;
 using MacroViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,6 +23,8 @@ namespace MacroViewModel_TEST
          Assert.AreEqual(MacroViewModelFactory.Instance.Create(null), null);
       }
 
+      [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+      [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
       private void AssertCreatesExpectedViewModelType(Type ModelType, Type ExpectedViewModelType)
       {
          var macroType = Type.GetType(ModelType.AssemblyQualifiedName);

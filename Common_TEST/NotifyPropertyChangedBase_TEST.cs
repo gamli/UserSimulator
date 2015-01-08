@@ -1,6 +1,4 @@
-﻿using System;
-using Common;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Common_TEST
 {
@@ -11,22 +9,22 @@ namespace Common_TEST
       public void RaisePropertyChanged_TEST()
       {
          var testModel = MockNotifyPropertyChanged.Create();
-         var propertyName = "";
+         string[] propertyName = {""};
          var eventCounter = 0;
          testModel.PropertyChanged +=
             (Sender, Args) =>
-            {
-               Assert.AreEqual(Args.PropertyName, propertyName);
-               eventCounter++;
-            };
-         propertyName = "Klaus";
-         testModel.RaisePropertyChanged_TEST(propertyName);
+               {
+                  Assert.AreEqual(propertyName[0], Args.PropertyName);
+                  eventCounter++;
+               };
+         propertyName[0] = "Klaus";
+         testModel.RaisePropertyChanged_TEST(propertyName[0]);
          Assert.AreEqual(eventCounter, 1);
-         propertyName = "Helga";
-         testModel.RaisePropertyChanged_TEST(propertyName);
+         propertyName[0] = "Helga";
+         testModel.RaisePropertyChanged_TEST(propertyName[0]);
          Assert.AreEqual(eventCounter, 2);
-         propertyName = null;
-         testModel.RaisePropertyChanged_TEST(propertyName);
+         propertyName[0] = null;
+         testModel.RaisePropertyChanged_TEST(propertyName[0]);
          Assert.AreEqual(eventCounter, 3);
       }
 

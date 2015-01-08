@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Macro;
+using Piglet.Lexer;
 using Piglet.Parser;
 using Piglet.Parser.Configuration;
-using Piglet.Parser.Configuration.Fluent;
 using Piglet.Parser.Construction;
 
 namespace MacroLanguage
@@ -27,30 +24,28 @@ namespace MacroLanguage
             var program = _parser.Parse(Text);
             return (MacroBase)program;
          }
-         catch(Piglet.Parser.ParseException E)
+         catch(Piglet.Parser.ParseException e)
          {
             _parser = CreateParser();
-            throw new ParseException(E.Message, E) { LineNumber = E.LexerState.CurrentLineNumber };
+            throw new ParseException(e.Message, e) { LineNumber = e.LexerState.CurrentLineNumber };
          }
-         catch (Piglet.Lexer.LexerException E)
+         catch (LexerException e)
          {
             _parser = CreateParser();
-            throw new ParseException(E.Message, E) { LineNumber = E.LineNumber};
+            throw new ParseException(e.Message, e) { LineNumber = e.LineNumber};
          }
       }
 
       private IParser<object> _parser;
 
-      private static PrecedenceGroup CONSTANT_PRECEDENCE = new PrecedenceGroup(1000);
-      private static PrecedenceGroup DEFINITION_PRECEDENCE = new PrecedenceGroup(900);
-      private static PrecedenceGroup FUNCTION_CALL_PRECEDENCE = new PrecedenceGroup(500);
-      private static PrecedenceGroup IF_PRECEDENCE = new PrecedenceGroup(900);
-      private static PrecedenceGroup IF_WITH_ALTERNATIVE_PRECEDENCE = new PrecedenceGroup(100);
-      private static PrecedenceGroup IF_WITHOUT_PRECEDENCE = new PrecedenceGroup(200);
-      private static PrecedenceGroup LIST_PRECEDENCE = new PrecedenceGroup(100);
-      private static PrecedenceGroup LOOP_PRECEDENCE = new PrecedenceGroup(900);
-      private static PrecedenceGroup QUOTE_PRECEDENCE = new PrecedenceGroup(900);
-      private static PrecedenceGroup SYMBOL_PRECEDENCE = new PrecedenceGroup(800);
+      private static readonly PrecedenceGroup CONSTANT_PRECEDENCE = new PrecedenceGroup(1000);
+      private static readonly PrecedenceGroup DEFINITION_PRECEDENCE = new PrecedenceGroup(900);
+      private static readonly PrecedenceGroup FUNCTION_CALL_PRECEDENCE = new PrecedenceGroup(500);
+      private static readonly PrecedenceGroup IF_PRECEDENCE = new PrecedenceGroup(900);
+      private static readonly PrecedenceGroup IF_WITH_ALTERNATIVE_PRECEDENCE = new PrecedenceGroup(100);
+      private static readonly PrecedenceGroup LOOP_PRECEDENCE = new PrecedenceGroup(900);
+      private static readonly PrecedenceGroup QUOTE_PRECEDENCE = new PrecedenceGroup(900);
+      private static readonly PrecedenceGroup SYMBOL_PRECEDENCE = new PrecedenceGroup(800);
 
       private static IParser<object> CreateParser()
       {
@@ -114,13 +109,14 @@ namespace MacroLanguage
       private class PrecedenceGroup : IPrecedenceGroup
       {
 
-         public AssociativityDirection Associativity { get; set; }
+         public AssociativityDirection Associativity { get; private set; }
 
-         public int Precedence { get; set; }
+         public int Precedence { get; private set; }
 
-         public PrecedenceGroup(int Precedence)
+         public PrecedenceGroup(int Precedence, AssociativityDirection Associativity = AssociativityDirection.Left)
          {
             this.Precedence = Precedence;
+            this.Associativity = Associativity;
          }
       }
 
@@ -132,7 +128,7 @@ namespace MacroLanguage
 
       private static ITerminal<object> ConstantBoolean(IParserConfigurator<object> Config)
       {
-         var constant = Config.CreateTerminal("(True|False)", O => ReduceConstantBoolean(O), true);
+         var constant = Config.CreateTerminal("(True|False)", ReduceConstantBoolean, true);
          constant.DebugName = "const bool-expr";
          return constant;
       }

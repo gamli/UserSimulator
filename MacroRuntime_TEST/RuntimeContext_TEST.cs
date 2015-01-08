@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Macro;
@@ -54,9 +53,9 @@ namespace MacroRuntime_TEST
             evaluator.Evaluate(ParseExpression("(pause)"));
             Assert.Fail();
          }
-         catch (RuntimeException E)
+         catch (RuntimeException e)
          {
-            Assert.AreEqual("pause function expected 1 argument(s) but got 0", E.Message);
+            Assert.AreEqual("pause function expected 1 argument(s) but got 0", e.Message);
          }
       }
       private ExpressionBase ParseExpression(string Expression)

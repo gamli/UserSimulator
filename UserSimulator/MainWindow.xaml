@@ -1,8 +1,6 @@
 ﻿<Window x:Class="UserSimulator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:usersimulator="clr-namespace:UserSimulator"
-        xmlns:macrovm="clr-namespace:MacroViewModel;assembly=MacroViewModel"
         xmlns:macroview="clr-namespace:MacroView;assembly=MacroView"
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         Title="MainWindow" Height="350" Width="525">
@@ -31,7 +29,7 @@
          </ScrollViewer>
       </Grid>
 
-      <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+      <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
 
       <Grid Grid.Row="0" Grid.Column="2">
          <Grid.RowDefinitions>

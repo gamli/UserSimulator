@@ -103,10 +103,10 @@ namespace MacroRuntime_TEST
             evaluator.Evaluate(ParseExpression("(SomeFun)"));
             Assert.Fail();
          }
-         catch (RuntimeException E)
+         catch (RuntimeException e)
          {
-            Assert.AreEqual("SomeFun", E.InnerException.Message);
-            Assert.IsTrue(E.InnerException is NotImplementedException);
+            Assert.AreEqual("SomeFun", e.InnerException.Message);
+            Assert.IsTrue(e.InnerException is NotImplementedException);
          }
       }
 
