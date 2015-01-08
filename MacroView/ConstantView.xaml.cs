@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Macro;
+using MacroViewModel;
 
 namespace MacroView
 {
@@ -19,12 +20,12 @@ namespace MacroView
    }
    public class ConstantViewTemplateSelector : DataTemplateSelector
    {
-      public override DataTemplate SelectTemplate(object Constant, DependencyObject Container)
+      public override DataTemplate SelectTemplate(object ConstantVM, DependencyObject Container)
       {
          FrameworkElement element = Container as FrameworkElement;
-         if (element != null && Constant is Constant)
+         if (element != null && ConstantVM is ConstantVM)
          {
-            var constantValueType = ((Constant)Constant).Value.GetType();
+            var constantValueType = ((ConstantVM)ConstantVM).Model.Value.GetType();
             if (constantValueType == typeof(bool))
                return element.FindResource("booleanTemplate") as DataTemplate;
             if (constantValueType == typeof(string))

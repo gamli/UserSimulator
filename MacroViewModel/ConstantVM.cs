@@ -3,7 +3,7 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class ConstantVM : ExpressionBaseVM
+   public class ConstantVM : ExpressionBaseVM<Constant>
    {
       [ExcludeFromCodeCoverage]
       public ConstantVM(Constant Model)

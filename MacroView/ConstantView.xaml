@@ -3,33 +3,47 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:macrovm="clr-namespace:MacroViewModel;assembly=MacroViewModel"
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+   
    <UserControl.Resources>
+      
+      <macroview:ConstantViewTemplateSelector x:Key="contentTemplateSelector"/>
+      
       <macroview:NumericConverter x:Key="numericConverter"/>
-      <DataTemplate x:Key="booleanTemplate" DataType="{x:Type system:Boolean}">
-         <CheckBox IsChecked="{Binding Path=.}" VerticalAlignment="Center"/>
+      
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="booleanTemplate" DataType="macrovm:ConstantVM">
+         <CheckBox IsChecked="{Binding Model.Value}" VerticalAlignment="Center"/>
       </DataTemplate>
-      <DataTemplate x:Key="stringTemplate" DataType="{x:Type system:String}">
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="stringTemplate" DataType="macrovm:ConstantVM">
          <StackPanel Orientation="Horizontal">
             <TextBlock Text="&quot;"/>
-            <TextBox Text="{Binding Path=., UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent"/>
+            <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent"/>
             <TextBlock Text="&quot;"/>
          </StackPanel>
       </DataTemplate>
-      <DataTemplate x:Key="integerTemplate" DataType="{x:Type system:Int32}">
-         <TextBox Text="{Binding Path=., UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="integerTemplate" DataType="macrovm:ConstantVM">
+         <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
       </DataTemplate>
-      <DataTemplate x:Key="doubleTemplate" DataType="{x:Type system:Double}">
-         <TextBox Text="{Binding Path=., UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="doubleTemplate" DataType="macrovm:ConstantVM">
+         <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
       </DataTemplate>
+      
    </UserControl.Resources>
+   
    <Grid Background="Transparent">
-      <Grid.Resources>
-         <macroview:ConstantViewTemplateSelector x:Key="contentTemplateSelector"/>
-      </Grid.Resources>
-      <ContentPresenter Content="{Binding Model}" ContentTemplateSelector="{StaticResource contentTemplateSelector}"/>
+      
+      <ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource contentTemplateSelector}"/>
+      
    </Grid>
+   
 </UserControl>
