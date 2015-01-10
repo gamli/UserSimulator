@@ -40,10 +40,12 @@
       
    </UserControl.Resources>
    
-   <Grid Background="Transparent">
+   <StackPanel Orientation="Horizontal" Background="Transparent">
+
+      <Image Source="/MacroView;component/Resources/ConstantIcon.png" Width="24" Height="24"/>
       
-      <ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource contentTemplateSelector}"/>
+      <ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource contentTemplateSelector}" Margin="5 0 0 0"/>
       
-   </Grid>
+   </StackPanel>
    
 </UserControl>

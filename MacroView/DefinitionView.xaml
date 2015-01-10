@@ -6,9 +6,11 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <StackPanel Orientation="Horizontal">
-      <macroview:MacroBaseView DataContext="{Binding SymbolVM}" VerticalAlignment="Top"/>
-      <Image Source="/MacroView;component/Resources/PositionIcon.png" Width="24" Height="24" VerticalAlignment="Top"/>
-      <macroview:MacroBaseView DataContext="{Binding ExpressionVM}" VerticalAlignment="Top"/>
+   <StackPanel>
+      <StackPanel Orientation="Horizontal">
+         <Image Source="/MacroView;component/Resources/DefineIcon.png" Width="24" Height="24"/>
+         <macroview:MacroBaseView DataContext="{Binding SymbolVM}" VerticalAlignment="Top" Margin="5 0 0 0"/>
+      </StackPanel>
+      <macroview:MacroBaseView DataContext="{Binding ExpressionVM}" VerticalAlignment="Top" Margin="24 0 0 0"/>
    </StackPanel>
 </UserControl>

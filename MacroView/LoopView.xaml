@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
    <StackPanel>
       <StackPanel Orientation="Horizontal">
-         <Image Source="/MacroView;component/Resources/ForLoopIcon.png" Width="24" Height="24"/>
+         <Image Source="/MacroView;component/Resources/LoopIcon.png" Width="24" Height="24"/>
          <macroview:MacroBaseView HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5 0 0 0" DataContext="{Binding ConditionVM}"/>
       </StackPanel>
       <macroview:MacroBaseView DataContext="{Binding BodyVM}" Margin="24 0 0 0"/>

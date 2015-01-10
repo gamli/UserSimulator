@@ -7,8 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
    <StackPanel Orientation="Horizontal" x:Name="_blockStackPanel">
-      <Line X1="0" Y1="0" X2="0" Y2="{Binding Path=ActualHeight, ElementName=_blockStackPanel}" Stroke="DarkGray" StrokeThickness="3" StrokeDashArray="2 1 1 1 1 1 1 1"/>
-      <ItemsControl ItemsSource="{Binding SymbolsVM}" Background="Transparent" BorderThickness="0">
+      <Image Source="/MacroView;component/Resources/SymbolListIcon.png" Width="24" Height="24"/>
+      <Line X1="0" Y1="0" X2="0" Y2="{Binding Path=ActualHeight, ElementName=_blockStackPanel}" Stroke="DarkGray" StrokeThickness="3" Margin="5 0 0 0"/>
+      <ItemsControl ItemsSource="{Binding ExpressionsVM}" Background="Transparent" BorderThickness="0">
          <ItemsControl.ItemTemplate>
             <DataTemplate>
                <macroview:MacroBaseView/>

@@ -22,8 +22,8 @@ namespace MacroLanguage
       {
          try
          {
-            var program = _parser.Parse(Text);
-            return (MacroBase)program;
+            var macro = _parser.Parse(Text);
+            return (MacroBase)macro;
          }
          catch(Piglet.Parser.ParseException e)
          {

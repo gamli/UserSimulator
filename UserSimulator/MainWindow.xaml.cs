@@ -16,10 +16,12 @@ namespace UserSimulator
          InitializeComponent();
 
          _model = new UserSimulatorModel();
-         _model.PropertyChanged += (Sender, Args) => {
-            if (Args.PropertyName == "ExpressionText")
-               _codeEditor.Document.Text = _model.ExpressionText;
-         };
+         _model.PropertyChanged += 
+            (Sender, Args) => 
+               {
+                  if (Args.PropertyName == "ExpressionText")
+                     _codeEditor.Document.Text = _model.ExpressionText;
+               };
          var viewModel = new UserSimulatorVM(_model);
          DataContext = viewModel;
 

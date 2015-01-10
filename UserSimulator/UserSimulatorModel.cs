@@ -54,7 +54,8 @@ namespace UserSimulator
       }
       private void HandleExpressionChanged()
       {
-         SetPropertyValue(ref _expressionText, MacroPrinter.Print(_expression));
+         // ReSharper disable once ExplicitCallerInfoArgument
+         SetPropertyValue(ref _expressionText, MacroPrinter.Print(_expression, true), "ExpressionText");
       }
 
 
