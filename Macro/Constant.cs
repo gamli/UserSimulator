@@ -30,7 +30,14 @@ namespace Macro
 
       public override string ToString()
       {
-         return Value is string ? "\"" + Value + "\"" : Value is double ? ((double)Value).ToString(CultureInfo.InvariantCulture) : Value.ToString();
+         return 
+            Value == null 
+               ? "null" 
+               : Value is string 
+                  ? "\"" + Value + "\"" 
+                  : Value is double 
+                     ? ((double)Value).ToString(CultureInfo.InvariantCulture) 
+                     : Value.ToString();
       }
    }
 }
