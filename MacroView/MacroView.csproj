@@ -184,7 +184,7 @@
     <Resource Include="Resources\WindowshotIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\DefineIcon.png" />
+    <Resource Include="Resources\DefineIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ConstantIcon.png" />

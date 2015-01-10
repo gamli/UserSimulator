@@ -23,8 +23,9 @@
       <Grid DataContext="{Binding ExpressionVM}" Grid.Row="0" Grid.Column="0">
          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <StackPanel>
-               <macroview:MacroBaseView/>
-               <macroview:MacroBaseView x:Name="_moo"/>
+               <macroview:MacroBaseView HorizontalAlignment="Left" VerticalAlignment="Top"/>
+               <Separator Margin="0 48 0 48"/>
+               <macroview:MacroBaseView x:Name="_moo" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             </StackPanel>
          </ScrollViewer>
       </Grid>

@@ -16,36 +16,32 @@
       
       <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
       <DataTemplate x:Key="booleanTemplate" DataType="macrovm:ConstantVM">
-         <CheckBox IsChecked="{Binding Model.Value}" VerticalAlignment="Center"/>
+         <CheckBox IsChecked="{Binding Model.Value}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
       </DataTemplate>
 
       <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
       <DataTemplate x:Key="stringTemplate" DataType="macrovm:ConstantVM">
          <StackPanel Orientation="Horizontal">
             <TextBlock Text="&quot;"/>
-            <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent"/>
+            <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <TextBlock Text="&quot;"/>
          </StackPanel>
       </DataTemplate>
 
       <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
       <DataTemplate x:Key="integerTemplate" DataType="macrovm:ConstantVM">
-         <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
+         <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"/>
       </DataTemplate>
 
       <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
       <DataTemplate x:Key="doubleTemplate" DataType="macrovm:ConstantVM">
-         <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent"/>
+         <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"/>
       </DataTemplate>
       
    </UserControl.Resources>
-   
-   <StackPanel Orientation="Horizontal" Background="Transparent">
 
-      <Image Source="/MacroView;component/Resources/ConstantIcon.png" Width="24" Height="24"/>
-      
-      <ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource contentTemplateSelector}" Margin="5 0 0 0"/>
-      
-   </StackPanel>
+   <Border Background="Transparent" BorderBrush="Brown" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+      <ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource contentTemplateSelector}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+   </Border>
    
 </UserControl>

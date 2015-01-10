@@ -6,20 +6,18 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <StackPanel Orientation="Horizontal" x:Name="_blockStackPanel">
-      <Image Source="/MacroView;component/Resources/SymbolListIcon.png" Width="24" Height="24"/>
-      <Line X1="0" Y1="0" X2="0" Y2="{Binding Path=ActualHeight, ElementName=_blockStackPanel}" Stroke="DarkGray" StrokeThickness="3" Margin="5 0 0 0"/>
-      <ItemsControl ItemsSource="{Binding ExpressionsVM}" Background="Transparent" BorderThickness="0">
+   <Border Background="#FFEFF7CF" BorderBrush="#FFC9FF00" CornerRadius="5" BorderThickness="3">
+      <ItemsControl ItemsSource="{Binding ExpressionsVM}" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top">
          <ItemsControl.ItemTemplate>
             <DataTemplate>
-               <macroview:MacroBaseView/>
+               <macroview:MacroBaseView HorizontalAlignment="Left" VerticalAlignment="Top"/>
             </DataTemplate>
          </ItemsControl.ItemTemplate>
          <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-               <StackPanel Orientation="Horizontal"></StackPanel>
+               <StackPanel Orientation="Horizontal"/>
             </ItemsPanelTemplate>
          </ItemsControl.ItemsPanel>
       </ItemsControl>
-   </StackPanel>
+   </Border>
 </UserControl>

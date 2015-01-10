@@ -6,12 +6,17 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <StackPanel>
-      <StackPanel Orientation="Horizontal">
-         <Image Source="/MacroView;component/Resources/IfIcon.png" Width="24" Height="24"/>
-         <macroview:MacroBaseView DataContext="{Binding ConditionVM}" Margin="5 0 0 0"/>
+   <Border Background="#FFFFFCFE" BorderBrush="Silver" CornerRadius="5" BorderThickness="3">
+      <StackPanel>
+         <macroview:MacroBaseView DataContext="{Binding ConditionVM}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+         <StackPanel Orientation="Horizontal">
+            <Border Background="#FFB1FCA4" BorderBrush="#FF26FF00" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+               <macroview:MacroBaseView DataContext="{Binding ConsequentVM}" Margin="24 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </Border>
+            <Border Background="#FFF7C0C0" BorderBrush="Red" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+               <macroview:MacroBaseView DataContext="{Binding AlternativeVM}" Margin="24 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </Border>
+         </StackPanel>
       </StackPanel>
-      <macroview:MacroBaseView DataContext="{Binding ConsequentVM}" Margin="24 0 0 0"/>
-      <macroview:MacroBaseView DataContext="{Binding AlternativeVM}" Margin="24 0 0 0"/>
-   </StackPanel>
+   </Border>
 </UserControl>
