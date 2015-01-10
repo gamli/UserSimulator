@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -38,15 +39,6 @@ namespace MacroLanguage
 
       private IParser<object> _parser;
 
-      private static readonly PrecedenceGroup CONSTANT_PRECEDENCE = new PrecedenceGroup(1000);
-      private static readonly PrecedenceGroup DEFINITION_PRECEDENCE = new PrecedenceGroup(900);
-      private static readonly PrecedenceGroup FUNCTION_CALL_PRECEDENCE = new PrecedenceGroup(500);
-      private static readonly PrecedenceGroup IF_PRECEDENCE = new PrecedenceGroup(900);
-      private static readonly PrecedenceGroup IF_WITH_ALTERNATIVE_PRECEDENCE = new PrecedenceGroup(100);
-      private static readonly PrecedenceGroup LOOP_PRECEDENCE = new PrecedenceGroup(900);
-      private static readonly PrecedenceGroup QUOTE_PRECEDENCE = new PrecedenceGroup(900);
-      private static readonly PrecedenceGroup SYMBOL_PRECEDENCE = new PrecedenceGroup(800);
-
       private static IParser<object> CreateParser()
       {
          var config = ParserConfigurator();
@@ -54,30 +46,26 @@ namespace MacroLanguage
          var expression = config.CreateNonTerminal();
          expression.DebugName = "expr";
 
-         var constantBoolean = expression.AddProduction(ConstantBoolean(config));
-         constantBoolean.SetPrecedence(CONSTANT_PRECEDENCE);
-         ReduceToSelf(constantBoolean);
+         ReduceToSelf(expression.AddProduction(ConstantBoolean(config)));
 
-         var constantString = expression.AddProduction(ConstantString(config));
-         constantString.SetPrecedence(CONSTANT_PRECEDENCE);
-         ReduceToSelf(constantString);
+         ReduceToSelf(expression.AddProduction(ConstantString(config)));
 
-         var constantInteger = expression.AddProduction(ConstantInteger(config));
-         constantInteger.SetPrecedence(CONSTANT_PRECEDENCE);
-         ReduceToSelf(constantInteger);
+         ReduceToSelf(expression.AddProduction(ConstantInteger(config)));
 
-         var constantDouble = expression.AddProduction(ConstantDouble(config));
-         constantDouble.SetPrecedence(CONSTANT_PRECEDENCE);
-         ReduceToSelf(constantDouble);
+         ReduceToSelf(expression.AddProduction(ConstantDouble(config)));
 
-         var symbolNonTerminal = Symbol(config);
-         var symbol = expression.AddProduction(symbolNonTerminal);
-         symbol.SetPrecedence(SYMBOL_PRECEDENCE);
-         ReduceToSelf(symbol);
+         var symbol = Symbol(config);
+         ReduceToSelf(expression.AddProduction(symbol));
 
-         var definition = expression.AddProduction(Definition(config, symbolNonTerminal, expression));
-         definition.SetPrecedence(DEFINITION_PRECEDENCE);
-         ReduceToSelf(definition);
+         ReduceToSelf(expression.AddProduction(Definition(config, symbol, expression)));
+
+         ReduceToSelf(expression.AddProduction(If(config, expression)));
+
+         var symbolList = SymbolList(config, symbol);
+
+         ReduceToSelf(expression.AddProduction(Lambda(config, expression, symbolList)));
+
+         ReduceToSelf(expression.AddProduction(Loop(config, expression)));
 
          var expressions = config.CreateNonTerminal();
          expressions.
@@ -87,21 +75,9 @@ namespace MacroLanguage
             AddProduction()
             .SetReduceFunction(ParseResults => new List<object>());
 
-         var functionCall = expression.AddProduction(FunctionCall(config, expression, expressions));
-         functionCall.SetPrecedence(FUNCTION_CALL_PRECEDENCE);
-         ReduceToSelf(functionCall);
+         ReduceToSelf(expression.AddProduction(ProcedureCall(config, expression, expressions)));
 
-         var ifExpression = expression.AddProduction(If(config, expression));
-         ifExpression.SetPrecedence(IF_PRECEDENCE);
-         ReduceToSelf(ifExpression);
-
-         var loop = expression.AddProduction(Loop(config, expression));
-         loop.SetPrecedence(LOOP_PRECEDENCE);
-         ReduceToSelf(loop);
-
-         var quote = expression.AddProduction(Quote(config, expression));
-         quote.SetPrecedence(QUOTE_PRECEDENCE);
-         ReduceToSelf(quote);
+         ReduceToSelf(expression.AddProduction(Quote(config, expression)));
 
          return config.CreateParser();
       }
@@ -186,30 +162,9 @@ namespace MacroLanguage
          return new Definition { Symbol = (Symbol)ParseResults[2], Expression = (ExpressionBase)ParseResults[3] };
       }
 
-      private static INonTerminal<object> FunctionCall(IParserConfigurator<object> Config, INonTerminal<object> Expression, INonTerminal<object> Expressions)
-      {
-         return ListGeneric(Config, "function-call-expr", ReduceFunctionCall, Expression, Expressions);
-      }
-
-      private static FunctionCall ReduceFunctionCall(object[] ParseResults)
-      {
-         var functionCall = new FunctionCall { Function = (ExpressionBase)ParseResults[1] };
-         foreach (var arg in (IEnumerable<object>)ParseResults[2])
-            functionCall.Expressions.Add((ExpressionBase)arg);
-         return functionCall;
-      }
-
       private static INonTerminal<object> If(IParserConfigurator<object> Config, INonTerminal<object> Expression)
       {
-         var ifExpression = Config.CreateNonTerminal();
-         ifExpression.DebugName = "if-expr";
-         
-         var ifWithAlternative = 
-            ifExpression.AddProduction(ListGeneric(Config, "if-with-alternative-expr", ReduceIf, "if", Expression, Expression, Expression));
-         ifWithAlternative.SetPrecedence(IF_WITH_ALTERNATIVE_PRECEDENCE);
-         ReduceToSelf(ifWithAlternative);
-
-         return ifExpression;
+         return ListGeneric(Config, "if-expr", ReduceIf, "if", Expression, Expression, Expression);
       }
 
       private static If ReduceIf(object[] ParseResults)
@@ -223,6 +178,21 @@ namespace MacroLanguage
                };
          return ifExpression;
       }
+      private static INonTerminal<object> Lambda(IParserConfigurator<object> Config, INonTerminal<object> Expression, INonTerminal<object> SymbolList)
+      {
+         return ListGeneric(Config, "lambda-expr", ReduceLambda, "lambda", SymbolList, Expression);
+      }
+
+      private static Lambda ReduceLambda(object[] ParseResults)
+      {
+         var lambda =
+            new Lambda
+               {
+                  ArgumentSymbols = (SymbolList) ParseResults[2],
+                  Body = (ExpressionBase)ParseResults[3]
+               };
+         return lambda;
+      }
 
       private static INonTerminal<object> Loop(IParserConfigurator<object> Config, INonTerminal<object> Expression)
       {
@@ -234,6 +204,19 @@ namespace MacroLanguage
          return new Loop { Condition = (ExpressionBase)ParseResults[2], Body = (ExpressionBase)ParseResults[3] };
       }
 
+      private static INonTerminal<object> ProcedureCall(IParserConfigurator<object> Config, INonTerminal<object> Expression, INonTerminal<object> Expressions)
+      {
+         return ListGeneric(Config, "function-call-expr", ReduceProcedureCall, Expression, Expressions);
+      }
+
+      private static ProcedureCall ReduceProcedureCall(object[] ParseResults)
+      {
+         var procedureCall = new ProcedureCall { Procedure = (ExpressionBase)ParseResults[1] };
+         foreach (var arg in (IEnumerable<object>)ParseResults[2])
+            procedureCall.Expressions.Add((ExpressionBase)arg);
+         return procedureCall;
+      }
+
       private static INonTerminal<object> Quote(IParserConfigurator<object> Config, INonTerminal<object> Expression)
       {
          return ListGeneric(Config, "quote-expr", ReduceQuote, "quote", Expression);
@@ -242,6 +225,39 @@ namespace MacroLanguage
       private static Quote ReduceQuote(object[] ParseResults)
       {
          return new Quote { Expression = (ExpressionBase)ParseResults[2] };
+      }
+
+      private static ITerminal<object> Symbol(IParserConfigurator<object> Config)
+      {
+         var symbol = Config.CreateTerminal(@"[a-zA-Z]([a-zA-Z0-9])*", ReduceSymbol);
+         symbol.DebugName = "smybol";
+         return symbol;
+      }
+
+      private static Symbol ReduceSymbol(string ParseResults)
+      {
+         return new Symbol(ParseResults);
+      }
+
+      private static INonTerminal<object> SymbolList(IParserConfigurator<object> Config, ITerminal<object> Symbol)
+      {
+         var symbols = Config.CreateNonTerminal();
+         symbols.
+            AddProduction(symbols, Symbol)
+            .SetReduceFunction(ParseResults => ((IEnumerable<object>)ParseResults[0]).Concat(new[] { ParseResults[1] }));
+         symbols.
+            AddProduction()
+            .SetReduceFunction(ParseResults => new List<object>());
+
+         return ListGeneric(Config, "symbol-list", ReduceSymbolList, symbols);
+      }
+
+      private static SymbolList ReduceSymbolList(object[] ParseResults)
+      {
+         var symbolList = new SymbolList();
+         foreach (Symbol symbol in (IEnumerable)ParseResults[1])
+            symbolList.Symbols.Add(symbol);
+         return symbolList;
       }
 
       private static INonTerminal<object> ListGeneric(
@@ -271,18 +287,6 @@ namespace MacroLanguage
       private static object ReduceToSelf(object[] ParseResults)
       {
          return ParseResults[0];
-      }
-
-      private static ITerminal<object> Symbol(IParserConfigurator<object> Config)
-      {
-         var symbol = Config.CreateTerminal(@"[a-zA-Z][a-zA-Z0-9]*", ReduceSymbol);
-         symbol.DebugName = "smybol";
-         return symbol;
-      }
-
-      private static Symbol ReduceSymbol(string ParseResults)
-      {
-         return new Symbol(ParseResults);
       }
    }
 

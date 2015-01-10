@@ -54,7 +54,11 @@
     <Compile Include="IfView.xaml.cs">
       <DependentUpon>IfView.xaml</DependentUpon>
     </Compile>
-    <Page Include="ListView.xaml">
+    <Page Include="LambdaView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SymbolListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -66,7 +70,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="FunctionCallView.xaml">
+    <Page Include="ProcedureCallView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -90,14 +94,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="ListView.xaml.cs">
-      <DependentUpon>ListView.xaml</DependentUpon>
+    <Compile Include="LambdaView.xaml.cs">
+      <DependentUpon>LambdaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SymbolListView.xaml.cs">
+      <DependentUpon>SymbolListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoopView.xaml.cs">
       <DependentUpon>LoopView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FunctionCallView.xaml.cs">
-      <DependentUpon>FunctionCallView.xaml</DependentUpon>
+    <Compile Include="ProcedureCallView.xaml.cs">
+      <DependentUpon>ProcedureCallView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MacroBaseView.xaml.cs">
       <DependentUpon>MacroBaseView.xaml</DependentUpon>
@@ -156,7 +163,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ForLoopIcon.png" />
+    <Resource Include="Resources\LoopIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\LeftClickIcon.png" />
@@ -175,6 +182,27 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\WindowshotIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DefineIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ConstantIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SymbolIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SymbolListIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\QuoteIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ProcedureCallIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\LambdaIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

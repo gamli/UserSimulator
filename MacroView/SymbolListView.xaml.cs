@@ -3,9 +3,9 @@
    /// <summary>
    /// Interaction logic for BlockView.xaml
    /// </summary>
-   public partial class ListView
+   public partial class SymbolListView
    {
-      public ListView()
+      public SymbolListView()
       {
          InitializeComponent();
       }

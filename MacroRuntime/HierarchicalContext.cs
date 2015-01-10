@@ -11,7 +11,12 @@ namespace MacroRuntime
          _parentContext = ParentContext;
       }
 
-      protected override object SymbolNotFoundGetValue(Symbol Symbol)
+      protected override void SymbolNotFoundSetValue(Symbol Symbol, ExpressionBase Value)
+      {
+         _parentContext.SetValue(Symbol, Value);
+      }
+
+      protected override ExpressionBase SymbolNotFoundGetValue(Symbol Symbol)
       {
          return _parentContext.GetValue(Symbol);
       }

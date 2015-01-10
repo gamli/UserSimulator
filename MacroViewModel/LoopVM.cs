@@ -28,7 +28,7 @@ namespace MacroViewModel
       {
          _conditionVM =
             new NotifyingTransformedProperty<ExpressionBaseVM>(
-               new[] { "Condition" }, "ConditionVM",
+               new[] { "Condition" }, "ArgumentSymbolsVM",
                Model, this,
                () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Condition),
                VM => VM.Dispose());

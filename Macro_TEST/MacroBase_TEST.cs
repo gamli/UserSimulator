@@ -12,8 +12,8 @@ namespace Macro_TEST
       public void Test_Event_MacroChanged()
       {
          var mock = new MockExpressionWithSomeProperty();
-         var list = new List();
-         list.Expressions.Add(mock);
+         var procedureCall = new ProcedureCall { Procedure = new Symbol("fun")};
+         procedureCall.Expressions.Add(mock);
 
          var macroChangedFired = false;
          mock.MacroChanged += (Sender, Args) => macroChangedFired = true;
@@ -58,16 +58,16 @@ namespace Macro_TEST
       [TestMethod]
       public void ToString_TEST()
       {
-         var list = new List();
-         list.Expressions.Add(new Symbol("aSymbol"));
-         list.Expressions.Add(new Constant("a string"));
-         list.Expressions.Add(new Constant(4711));
-         list.Expressions.Add(new Constant(-4711.1174));
-         list.Expressions.Add(new Constant(true));
-         var functionCall = new FunctionCall { Function = new Symbol("aFunctionCall") };
+         var procedureCall = new ProcedureCall { Procedure = new Symbol("fun") };
+         procedureCall.Expressions.Add(new Symbol("aSymbol"));
+         procedureCall.Expressions.Add(new Constant("a string"));
+         procedureCall.Expressions.Add(new Constant(4711));
+         procedureCall.Expressions.Add(new Constant(-4711.1174));
+         procedureCall.Expressions.Add(new Constant(true));
+         var functionCall = new ProcedureCall { Procedure = new Symbol("aFunctionCall") };
          functionCall.Expressions.Add(new Quote { Expression = new Symbol("aQuotedSymbol") });
-         list.Expressions.Add(functionCall);
-         Assert.AreEqual("(aSymbol \"a string\" 4711 -4711.1174 True (aFunctionCall (quote aQuotedSymbol)))", list.ToString());
+         procedureCall.Expressions.Add(functionCall);
+         Assert.AreEqual("(fun aSymbol \"a string\" 4711 -4711.1174 True (aFunctionCall (quote aQuotedSymbol)))", procedureCall.ToString());
       }
    }
 }

@@ -10,7 +10,7 @@ namespace MacroViewModel_TEST
       [TestMethod]
       public void ConditionVM_Property_TEST()
       {
-         var forLoop = new Loop { Condition = new Constant(true), Body = new List() };
+         var forLoop = new Loop { Condition = new Constant(true), Body = new Constant(4711) };
          using(var forLoopVM = new LoopVM(forLoop))
          {
             Assert.AreEqual(forLoop.Condition, forLoopVM.ConditionVM.Model);

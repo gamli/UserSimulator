@@ -16,84 +16,98 @@ namespace MacroRuntime
       {
          _targetWindow = TargetWindow;
 
-         AddIntrinsicFunction("move", MouseMove);
-         AddIntrinsicFunction("position", MousePosition);
-         AddIntrinsicFunction("pause", Pause);
+         AddIntrinsicFunction("move", MouseMove, _mouseMoveDeltaX, _mouseMoveDeltaY);
+         AddIntrinsicFunction("position", MousePosition, _mousePositionX, _mousePositionY);
+         AddIntrinsicFunction("pause", Pause, _pauseDuration);
          AddIntrinsicFunction("click", LeftClick);
-         AddIntrinsicFunction("windowshot", Windowshot);
+         AddIntrinsicFunction("windowshot", Windowshot, _windowshotX, _windowshotY, _windowshotImageUrl);
       }
 
-      private void AddIntrinsicFunction(string Symbol, Func<List<object>, object> Function)
+      private void AddIntrinsicFunction(string Symbol, Func<ContextBase, ExpressionBase> Function, params Symbol[] Arguments)
       {
-         DefineValue(new Symbol(Symbol), Function);
+         var argumentSymbols = new SymbolList();
+         foreach (var argument in Arguments)
+            argumentSymbols.Symbols.Add(argument);
+         DefineValue(new Symbol(Symbol), new IntrinsicProcedure { DefiningContext = this, ArgumentSymbols = argumentSymbols, Function = Function});
       }
 
       [ExcludeFromCodeCoverage]
-      protected override object SymbolNotFoundGetValue(Symbol Symbol)
+      protected override void SymbolNotFoundSetValue(Symbol Symbol, ExpressionBase Value)
       {
-         var exceptionMessage = "Symbol >>" + Symbol.Value + "<< is not defined (did you forget to 'define' first?)";
+         var exceptionMessage = "SetValue: Symbol >>" + Symbol.Value + "<< is not defined (did you forget to 'define' first?)";
          throw new RuntimeException(exceptionMessage, Symbol, this);
       }
 
-      private object MouseMove(List<object> Args)
+      [ExcludeFromCodeCoverage]
+      protected override ExpressionBase SymbolNotFoundGetValue(Symbol Symbol)
       {
-         CheckArgsCount(Args, 2, "move function expected {0} argument(s) but got {1}");
-
-         Mouse.X += (int)Convert.ChangeType(Args[0], typeof(int));
-         Mouse.Y += (int)Convert.ChangeType(Args[1], typeof(int));
-
-         return true;
+         var exceptionMessage = "GetValue: Symbol >>" + Symbol.Value + "<< is not defined (did you forget to 'define' first?)";
+         throw new RuntimeException(exceptionMessage, Symbol, this);
       }
 
-      private object MousePosition(List<object> Args)
+      private readonly Symbol _mouseMoveDeltaX = new Symbol("DeltaX");
+      private readonly Symbol _mouseMoveDeltaY = new Symbol("DeltaY");
+      private Constant MouseMove(ContextBase Context)
       {
-         CheckArgsCount(Args, 2, "position function expected {0} argument(s) but got {1}");
+         Mouse.X += GetConstantValue<int>(Context, _mouseMoveDeltaX);
+         Mouse.Y += GetConstantValue<int>(Context, _mouseMoveDeltaY);
 
+         return new Constant(true);
+      }
+
+
+      private readonly Symbol _mousePositionX = new Symbol("X");
+      private readonly Symbol _mousePositionY = new Symbol("Y");
+      private Constant MousePosition(ContextBase Context)
+      {
          int screenX, screenY;
          Window.ClientToScreen(
             _targetWindow,
-            (int)Args[0], (int)Args[1],
+            GetConstantValue<int>(Context, _mousePositionX), GetConstantValue<int>(Context, _mousePositionY),
             out screenX, out screenY);
          Mouse.Position = new Mouse.MousePoint(screenX, screenY);
 
-         return true;
+         return new Constant(true);
       }
 
-      private object Pause(List<object> Args)
-      {
-         CheckArgsCount(Args, 1, "pause function expected {0} argument(s) but got {1}");
 
-         var milliseconds = (int)Args[0];
+      private readonly Symbol _pauseDuration = new Symbol("Duration");
+      private Constant Pause(ContextBase Context)
+      {
+         var milliseconds = GetConstantValue<int>(Context, _pauseDuration);
          Thread.Sleep(milliseconds);
 
-         return milliseconds;
+         return new Constant(milliseconds);
       }
 
       [ExcludeFromCodeCoverage]
-      private object LeftClick(List<object> Args)
+      private Constant LeftClick(ContextBase Context)
       {
-         CheckArgsCount(Args, 0, "click function expected {0} argument(s) but got {1}");
-
          Mouse.LeftClick();
 
-         return true;
+         return new Constant(true);
       }
-        
-      [ExcludeFromCodeCoverage]
-      private object Windowshot(List<object> Args)
-      {
-         CheckArgsCount(Args, 3, "windowshot function expected {0} argument(s) but got {1}");
 
-         using (var image = new Bitmap((string)Args[2]))
+
+      private readonly Symbol _windowshotX = new Symbol("X");
+      private readonly Symbol _windowshotY = new Symbol("Y");
+      private readonly Symbol _windowshotImageUrl = new Symbol("ImageUrl");
+      [ExcludeFromCodeCoverage]
+      private Constant Windowshot(ContextBase Context)
+      {
+         using (var image = new Bitmap(GetConstantValue<string>(Context, _windowshotImageUrl)))
          using (var windowContent = Window.Capture(_targetWindow))
          using (var clippedWindowContent = new Bitmap(image.Width, image.Height))
          using (var clippedWindowContentGraphics = Graphics.FromImage(clippedWindowContent))
          {
+            var windowshotX = GetConstantValue<int>(Context, _windowshotX);
+            var windowshotY = GetConstantValue<int>(Context, _windowshotY);
+
             clippedWindowContentGraphics.DrawImage(
                windowContent,
                0, 0,
                new Rectangle(
-                  (int)Args[0] - image.Width / 2, (int)Args[1] - image.Width / 2,
+                  windowshotX - image.Width / 2, windowshotY - image.Width / 2,
                   image.Width, image.Height),
                GraphicsUnit.Pixel
                );
@@ -102,16 +116,34 @@ namespace MacroRuntime
                for (var y = 0; y < image.Height; y++)
                   if (image.GetPixel(x, y) != clippedWindowContent.GetPixel(x, y))
                   {
-                     return false;
+                     return new Constant(false);
                   }
          }
-         return true;
+         return new Constant(true);
       }
 
-      private void CheckArgsCount(List<object> Args, int ExpectedArgsCount, string ErrorMessageFormat)
+      private T GetConstantValue<T>(ContextBase Context, Symbol Symbol)
       {
-         if (Args.Count != ExpectedArgsCount)
-            throw new RuntimeException(string.Format(ErrorMessageFormat, ExpectedArgsCount, Args.Count), null, this);
+         try
+         {
+            var constantValue = ((Constant)Context.GetValue(Symbol)).Value;
+            try
+            {
+               return (T) constantValue;
+            }
+            catch (InvalidCastException e)
+            {
+               throw new RuntimeException(
+                  string.Join("Symbol {0}: expected type was {1} but got {2}", Symbol, typeof(T), constantValue.GetType()), 
+                  Symbol, 
+                  Context, 
+                  e);
+            }
+         }
+         catch (InvalidCastException e)
+         {
+            throw new RuntimeException(string.Join("Symbol {0}: expected constant", Symbol), Symbol, Context, e);
+         }
       }
    }
 }

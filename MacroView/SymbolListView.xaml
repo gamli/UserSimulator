@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MacroView.ListView"
+﻿<UserControl x:Class="MacroView.SymbolListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
    <StackPanel Orientation="Horizontal" x:Name="_blockStackPanel">
       <Line X1="0" Y1="0" X2="0" Y2="{Binding Path=ActualHeight, ElementName=_blockStackPanel}" Stroke="DarkGray" StrokeThickness="3" StrokeDashArray="2 1 1 1 1 1 1 1"/>
-      <ItemsControl ItemsSource="{Binding ItemsVM}" Background="Transparent" BorderThickness="0">
+      <ItemsControl ItemsSource="{Binding SymbolsVM}" Background="Transparent" BorderThickness="0">
          <ItemsControl.ItemTemplate>
             <DataTemplate>
                <macroview:MacroBaseView/>

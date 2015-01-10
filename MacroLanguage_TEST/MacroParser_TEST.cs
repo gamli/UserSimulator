@@ -65,6 +65,36 @@ namespace MacroLanguage_TEST
 
          try
          {
+            _parser.Parse("-");
+            Assert.Fail();
+         }
+         catch (ParseException)
+         {
+            // everything ok
+         }
+
+         try
+         {
+            _parser.Parse("*");
+            Assert.Fail();
+         }
+         catch (ParseException)
+         {
+            // everything ok
+         }
+
+         try
+         {
+            _parser.Parse("+");
+            Assert.Fail();
+         }
+         catch (ParseException)
+         {
+            // everything ok
+         }
+
+         try
+         {
             _parser.Parse("(if True consequent)");
             Assert.Fail();
          }

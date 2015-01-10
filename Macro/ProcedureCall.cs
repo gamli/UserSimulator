@@ -3,30 +3,30 @@ using System.Linq;
 
 namespace Macro
 {
-   public class FunctionCall : List
+   public class ProcedureCall : ListExpressionBase<ExpressionBase>
    {
-      private ExpressionBase _function;
-      public ExpressionBase Function 
+      private ExpressionBase _procedure;
+      public ExpressionBase Procedure 
       { 
-         get { return _function; } 
+         get { return _procedure; } 
          set 
          {
-            if (SetPropertyValue(ref _function, value))
-               if(!Equals(Expressions[0], _function))
-                  Expressions[0] = _function;
+            if (SetPropertyValue(ref _procedure, value))
+               if(!Equals(Expressions[0], _procedure))
+                  Expressions[0] = _procedure;
          } 
       }
 
       public ObservableCollection<ExpressionBase> Arguments { get; private set; }
 
-      public FunctionCall()
+      public ProcedureCall()
       {
          Arguments = new ObservableCollection<ExpressionBase>();
 
          Expressions.CollectionChanged +=
             (Sender, Args) =>
                {
-                  Function = Expressions[0];
+                  Procedure = Expressions[0];
                   // todo bad algorithm
                   Arguments.Clear();
                   foreach (var expression in Expressions.Skip(1))
@@ -38,7 +38,7 @@ namespace Macro
 
       public override void Accept(IVisitor Visitor)
       {
-         Visitor.VisitFunctionCall(this);
+         Visitor.VisitProcedureCall(this);
       }
    }
 }

@@ -6,9 +6,9 @@ namespace MacroRuntime
 {
    public abstract class ContextBase
    {
-      private readonly Dictionary<string, object> _values = new Dictionary<string, object>();
+      private readonly Dictionary<string, ExpressionBase> _values = new Dictionary<string, ExpressionBase>();
 
-      public void DefineValue(Symbol Symbol, object Value)
+      public void DefineValue(Symbol Symbol, ExpressionBase Value)
       {
          try
          {
@@ -21,23 +21,22 @@ namespace MacroRuntime
          }
       }
 
-      public void SetValue(Symbol Symbol, object Value)
+      public void SetValue(Symbol Symbol, ExpressionBase Value)
       {
-         if (!_values.ContainsKey(Symbol.Value))
-         {
-            string exceptionMessage = string.Format("Symbol >>{0}<< is not defined (did you mean 'define' instead of 'set!'?)", Symbol.Value);
-            throw new RuntimeException(exceptionMessage, Symbol, this);
-         }
-         _values[Symbol.Value] = Value;
+         if (_values.ContainsKey(Symbol.Value))
+            _values[Symbol.Value] = Value;
+         SymbolNotFoundSetValue(Symbol, Value);
       }
 
-      public object GetValue(Symbol Symbol)
+      protected abstract void SymbolNotFoundSetValue(Symbol Symbol, ExpressionBase Value);
+
+      public ExpressionBase GetValue(Symbol Symbol)
       {
          if (_values.ContainsKey(Symbol.Value))
             return _values[Symbol.Value];
          return SymbolNotFoundGetValue(Symbol);
       }
 
-      protected abstract object SymbolNotFoundGetValue(Symbol Symbol);
+      protected abstract ExpressionBase SymbolNotFoundGetValue(Symbol Symbol);
    }
 }

@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Macro_TEST
 {
    [TestClass]
-   public class SpecialFormBase_TEST : List_TEST_Base
+   public class SpecialFormBase_TEST
    {
       [TestMethod]
       public void SetSpecialFormSymbol_TEST()

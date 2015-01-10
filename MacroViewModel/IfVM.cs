@@ -37,14 +37,14 @@ namespace MacroViewModel
       {
          _conditionVM =
             new NotifyingTransformedProperty<ExpressionBaseVM>(
-               new[] { "Condition" }, "ConditionVM",
+               new[] { "Condition" }, "ArgumentSymbolsVM",
                Model, this,
                () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Condition),
                VM => VM.Dispose());
 
          _consequentVM =
             new NotifyingTransformedProperty<ExpressionBaseVM>(
-               new[] { "Consequent" }, "ConsequentVM",
+               new[] { "Consequent" }, "BodyVM",
                Model, this,
                () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Consequent),
                VM => VM.Dispose());
@@ -63,8 +63,7 @@ namespace MacroViewModel
          {
             _conditionVM.Dispose();
             _consequentVM.Dispose();
-            if (_alternativeVM != null)
-               _alternativeVM.Dispose();
+            _alternativeVM.Dispose();
          }
          base.Dispose(Disposing);
       }

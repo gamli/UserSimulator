@@ -93,7 +93,7 @@ namespace UserSimulator
          if (screenshotErrorImage != null)
             LastWindowshot =
                Image.FromStream(screenshotErrorImage.Stream);
-         var initialFunction = new FunctionCall { Function = new Symbol("print") };
+         var initialFunction = new ProcedureCall { Procedure = new Symbol("print") };
          initialFunction.Expressions.Add(new Constant("Hello World"));
          Expression = initialFunction;         
          UpdateWindowshot();

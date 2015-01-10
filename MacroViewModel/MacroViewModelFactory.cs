@@ -38,23 +38,26 @@ namespace MacroViewModel
                { typeof(Definition), Macro => 
                   new DefinitionVM((Definition)Macro) },
 
-               { typeof(FunctionCall), Macro => 
-                  new FunctionCallVM((FunctionCall)Macro) },
-
                { typeof(If), Macro => 
                   new IfVM((If)Macro) },
 
-               { typeof(List), Macro => 
-                  new ListVM((List)Macro) },
+               { typeof(Lambda), Macro => 
+                  new LambdaVM((Lambda)Macro) },
 
                { typeof(Loop), Macro => 
                   new LoopVM((Loop)Macro) },
+
+               { typeof(ProcedureCall), Macro => 
+                  new ProcedureCallVM((ProcedureCall)Macro) },
 
                { typeof(Quote), Macro => 
                   new QuoteVM((Quote)Macro) },
 
                { typeof(Symbol), Macro => 
                   new SymbolVM((Symbol)Macro) },
+
+               { typeof(SymbolList), Macro => 
+                  new SymbolListVM((SymbolList)Macro) },
             };
       }
    }

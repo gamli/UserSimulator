@@ -16,7 +16,7 @@ namespace MacroRuntime
          _visitor = new ExpressionVisitor(Context);
       }
 
-      public object Evaluate(ExpressionBase Expression)
+      public ExpressionBase Evaluate(ExpressionBase Expression)
       {
          try
          {
@@ -37,7 +37,7 @@ namespace MacroRuntime
 
       private class ExpressionVisitor : IVisitor
       {
-         public object Value { get; private set; }
+         public ExpressionBase Value { get; private set; }
 
          private readonly ContextBase _context;
 
@@ -48,38 +48,38 @@ namespace MacroRuntime
 
          public void VisitConstant(Constant Constant)
          {
-            Value = Constant.Value;
+            Value = Constant;
          }
 
          public void VisitDefinition(Definition Definition)
          {
-            var evaluatedExpression = EvaluateExpression<object>(Definition.Expression);
+            var evaluatedExpression = EvaluateExpression<ExpressionBase>(Definition.Expression);
             _context.DefineValue(Definition.Symbol, evaluatedExpression);
             Value = evaluatedExpression;
          }
 
-         public void VisitFunctionCall(FunctionCall FunctionCall)
-         {
-            var function = EvaluateExpression<Func<List<object>, object>>(FunctionCall.Function);
-            var args = FunctionCall.Arguments.Select(EvaluateExpression<object>).ToList();
-            Value = function(args);
-         }
-
          public void VisitIf(If If)
          {
-            var consequentOrAlternative = EvaluateExpression<bool>(If.Condition) ? If.Consequent : If.Alternative;
-            Value = EvaluateExpression<object>(consequentOrAlternative);
+            var consequentOrAlternative = (bool)EvaluateExpression<Constant>(If.Condition).Value ? If.Consequent : If.Alternative;
+            Value = EvaluateExpression<ExpressionBase>(consequentOrAlternative);
          }
 
-         public void VisitList(List List)
+         public void VisitLambda(Lambda Lambda)
          {
-            throw new RuntimeException("Cannot evaluate list", List, _context);
+            Value = new Procedure { DefiningContext = _context, ArgumentSymbols = Lambda.ArgumentSymbols };
          }
 
          public void VisitLoop(Loop Loop)
          {
-            while (EvaluateExpression<bool>(Loop.Condition))
-               Value = EvaluateExpression<object>(Loop.Body);
+            while ((bool)EvaluateExpression<Constant>(Loop.Condition).Value)
+               Value = EvaluateExpression<ExpressionBase>(Loop.Body);
+         }
+
+         public void VisitProcedureCall(ProcedureCall ProcedureCall)
+         {
+            var procedure = EvaluateExpression<ProcedureBase>(ProcedureCall.Procedure);
+            var args = ProcedureCall.Arguments.Select(EvaluateExpression<ExpressionBase>).ToList();
+            Value = procedure.Call(args);
          }
 
          public void VisitQuote(Quote Quote)
@@ -92,9 +92,16 @@ namespace MacroRuntime
             Value = _context.GetValue(Symbol);
          }
 
-         private TValue EvaluateExpression<TValue>(ExpressionBase Expression)
+         // TODO should not happen?
+         public void VisitSymbolList(SymbolList SymbolList)
          {
-            return (TValue)new ExpressionEvaluator(new HierarchicalContext(_context)).Evaluate(Expression);
+            throw new RuntimeException("Can not evaluate symbol list", SymbolList, _context);
+         }
+
+         private T EvaluateExpression<T>(ExpressionBase Expression)
+            where T : ExpressionBase
+         {
+            return (T)new ExpressionEvaluator(new HierarchicalContext(_context)).Evaluate(Expression);
          }
       }
    }

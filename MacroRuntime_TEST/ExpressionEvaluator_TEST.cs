@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using Macro;
 using MacroLanguage;
 using MacroRuntime;
@@ -14,47 +15,47 @@ namespace MacroRuntime_TEST
       [TestMethod]
       public void Constant_TEST()
       {
-         AssertExpressionEvaluatesTo(true, "True");
-         AssertExpressionEvaluatesTo(false, "False");
+         AssertExpressionEvaluatesTo(new Constant(true), "True");
+         AssertExpressionEvaluatesTo(new Constant(false), "False");
 
-         AssertExpressionEvaluatesTo("test with >> \" <<", "\"test with >> \\\" <<\"");
+         AssertExpressionEvaluatesTo(new Constant("test with >> \" <<"), "\"test with >> \\\" <<\"");
 
-         AssertExpressionEvaluatesTo(4711, "4711");
-         AssertExpressionEvaluatesTo(-4711, "-4711");
+         AssertExpressionEvaluatesTo(new Constant(4711), "4711");
+         AssertExpressionEvaluatesTo(new Constant(-4711), "-4711");
 
-         AssertExpressionEvaluatesTo(-4711.1174, "-4711.1174");
-         AssertExpressionEvaluatesTo(4711.1174, "4711.1174");
+         AssertExpressionEvaluatesTo(new Constant(-4711.1174), "-4711.1174");
+         AssertExpressionEvaluatesTo(new Constant(4711.1174), "4711.1174");
       }
 
       [TestMethod]
       public void Definition_TEST()
       {
          var context = new RuntimeContext(IntPtr.Zero);
-         AssertExpressionEvaluatesTo("Hello World", "(define var \"Hello World\")", context);
-         Assert.AreEqual("Hello World", context.GetValue(new Symbol("var")));
+         AssertExpressionEvaluatesTo(new Constant("Hello World"), "(define var \"Hello World\")", context);
+         Assert.AreEqual(new Constant("Hello World"), context.GetValue(new Symbol("var")));
       }
 
       [TestMethod]
       public void FunctionCall_TEST()
       {
          var context = new RuntimeContext(IntPtr.Zero);
-         AssertExpressionEvaluatesTo(10, "(define var (pause 10))", context);
-         Assert.AreEqual(10, context.GetValue(new Symbol("var")));
+         AssertExpressionEvaluatesTo(new Constant(10), "(define var (pause 10))", context);
+         Assert.AreEqual(new Constant(10), context.GetValue(new Symbol("var")));
       }
 
       [TestMethod]
       public void If_TEST()
       {
-         AssertExpressionEvaluatesTo(1, "(if True (pause 1) (pause 2))");
-         AssertExpressionEvaluatesTo(2, "(if False (pause 1) (pause 2))");
+         AssertExpressionEvaluatesTo(new Constant(1), "(if True (pause 1) (pause 2))");
+         AssertExpressionEvaluatesTo(new Constant(2), "(if False (pause 1) (pause 2))");
       }
 
       [TestMethod]
       [ExpectedException(typeof(RuntimeException))]
       [ExcludeFromCodeCoverage]
-      public void List_TEST()
+      public void SymbolList_TEST()
       {
-         new ExpressionEvaluator(new RuntimeContext(IntPtr.Zero)).Evaluate(new List());
+         new ExpressionEvaluator(new RuntimeContext(IntPtr.Zero)).Evaluate(new SymbolList());
       }
 
       [TestMethod]
@@ -62,11 +63,15 @@ namespace MacroRuntime_TEST
       {
          var context = new RuntimeContext(IntPtr.Zero);
          var counter = 10;
-         context.DefineValue(new Symbol("loopTestCondition"), new Func<List<object>, object>(Args => counter-- > 0));
+         context.DefineValue(
+            new Symbol("loopTestCondition"),
+            new IntrinsicProcedure { Function = ContextBase => new Constant(counter-- > 0), ArgumentSymbols = new SymbolList(), DefiningContext = context });
          var result = 0;
-         context.DefineValue(new Symbol("loopTestBody"), new Func<List<object>, object>(Args => ++result));
+         context.DefineValue(
+            new Symbol("loopTestBody"),
+            new IntrinsicProcedure { Function = ContextBase => new Constant(++result), ArgumentSymbols = new SymbolList(), DefiningContext = context });
 
-         AssertExpressionEvaluatesTo(10, "(loop (loopTestCondition) (loopTestBody))", context);
+         AssertExpressionEvaluatesTo(new Constant(10), "(loop (loopTestCondition) (loopTestBody))", context);
          Assert.AreEqual(-1, counter);
          Assert.AreEqual(10, result);
       }
@@ -95,7 +100,9 @@ namespace MacroRuntime_TEST
       public void ExceptionHandling_TEST()
       {
          var context = new RuntimeContext(IntPtr.Zero);
-         context.DefineValue(new Symbol("SomeFun"), (Func<List<object>, object>)SomeFun);
+         context.DefineValue(
+            new Symbol("SomeFun"), 
+            new IntrinsicProcedure { Function = SomeFun, ArgumentSymbols = new SymbolList(), DefiningContext = context });
          var evaluator = new ExpressionEvaluator(context);
 
          try
@@ -111,12 +118,12 @@ namespace MacroRuntime_TEST
       }
 
       [ExcludeFromCodeCoverage]
-      private object SomeFun(List<object> Args)
+      private ExpressionBase SomeFun(ContextBase Context)
       {
          throw new NotImplementedException("SomeFun");
       }
 
-      private void AssertExpressionEvaluatesTo(object ExpectedValue, string Expression, ContextBase Context = null)
+      private void AssertExpressionEvaluatesTo(ExpressionBase ExpectedValue, string Expression, ContextBase Context = null)
       {
          if(Context == null)
             Context = new RuntimeContext(IntPtr.Zero);

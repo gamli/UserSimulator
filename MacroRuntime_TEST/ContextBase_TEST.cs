@@ -14,12 +14,12 @@ namespace MacroRuntime_TEST
       {
          var context = new MockContext();
          var symbol = new Symbol("var");
-         context.DefineValue(symbol, this);
-         Assert.AreSame(this, context.GetValue(symbol));
+         context.DefineValue(symbol, new Constant(this));
+         Assert.AreEqual(new Constant(this), context.GetValue(symbol));
          
          try
          {
-            context.DefineValue(symbol, this);
+            context.DefineValue(symbol, new Constant(this));
             Assert.Fail();
          }
          catch (RuntimeException)
@@ -34,20 +34,15 @@ namespace MacroRuntime_TEST
       {
          var context = new MockContext();
          var symbol = new Symbol("var");
+
          context.DefineValue(symbol, null);
          Assert.AreSame(null, context.GetValue(symbol));
-         context.SetValue(symbol, this);
-         Assert.AreSame(this, context.GetValue(symbol));
 
-         try
-         {
-            context.SetValue(new Symbol("undefinedVar"), this);
-            Assert.Fail();
-         }
-         catch (RuntimeException)
-         {
-            // everything ok
-         }
+         context.SetValue(symbol, new Constant(this));
+         Assert.AreEqual(new Constant(this), context.GetValue(symbol));
+
+         context.SetValue(new Symbol("undefinedVar"), new Constant(this));
+         Assert.AreEqual(new Constant(this), context.SymbolNotFundSetValueValue);
       }
 
       [TestMethod]

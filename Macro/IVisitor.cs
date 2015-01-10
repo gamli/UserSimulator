@@ -2,20 +2,22 @@
 {
    public interface IVisitor
    {
-      void VisitDefinition(Definition Definition);
-
-      void VisitSymbol(Symbol Symbol);
-
       void VisitConstant(Constant Constant);
 
-      void VisitList(List List);
-
-      void VisitFunctionCall(FunctionCall FunctionCall);
-
-      void VisitLoop(Loop Loop);
+      void VisitDefinition(Definition Definition);
 
       void VisitIf(If If);
 
+      void VisitLambda(Lambda Lambda);
+
+      void VisitLoop(Loop Loop);
+
+      void VisitProcedureCall(ProcedureCall ProcedureCall);
+
       void VisitQuote(Quote Quote);
+
+      void VisitSymbol(Symbol Symbol);
+
+      void VisitSymbolList(SymbolList SymbolList);
    }
 }

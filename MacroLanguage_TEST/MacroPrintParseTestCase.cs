@@ -10,7 +10,7 @@ namespace MacroLanguage_TEST
       {
          var text = new StringBuilder();
 
-         var macro = new FunctionCall { Function = new Symbol("funTEST") };
+         var macro = new ProcedureCall { Procedure = new Symbol("funTEST") };
          text.Append("(funTEST");
 
          macro.Expressions.Add(new Constant(true));
@@ -31,22 +31,30 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(new Constant(4711.1174));
          text.Append(" 4711.1174");
 
-         macro.Expressions.Add(new Definition { Symbol = new Symbol("var"), Expression = new Constant(4711) });
-         text.Append(" (define var 4711)");
-
-         var functionCall = new FunctionCall { Function = new Symbol("fun") };
-         functionCall.Expressions.Add(new Constant("arg"));
-         macro.Expressions.Add(functionCall);
-         text.Append(" (fun \"arg\")");
-
          macro.Expressions.Add(new If { Condition = new Constant(true), Consequent = new Constant("Consequent"), Alternative = new Constant("Alternative") });
          text.Append(" (if True \"Consequent\" \"Alternative\")");
 
-         macro.Expressions.Add(new Loop { Condition = new Constant(true), Body = new FunctionCall { Function = new Symbol("fun") } });
+         macro.Expressions.Add(new Loop { Condition = new Constant(true), Body = new ProcedureCall { Procedure = new Symbol("fun") } });
          text.Append(" (loop True (fun))");
 
-         macro.Expressions.Add(new Quote { Expression = new FunctionCall { Function = new Symbol("fun") } });
+         var procedureCall = new ProcedureCall { Procedure = new Symbol("fun") };
+         procedureCall.Expressions.Add(new Constant("arg"));
+         macro.Expressions.Add(procedureCall);
+         text.Append(" (fun \"arg\")");
+
+         macro.Expressions.Add(new Quote { Expression = new ProcedureCall { Procedure = new Symbol("fun") } });
          text.Append(" (quote (fun))");
+
+         macro.Expressions.Add(new Definition { Symbol = new Symbol("var"), Expression = new Constant(4711) });
+         text.Append(" (define var 4711)");
+
+         var lambdaBody = new ProcedureCall { Procedure = new Symbol("mult") };
+         lambdaBody.Expressions.Add(new Symbol("x"));
+         lambdaBody.Expressions.Add(new Symbol("x"));
+         var lambda = new Lambda { ArgumentSymbols = new SymbolList(), Body = lambdaBody };
+         lambda.ArgumentSymbols.Expressions.Add(new Symbol("x"));
+         macro.Expressions.Add(lambda);
+         text.Append(" (lambda (x) (mult x x))");
 
          text.Append(")");
 

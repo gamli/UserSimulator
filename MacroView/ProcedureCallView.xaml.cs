@@ -3,11 +3,11 @@
 namespace MacroView
 {
    /// <summary>
-   /// Interaction logic for FunctionCallView.xaml
+   /// Interaction logic for ProcedureCallView.xaml
    /// </summary>
-   public partial class FunctionCallView
+   public partial class ProcedureCallView
    {
-      public FunctionCallView()
+      public ProcedureCallView()
       {
          InitializeComponent();
       }
@@ -18,7 +18,7 @@ namespace MacroView
          set { SetValue(FunctionNameProperty, value); }
       }
       public static readonly DependencyProperty FunctionNameProperty =
-         DependencyProperty.Register("FunctionName", typeof(string), typeof(FunctionCallView), null);
+         DependencyProperty.Register("FunctionName", typeof(string), typeof(ProcedureCallView), null);
    }
 
    public class FunctionCallParameter : FrameworkElement

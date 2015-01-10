@@ -4,28 +4,28 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class FunctionCallVM : ListVM
+   public class ProcedureCallVM : ListExpressionBaseVM<ExpressionBase, ExpressionBaseVM>
    {
-      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _function;
-      public ExpressionBaseVM FunctionVM
+      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _procedureVM;
+      public ExpressionBaseVM ProcedureVM
       {
          get
          {
-            return _function.Value;
+            return _procedureVM.Value;
          }
       }
 
       private readonly TransformedCollection<ExpressionBase, ExpressionBaseVM> _argumentsVM;
       public ReadOnlyObservableCollection<ExpressionBaseVM> ArgumentsVM { get { return _argumentsVM.Transformed; } }
 
-      public FunctionCallVM(FunctionCall Model)
+      public ProcedureCallVM(ProcedureCall Model)
          : base(Model)
       {
-         _function =
+         _procedureVM =
             new NotifyingTransformedProperty<ExpressionBaseVM>(
-               new[] { "Function" }, "FunctionVM",
+               new[] { "Procedure" }, "ProcedureVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Function),
+               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Procedure),
                VM => VM.Dispose());
 
          _argumentsVM =

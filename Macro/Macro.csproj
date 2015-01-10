@@ -42,10 +42,11 @@
   <ItemGroup>
     <Compile Include="Constant.cs" />
     <Compile Include="ExpressionBase.cs" />
+    <Compile Include="Lambda.cs" />
+    <Compile Include="ListExpressionBase.cs" />
     <Compile Include="Loop.cs" />
-    <Compile Include="FunctionCall.cs" />
+    <Compile Include="ProcedureCall.cs" />
     <Compile Include="If.cs" />
-    <Compile Include="List.cs" />
     <Compile Include="Quote.cs" />
     <Compile Include="SpecialFormBase.cs" />
     <Compile Include="Symbol.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="MacroBase.cs" />
     <Compile Include="MacroCloner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SymbolList.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

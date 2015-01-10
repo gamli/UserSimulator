@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Macro_TEST
 {
    [TestClass]
-   public class Loop_TEST : List_TEST_Base
+   public class Loop_TEST : List_TEST_Base<ExpressionBase>
    {
       [TestMethod]
       public void CloneAndEqualsAndAccept_TEST()

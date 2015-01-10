@@ -42,20 +42,46 @@ namespace MacroLanguage
 
       public void VisitDefinition(Definition Definition)
       {
-         VisitList(Definition);
-      }
-
-      public void VisitFunctionCall(FunctionCall FunctionCall)
-      {
-         VisitList(FunctionCall);
+         VisitListExpressionBase(Definition);
       }
 
       public void VisitIf(If If)
       {
-         VisitList(If);
+         VisitListExpressionBase(If);
       }
 
-      public void VisitList(List List)
+      public void VisitLambda(Lambda Lambda)
+      {
+         VisitListExpressionBase(Lambda);
+      }
+
+      public void VisitLoop(Loop Loop)
+      {
+         VisitListExpressionBase(Loop);
+      }
+
+      public void VisitProcedureCall(ProcedureCall ProcedureCall)
+      {
+         VisitListExpressionBase(ProcedureCall);
+      }
+
+      public void VisitQuote(Quote Quote)
+      {
+         VisitListExpressionBase(Quote);
+      }
+
+      public void VisitSymbol(Symbol Symbol)
+      {
+         Append(Symbol.Value);
+      }
+
+      public void VisitSymbolList(SymbolList SymbolList)
+      {
+         VisitListExpressionBase(SymbolList);
+      }
+
+      private void VisitListExpressionBase<TExpression>(ListExpressionBase<TExpression> List)
+         where TExpression : ExpressionBase
       {
          Append("(");
          foreach (var expression in List.Expressions.Take(List.Expressions.Count - 1))
@@ -65,21 +91,6 @@ namespace MacroLanguage
          }
          List.Expressions.Last().Accept(this);
          Append(")");
-      }
-
-      public void VisitLoop(Loop Loop)
-      {
-         VisitList(Loop);
-      }
-
-      public void VisitQuote(Quote Quote)
-      {
-         VisitList(Quote);
-      }
-
-      public void VisitSymbol(Symbol Symbol)
-      {
-         Append(Symbol.Value);
       }
 
       private void Append(string Text)

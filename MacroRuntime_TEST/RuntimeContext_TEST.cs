@@ -34,13 +34,13 @@ namespace MacroRuntime_TEST
          var context = new RuntimeContext(IntPtr.Zero);
          var evaluator = new ExpressionEvaluator(context);
 
-         Assert.AreEqual(true, evaluator.Evaluate(ParseExpression("(move 0 0)")));
+         Assert.AreEqual(new Constant(true), evaluator.Evaluate(ParseExpression("(move 0 0)")));
 
-         Assert.AreEqual(true, evaluator.Evaluate(ParseExpression("(position 0 0)")));
+         Assert.AreEqual(new Constant(true), evaluator.Evaluate(ParseExpression("(position 0 0)")));
 
          var sw = new Stopwatch();
          sw.Start();
-         Assert.AreEqual(100, evaluator.Evaluate(ParseExpression("(pause 100)")));
+         Assert.AreEqual(new Constant(100), evaluator.Evaluate(ParseExpression("(pause 100)")));
          sw.Stop();
          Assert.IsTrue(sw.ElapsedMilliseconds >= 100);
 
@@ -55,7 +55,7 @@ namespace MacroRuntime_TEST
          }
          catch (RuntimeException e)
          {
-            Assert.AreEqual("pause function expected 1 argument(s) but got 0", e.Message);
+            Assert.AreEqual("Expected 1 argument(s) but got 0", e.Message);
          }
       }
       private ExpressionBase ParseExpression(string Expression)

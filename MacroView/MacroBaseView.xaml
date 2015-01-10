@@ -15,23 +15,26 @@
          <DataTemplate DataType="{x:Type macrovm:DefinitionVM}">
             <macroview:DefinitionView/>
          </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:FunctionCallVM}">
-            <macroview:FunctionCallView/>
-         </DataTemplate>
          <DataTemplate DataType="{x:Type macrovm:IfVM}">
             <macroview:IfView/>
          </DataTemplate>
-         <DataTemplate DataType="{x:Type macrovm:ListVM}">
-            <macroview:ListView/>
+         <DataTemplate DataType="{x:Type macrovm:LambdaVM}">
+            <macroview:LambdaView/>
          </DataTemplate>
          <DataTemplate DataType="{x:Type macrovm:LoopVM}">
             <macroview:LoopView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:ProcedureCallVM}">
+            <macroview:ProcedureCallView/>
          </DataTemplate>
          <DataTemplate DataType="{x:Type macrovm:QuoteVM}">
             <macroview:QuoteView/>
          </DataTemplate>
          <DataTemplate DataType="{x:Type macrovm:SymbolVM}">
             <macroview:SymbolView/>
+         </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:SymbolListVM}">
+            <macroview:SymbolListView/>
          </DataTemplate>
       </Grid.Resources>
       <ContentPresenter Content="{Binding}"/>

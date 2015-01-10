@@ -8,24 +8,24 @@ namespace MacroViewModel_TEST
    public class FunctionCallVM_TEST
    {
       [TestMethod]
-      public void FunctionVM_Property_TEST()
+      public void ProcedureVM_Property_TEST()
       {
-         var functionCall = new FunctionCall { Function = new Symbol("foo") };
-         functionCall.Expressions.Add(new Constant(true));
-         functionCall.Expressions.Add(new Constant("arg"));
-         using (var functionCallVM = new FunctionCallVM(functionCall))
+         var procedureCall = new ProcedureCall { Procedure = new Symbol("foo") };
+         procedureCall.Expressions.Add(new Constant(true));
+         procedureCall.Expressions.Add(new Constant("arg"));
+         using (var procedureCallVM = new ProcedureCallVM(procedureCall))
          {
-            Assert.AreEqual(functionCall.Function, functionCallVM.FunctionVM.Model);
-            Assert.AreEqual(functionCall.Arguments.Count, functionCallVM.ArgumentsVM.Count);
-            for (var i = 0; i < functionCall.Expressions.Count; i++)
-               Assert.AreSame(functionCall.Expressions[i], functionCallVM.ExpressionsVM[i].Model);
-            functionCall.Function = new Symbol("bar");
-            functionCall.Expressions[1] = new Constant(-1147);
-            functionCall.Expressions[2] = new Constant("gra");
-            Assert.AreEqual(functionCall.Function, functionCallVM.FunctionVM.Model);
-            Assert.AreEqual(functionCall.Arguments.Count, functionCallVM.ArgumentsVM.Count);
-            for (var i = 0; i < functionCall.Expressions.Count; i++)
-               Assert.AreSame(functionCall.Expressions[i], functionCallVM.ExpressionsVM[i].Model);
+            Assert.AreEqual(procedureCall.Procedure, procedureCallVM.ProcedureVM.Model);
+            Assert.AreEqual(procedureCall.Arguments.Count, procedureCallVM.ArgumentsVM.Count);
+            for (var i = 0; i < procedureCall.Arguments.Count; i++)
+               Assert.AreSame(procedureCall.Arguments[i], procedureCallVM.ArgumentsVM[i].Model);
+            procedureCall.Procedure = new Symbol("bar");
+            procedureCall.Expressions[1] = new Constant(-1147);
+            procedureCall.Expressions[2] = new Constant("gra");
+            Assert.AreEqual(procedureCall.Procedure, procedureCallVM.ProcedureVM.Model);
+            Assert.AreEqual(procedureCall.Arguments.Count, procedureCallVM.ArgumentsVM.Count);
+            for (var i = 0; i < procedureCall.Arguments.Count; i++)
+               Assert.AreSame(procedureCall.Arguments[i], procedureCallVM.ArgumentsVM[i].Model);
          }
       }
    }

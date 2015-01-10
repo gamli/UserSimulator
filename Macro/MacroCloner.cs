@@ -1,4 +1,6 @@
-﻿namespace Macro
+﻿using System.Linq.Expressions;
+
+namespace Macro
 {
    public class MacroCloner
    {
@@ -14,35 +16,68 @@
       {
          public MacroBase Clone { get; private set; }
 
-         public void VisitDefinition(Definition Definition)
-         {
-            VisitListGeneric(Definition);
-         }
-
-         public void VisitSymbol(Symbol Symbol)
-         {
-            Clone = new Symbol { Value = Symbol.Value };
-         }
-
          public void VisitConstant(Constant Constant)
          {
             Clone = new Constant(Constant.Value);
          }
 
-         public void VisitList(List List)
+         public void VisitDefinition(Definition Definition)
          {
-            VisitListGeneric(List);
+            VisitListGeneric(Definition);
+         }
+
+         public void VisitIf(If If)
+         {
+            VisitListGeneric(If);
+         }
+
+         public void VisitLambda(Lambda Lambda)
+         {
+            VisitListGeneric(Lambda);
+         }
+
+         public void VisitLoop(Loop Loop)
+         {
+            VisitListGeneric(Loop);
+         }
+
+         public void VisitProcedureCall(ProcedureCall ProcedureCall)
+         {
+            VisitListGeneric(ProcedureCall);
+         }
+
+         public void VisitQuote(Quote Quote)
+         {
+            VisitListGeneric(Quote);
+         }
+
+         public void VisitSymbol(Symbol Symbol)
+         {
+            Clone = new Symbol(Symbol.Value);
+         }
+
+         public void VisitSymbolList(SymbolList SymbolList)
+         {
+            VisitListGeneric<SymbolList, Symbol>(SymbolList);
          }
 
          private void VisitListGeneric<TList>(TList List)
-            where TList : List, new()
+            where TList : ListExpressionBase<ExpressionBase>, new()
+         {
+            VisitListGeneric<TList, ExpressionBase>(List);
+         }
+
+         private void VisitListGeneric<TList, TExpression>(TList List)
+            where TList : ListExpressionBase<TExpression>, new() 
+            where TExpression : ExpressionBase
          {
             var clone = new TList();
             CloneListsExpressions(List, clone);
             Clone = clone;
          }
 
-         private static void CloneListsExpressions(List List, List Clone)
+         private static void CloneListsExpressions<TExpression>(ListExpressionBase<TExpression> List, ListExpressionBase<TExpression> Clone)
+            where TExpression : ExpressionBase
          {
             while (Clone.Expressions.Count < List.Expressions.Count)
                Clone.Expressions.Add(null);
@@ -52,26 +87,6 @@
                Clone.Expressions[index] = MacroCloner.Clone(expression);
                index++;
             }
-         }
-
-         public void VisitFunctionCall(FunctionCall FunctionCall)
-         {
-            VisitListGeneric(FunctionCall);
-         }
-
-         public void VisitLoop(Loop Loop)
-         {
-            VisitListGeneric(Loop);
-         }
-
-         public void VisitIf(If If)
-         {
-            VisitListGeneric(If);
-         }
-
-         public void VisitQuote(Quote Quote)
-         {
-            VisitListGeneric(Quote);
          }
       }
    }
