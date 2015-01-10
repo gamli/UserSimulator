@@ -58,6 +58,7 @@
     <Compile Include="FunctionCallVM_TEST.cs" />
     <Compile Include="DefinitionVM_TEST.cs" />
     <Compile Include="QuoteVM_TEST.cs" />
+    <Compile Include="LambdaVM_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

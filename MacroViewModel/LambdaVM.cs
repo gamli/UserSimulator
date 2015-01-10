@@ -10,8 +10,8 @@ namespace MacroViewModel
 {
    public class LambdaVM : ExpressionBaseVM
    {
-      private readonly NotifyingTransformedProperty<SymbolVM> _argumentSymbolsVM;
-      public SymbolVM ArgumentSymbolsVM
+      private readonly NotifyingTransformedProperty<SymbolListVM> _argumentSymbolsVM;
+      public SymbolListVM ArgumentSymbolsVM
       {
          get
          {
@@ -32,10 +32,10 @@ namespace MacroViewModel
          : base(Model)
       {
          _argumentSymbolsVM =
-            new NotifyingTransformedProperty<SymbolVM>(
+            new NotifyingTransformedProperty<SymbolListVM>(
                new[] { "ArgumentSymbols" }, "ArgumentSymbolsVM",
                Model, this,
-               () => (SymbolVM)MacroViewModelFactory.Instance.Create(Model.ArgumentSymbols),
+               () => (SymbolListVM)MacroViewModelFactory.Instance.Create(Model.ArgumentSymbols),
                VM => VM.Dispose());
 
          _bodyVM =

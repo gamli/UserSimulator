@@ -82,20 +82,6 @@ namespace MacroLanguage
          return config.CreateParser();
       }
 
-      private class PrecedenceGroup : IPrecedenceGroup
-      {
-
-         public AssociativityDirection Associativity { get; private set; }
-
-         public int Precedence { get; private set; }
-
-         public PrecedenceGroup(int Precedence, AssociativityDirection Associativity = AssociativityDirection.Left)
-         {
-            this.Precedence = Precedence;
-            this.Associativity = Associativity;
-         }
-      }
-
       private static IParserConfigurator<object> ParserConfigurator()
       {
          var config = ParserFactory.Configure<object>();

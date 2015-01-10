@@ -20,7 +20,10 @@ namespace MacroRuntime
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
          var otherIntrinsicProcedure = (IntrinsicProcedure)OtherMacro;
-         return Function.Equals(otherIntrinsicProcedure.Function) && base.MacroEquals(otherIntrinsicProcedure);
+         var equals = Function.Equals(otherIntrinsicProcedure.Function);
+         if(equals)
+            equals &= base.MacroEquals(otherIntrinsicProcedure);
+         return equals;
       }
    }
 }

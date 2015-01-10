@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,7 @@ namespace MacroRuntime
       protected abstract ExpressionBase ExecuteCall(ContextBase Context);
 
       // TODO extract superclass from MacroBase to make this dummy implementation unnecessary
+      [ExcludeFromCodeCoverage]
       public override void Accept(IVisitor Visitor)
       {
          throw new NotImplementedException();
@@ -44,7 +46,10 @@ namespace MacroRuntime
 
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
-         return DefiningContext.Equals(((ProcedureBase) OtherMacro).DefiningContext);
+         var otherProcedure = (ProcedureBase) OtherMacro;
+         return 
+            DefiningContext.Equals(otherProcedure.DefiningContext) && 
+            ArgumentSymbols.Equals(otherProcedure.ArgumentSymbols);
       }
    }
 }

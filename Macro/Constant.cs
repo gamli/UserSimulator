@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace Macro
 {
@@ -28,6 +29,7 @@ namespace Macro
          return Value == null ? otherConstantExpression.Value == null : Value.Equals(otherConstantExpression.Value);
       }
 
+      [ExcludeFromCodeCoverage]
       public override string ToString()
       {
          return 

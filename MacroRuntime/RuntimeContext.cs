@@ -28,7 +28,7 @@ namespace MacroRuntime
          var argumentSymbols = new SymbolList();
          foreach (var argument in Arguments)
             argumentSymbols.Symbols.Add(argument);
-         DefineValue(new Symbol(Symbol), new IntrinsicProcedure { DefiningContext = this, ArgumentSymbols = argumentSymbols, Function = Function});
+         DefineValue(new Symbol(Symbol), new IntrinsicProcedure { DefiningContext = this, ArgumentSymbols = argumentSymbols, Function = Function });
       }
 
       [ExcludeFromCodeCoverage]
@@ -129,20 +129,28 @@ namespace MacroRuntime
             var constantValue = ((Constant)Context.GetValue(Symbol)).Value;
             try
             {
-               return (T) constantValue;
+               return (T)constantValue;
             }
             catch (InvalidCastException e)
             {
                throw new RuntimeException(
-                  string.Join("Symbol {0}: expected type was {1} but got {2}", Symbol, typeof(T), constantValue.GetType()), 
-                  Symbol, 
-                  Context, 
+                  string.Format("Symbol >> {0} <<: expected type was >> {1} << but got >> {2} <<", Symbol, typeof(T), constantValue.GetType()),
+                  Symbol,
+                  Context,
                   e);
             }
          }
          catch (InvalidCastException e)
          {
-            throw new RuntimeException(string.Join("Symbol {0}: expected constant", Symbol), Symbol, Context, e);
+            throw new RuntimeException(
+               string.Format(
+                  "Symbol >> {0} <<: expected constant but got >> {1} [{2}] <<",
+                  Symbol,
+                  Context.GetValue(Symbol),
+                  Context.GetValue(Symbol).GetType()),
+               Symbol,
+               Context,
+               e);
          }
       }
    }

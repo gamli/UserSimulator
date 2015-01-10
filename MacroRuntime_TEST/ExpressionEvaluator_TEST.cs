@@ -36,19 +36,24 @@ namespace MacroRuntime_TEST
       }
 
       [TestMethod]
-      public void FunctionCall_TEST()
-      {
-         var context = new RuntimeContext(IntPtr.Zero);
-         AssertExpressionEvaluatesTo(new Constant(10), "(define var (pause 10))", context);
-         Assert.AreEqual(new Constant(10), context.GetValue(new Symbol("var")));
-      }
-
-      [TestMethod]
       public void If_TEST()
       {
          AssertExpressionEvaluatesTo(new Constant(1), "(if True (pause 1) (pause 2))");
          AssertExpressionEvaluatesTo(new Constant(2), "(if False (pause 1) (pause 2))");
       }
+
+      [TestMethod]
+      public void Lambda_TEST()
+      {
+         var context = new RuntimeContext(IntPtr.Zero);
+         var argumentSymbols = new SymbolList();
+         var lambda = new Lambda { ArgumentSymbols = argumentSymbols, Body = new Symbol("y")};
+         AssertExpressionEvaluatesTo(new Procedure { DefiningContext = context, ArgumentSymbols = argumentSymbols, Lambda = lambda }, "(lambda () y)", context);
+         argumentSymbols.Symbols.Add(new Symbol("x"));
+         argumentSymbols.Symbols.Add(new Symbol("y"));
+         AssertExpressionEvaluatesTo(new Procedure { DefiningContext = context, ArgumentSymbols = argumentSymbols, Lambda = lambda }, "(lambda (x y) y)", context);
+      }
+
 
       [TestMethod]
       [ExpectedException(typeof(RuntimeException))]
@@ -74,6 +79,16 @@ namespace MacroRuntime_TEST
          AssertExpressionEvaluatesTo(new Constant(10), "(loop (loopTestCondition) (loopTestBody))", context);
          Assert.AreEqual(-1, counter);
          Assert.AreEqual(10, result);
+      }
+
+      [TestMethod]
+      public void ProcedureCall_TEST()
+      {
+         var context = new RuntimeContext(IntPtr.Zero);
+         AssertExpressionEvaluatesTo(new Constant(10), "(define var1 (pause 10))", context);
+         Assert.AreEqual(new Constant(10), context.GetValue(new Symbol("var1")));
+         AssertExpressionEvaluatesTo(new Constant(10), "(define var2 ((lambda (duration) (pause duration)) 10))", context);
+         Assert.AreEqual(new Constant(10), context.GetValue(new Symbol("var2")));
       }
 
       [TestMethod]
@@ -128,7 +143,8 @@ namespace MacroRuntime_TEST
          if(Context == null)
             Context = new RuntimeContext(IntPtr.Zero);
          var evaluator = new ExpressionEvaluator(Context);
-         Assert.AreEqual(ExpectedValue, evaluator.Evaluate(ParseExpression(Expression)));
+         var value = evaluator.Evaluate(ParseExpression(Expression));
+         Assert.AreEqual(ExpectedValue, value);
       }
 
       private ExpressionBase ParseExpression(string Expression)

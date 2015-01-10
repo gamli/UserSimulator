@@ -52,10 +52,12 @@
   <ItemGroup>
     <Compile Include="ContextBase_TEST.cs" />
     <Compile Include="MockContext.cs" />
+    <Compile Include="Procedure_TEST.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HierarchicalContest_TEST.cs" />
     <Compile Include="RuntimeContext_TEST.cs" />
     <Compile Include="ExpressionEvaluator_TEST.cs" />
+    <Compile Include="IntrinsicProcedure_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

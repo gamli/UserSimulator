@@ -16,7 +16,7 @@ namespace MacroRuntime
          }
          catch(ArgumentException e)
          {
-            string exceptionMessage = string.Format("Symbol >>{0}<< is already defined (did you mean 'set!' instead of 'define'?)", Symbol.Value);
+            string exceptionMessage = string.Format("Symbol >>{0}<< is already defined (did you mean 'set' instead of 'define'?)", Symbol.Value);
             throw new RuntimeException(exceptionMessage, Symbol, this, e);
          }
       }

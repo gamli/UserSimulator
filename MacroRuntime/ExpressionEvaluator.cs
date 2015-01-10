@@ -66,7 +66,7 @@ namespace MacroRuntime
 
          public void VisitLambda(Lambda Lambda)
          {
-            Value = new Procedure { DefiningContext = _context, ArgumentSymbols = Lambda.ArgumentSymbols };
+            Value = new Procedure { DefiningContext = _context, Lambda = Lambda, ArgumentSymbols = Lambda.ArgumentSymbols };
          }
 
          public void VisitLoop(Loop Loop)

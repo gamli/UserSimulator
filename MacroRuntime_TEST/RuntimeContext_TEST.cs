@@ -29,10 +29,27 @@ namespace MacroRuntime_TEST
       }
 
       [TestMethod]
-      public void IOFunctions_TEST() 
+      public void IntrinsicProcedures_TEST() 
       {
          var context = new RuntimeContext(IntPtr.Zero);
          var evaluator = new ExpressionEvaluator(context);
+
+         var intrinsicProcedure = ((IntrinsicProcedure)evaluator.Evaluate(ParseExpression("pause")));
+         var proc1 = 
+            new IntrinsicProcedure
+               {
+                  Function = intrinsicProcedure.Function,
+                  ArgumentSymbols = MacroCloner.Clone(intrinsicProcedure.ArgumentSymbols),
+                  DefiningContext = context
+               };
+         var proc2 =
+            new IntrinsicProcedure
+            {
+               Function = intrinsicProcedure.Function,
+               ArgumentSymbols = MacroCloner.Clone(intrinsicProcedure.ArgumentSymbols),
+               DefiningContext = context
+            };
+         Assert.AreEqual(proc1, proc2);
 
          Assert.AreEqual(new Constant(true), evaluator.Evaluate(ParseExpression("(move 0 0)")));
 
@@ -61,6 +78,46 @@ namespace MacroRuntime_TEST
       private ExpressionBase ParseExpression(string Expression)
       {
          return (ExpressionBase)new MacroParser().Parse(Expression);
+      }
+
+      [TestMethod]
+      [ExcludeFromCodeCoverage]
+      public void InvalidCastException_TEST()
+      {
+         var context = new RuntimeContext(IntPtr.Zero);
+         var evaluator = new ExpressionEvaluator(context);
+
+         evaluator.Evaluate((ExpressionBase)new MacroParser().Parse("(pause 10)"));
+
+         try
+         {
+            evaluator.Evaluate((ExpressionBase)new MacroParser().Parse("(pause 10.05)"));
+            Assert.Fail();
+         }
+         catch (RuntimeException e)
+         {
+            Assert.AreEqual("Symbol >> Duration <<: expected type was >> System.Int32 << but got >> System.Double <<", e.Message);
+         }
+
+         try
+         {
+            evaluator.Evaluate((ExpressionBase) new MacroParser().Parse("(pause (quote (fun)))"));
+            Assert.Fail();
+         }
+         catch (RuntimeException e)
+         {
+            Assert.AreEqual("Symbol >> Duration <<: expected constant but got >> (fun) [Macro.ProcedureCall] <<", e.Message);
+         }
+
+         try
+         {
+            evaluator.Evaluate((ExpressionBase)new MacroParser().Parse("(pause \"10\")"));
+            Assert.Fail();
+         }
+         catch (RuntimeException e)
+         {
+            Assert.AreEqual("Symbol >> Duration <<: expected type was >> System.Int32 << but got >> System.String <<", e.Message);
+         }
       }
    }
 }

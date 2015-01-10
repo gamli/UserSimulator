@@ -6,6 +6,7 @@ namespace MacroViewModel
    public abstract class ExpressionBaseVM<T> : ExpressionBaseVM
       where T : ExpressionBase
    {
+      [ExcludeFromCodeCoverage]
       public new T Model
       {
          get
