@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Constant.cs" />
     <Compile Include="ExpressionBase.cs" />
+    <Compile Include="ExpressionList.cs" />
     <Compile Include="Lambda.cs" />
     <Compile Include="ListExpressionBase.cs" />
     <Compile Include="Loop.cs" />

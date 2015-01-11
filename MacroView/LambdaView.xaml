@@ -8,7 +8,12 @@
              d:DesignHeight="300" d:DesignWidth="300">
    <Border Background="#FFC1FFFB" BorderBrush="#FF00FFEF" CornerRadius="5" BorderThickness="3">
       <StackPanel>
-         <macroview:MacroBaseView DataContext="{Binding ArgumentSymbolsVM}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+         <StackPanel Orientation="Horizontal">
+            <Border Background="Transparent" BorderBrush="#FF00FFEF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+               <TextBlock Text="lambda" FontWeight="Bold" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </Border>
+            <macroview:MacroBaseView DataContext="{Binding ArgumentSymbolsVM}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5 0 0 0"/>
+         </StackPanel>
          <macroview:MacroBaseView DataContext="{Binding BodyVM}" Margin="24, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
       </StackPanel>
    </Border>

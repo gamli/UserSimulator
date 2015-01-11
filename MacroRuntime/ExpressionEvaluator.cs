@@ -53,15 +53,21 @@ namespace MacroRuntime
 
          public void VisitDefinition(Definition Definition)
          {
-            var evaluatedExpression = EvaluateExpression<ExpressionBase>(Definition.Expression);
+            var evaluatedExpression = EvaluateExpression<ExpressionBase>(Definition.Expression, _context);
             _context.DefineValue(Definition.Symbol, evaluatedExpression);
             Value = evaluatedExpression;
          }
 
+         // TODO should not happen?
+         public void VisitExpressionList(ExpressionList ExpressionList)
+         {
+            throw new RuntimeException("Can not evaluate expression list", ExpressionList, _context);
+         }
+
          public void VisitIf(If If)
          {
-            var consequentOrAlternative = (bool)EvaluateExpression<Constant>(If.Condition).Value ? If.Consequent : If.Alternative;
-            Value = EvaluateExpression<ExpressionBase>(consequentOrAlternative);
+            var consequentOrAlternative = (bool)EvaluateExpression<Constant>(If.Condition, _context).Value ? If.Consequent : If.Alternative;
+            Value = EvaluateExpression<ExpressionBase>(consequentOrAlternative, _context);
          }
 
          public void VisitLambda(Lambda Lambda)
@@ -71,15 +77,17 @@ namespace MacroRuntime
 
          public void VisitLoop(Loop Loop)
          {
-            while ((bool)EvaluateExpression<Constant>(Loop.Condition).Value)
-               Value = EvaluateExpression<ExpressionBase>(Loop.Body);
+            while ((bool)EvaluateExpression<Constant>(Loop.Condition, _context).Value)
+               Value = EvaluateExpression<ExpressionBase>(Loop.Body, _context);
          }
 
          public void VisitProcedureCall(ProcedureCall ProcedureCall)
          {
-            var procedure = EvaluateExpression<ProcedureBase>(ProcedureCall.Procedure);
-            var args = ProcedureCall.Arguments.Select(EvaluateExpression<ExpressionBase>).ToList();
-            Value = procedure.Call(args);
+            var procedure = EvaluateExpression<ProcedureBase>(ProcedureCall.Procedure, _context);
+            var evaluatedArgs = new ExpressionList();
+            foreach (var arg in ProcedureCall.Arguments)
+               evaluatedArgs.Expressions.Add(EvaluateExpression<ExpressionBase>(arg, _context));
+            Value = procedure.Call(evaluatedArgs);
          }
 
          public void VisitQuote(Quote Quote)
@@ -98,10 +106,10 @@ namespace MacroRuntime
             throw new RuntimeException("Can not evaluate symbol list", SymbolList, _context);
          }
 
-         private T EvaluateExpression<T>(ExpressionBase Expression)
+         private T EvaluateExpression<T>(ExpressionBase Expression, ContextBase Context)
             where T : ExpressionBase
          {
-            return (T)new ExpressionEvaluator(new HierarchicalContext(_context)).Evaluate(Expression);
+            return (T)new ExpressionEvaluator(Context).Evaluate(Expression);
          }
       }
    }

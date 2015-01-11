@@ -38,6 +38,9 @@ namespace MacroViewModel
                { typeof(Definition), Macro => 
                   new DefinitionVM((Definition)Macro) },
 
+               { typeof(ExpressionList), Macro => 
+                  new ExpressionListVM((ExpressionList)Macro) },
+
                { typeof(If), Macro => 
                   new IfVM((If)Macro) },
 

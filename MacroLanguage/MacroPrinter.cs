@@ -47,6 +47,11 @@ namespace MacroLanguage
          VisitListExpressionBase(Definition, 1);
       }
 
+      public void VisitExpressionList(ExpressionList ExpressionList)
+      {
+         VisitListExpressionBase(ExpressionList, ExpressionList.Expressions.Count);
+      }
+
       public void VisitIf(If If)
       {
          VisitListExpressionBase(If, 1);
@@ -102,7 +107,8 @@ namespace MacroLanguage
 
             index++;
          }
-         List.Expressions.Last().Accept(this);
+         if(List.Expressions.Count != 0)
+            List.Expressions.Last().Accept(this);
          
          if(_linebreaks && index > LinebreakIndex)
             DecreaseIndent();

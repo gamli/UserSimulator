@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using IO;
 using Macro;
@@ -21,6 +22,9 @@ namespace MacroRuntime
          AddIntrinsicFunction("pause", Pause, _pauseDuration);
          AddIntrinsicFunction("click", LeftClick);
          AddIntrinsicFunction("windowshot", Windowshot, _windowshotX, _windowshotY, _windowshotImageUrl);
+         AddIntrinsicFunction("begin", Begin, _varArg);
+         AddIntrinsicFunction("eq", Equals, _equalsLeft, _equalsRight);
+         AddIntrinsicFunction("dec", Decrement, _decrementVariableSymbol);
       }
 
       private void AddIntrinsicFunction(string Symbol, Func<ContextBase, ExpressionBase> Function, params Symbol[] Arguments)
@@ -44,6 +48,8 @@ namespace MacroRuntime
          var exceptionMessage = "GetValue: Symbol >>" + Symbol.Value + "<< is not defined (did you forget to 'define' first?)";
          throw new RuntimeException(exceptionMessage, Symbol, this);
       }
+
+      private readonly Symbol _varArg = new Symbol(".");
 
       private readonly Symbol _mouseMoveDeltaX = new Symbol("DeltaX");
       private readonly Symbol _mouseMoveDeltaY = new Symbol("DeltaY");
@@ -122,30 +128,60 @@ namespace MacroRuntime
          return new Constant(true);
       }
 
+      private ExpressionBase Begin(ContextBase Context)
+      {
+         return GetGenericValue<ExpressionList>(Context, _varArg).Expressions.LastOrDefault();
+      }
+
+      private readonly Symbol _equalsLeft = new Symbol("Left");
+      private readonly Symbol _equalsRight = new Symbol("Right");
+      private ExpressionBase Equals(ContextBase Context)
+      {
+         return new Constant(Equals(GetGenericValue<ExpressionBase>(Context, _equalsLeft), GetGenericValue<ExpressionBase>(Context, _equalsRight)));
+      }
+
+      private readonly Symbol _decrementVariableSymbol = new Symbol("VariableSymbol");
+      private ExpressionBase Decrement(ContextBase Context)
+      {
+         var variableValue = GetGenericValue<Constant>(Context, _decrementVariableSymbol);
+         if(variableValue.Value is int)
+            return new Constant(((int)variableValue.Value) - 1);
+         if (variableValue.Value is double)
+            return new Constant(((double)variableValue.Value) - 1);
+         throw new RuntimeException("Can only decrement int or double", GetValue(new Symbol("dec")), Context);
+      }
+
       private T GetConstantValue<T>(ContextBase Context, Symbol Symbol)
+      {
+         var constantValue = GetGenericValue<Constant>(Context, Symbol).Value;
+         try
+         {
+            return (T)constantValue;
+         }
+         catch (InvalidCastException e)
+         {
+            throw new RuntimeException(
+               string.Format("Symbol >> {0} <<: expected type was >> {1} << but got >> {2} <<", Symbol, typeof(T), constantValue.GetType()),
+               Symbol,
+               Context,
+               e);
+         }
+      }
+
+      private T GetGenericValue<T>(ContextBase Context, Symbol Symbol)
+         where T : ExpressionBase
       {
          try
          {
-            var constantValue = ((Constant)Context.GetValue(Symbol)).Value;
-            try
-            {
-               return (T)constantValue;
-            }
-            catch (InvalidCastException e)
-            {
-               throw new RuntimeException(
-                  string.Format("Symbol >> {0} <<: expected type was >> {1} << but got >> {2} <<", Symbol, typeof(T), constantValue.GetType()),
-                  Symbol,
-                  Context,
-                  e);
-            }
+            return (T)Context.GetValue(Symbol);
          }
          catch (InvalidCastException e)
          {
             throw new RuntimeException(
                string.Format(
-                  "Symbol >> {0} <<: expected constant but got >> {1} [{2}] <<",
+                  "Symbol >> {0} <<: expected [{1}] but got >> {2} [{3}] <<",
                   Symbol,
+                  typeof(T),
                   Context.GetValue(Symbol),
                   Context.GetValue(Symbol).GetType()),
                Symbol,

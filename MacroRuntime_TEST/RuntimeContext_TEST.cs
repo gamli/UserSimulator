@@ -106,7 +106,7 @@ namespace MacroRuntime_TEST
          }
          catch (RuntimeException e)
          {
-            Assert.AreEqual("Symbol >> Duration <<: expected constant but got >> (fun) [Macro.ProcedureCall] <<", e.Message);
+            Assert.AreEqual("Symbol >> Duration <<: expected [Macro.Constant] but got >> (fun) [Macro.ProcedureCall] <<", e.Message);
          }
 
          try

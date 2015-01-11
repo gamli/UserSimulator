@@ -15,6 +15,9 @@
          <DataTemplate DataType="{x:Type macrovm:DefinitionVM}">
             <macroview:DefinitionView/>
          </DataTemplate>
+         <DataTemplate DataType="{x:Type macrovm:ExpressionListVM}">
+            <macroview:ExpressionListView/>
+         </DataTemplate>
          <DataTemplate DataType="{x:Type macrovm:IfVM}">
             <macroview:IfView/>
          </DataTemplate>

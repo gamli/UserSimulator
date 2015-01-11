@@ -26,6 +26,11 @@ namespace Macro
             VisitListGeneric(Definition);
          }
 
+         public void VisitExpressionList(ExpressionList ExpressionList)
+         {
+            VisitListGeneric(ExpressionList);
+         }
+
          public void VisitIf(If If)
          {
             VisitListGeneric(If);

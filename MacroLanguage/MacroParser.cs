@@ -25,7 +25,7 @@ namespace MacroLanguage
             var macro = _parser.Parse(Text);
             return (MacroBase)macro;
          }
-         catch(Piglet.Parser.ParseException e)
+         catch (Piglet.Parser.ParseException e)
          {
             _parser = CreateParser();
             throw new ParseException(e.Message, e) { LineNumber = e.LexerState.CurrentLineNumber };
@@ -33,7 +33,7 @@ namespace MacroLanguage
          catch (LexerException e)
          {
             _parser = CreateParser();
-            throw new ParseException(e.Message, e) { LineNumber = e.LineNumber};
+            throw new ParseException(e.Message, e) { LineNumber = e.LineNumber };
          }
       }
 
@@ -67,15 +67,9 @@ namespace MacroLanguage
 
          ReduceToSelf(expression.AddProduction(Loop(config, expression)));
 
-         var expressions = config.CreateNonTerminal();
-         expressions.
-            AddProduction(expressions, expression)
-            .SetReduceFunction(ParseResults => ((IEnumerable<object>)ParseResults[0]).Concat(new[] { ParseResults[1] }));
-         expressions.
-            AddProduction()
-            .SetReduceFunction(ParseResults => new List<object>());
+         var expressionList = ExpressionList(config, expression);
 
-         ReduceToSelf(expression.AddProduction(ProcedureCall(config, expression, expressions)));
+         ReduceToSelf(expression.AddProduction(ProcedureCall(config, expression, expressionList)));
 
          ReduceToSelf(expression.AddProduction(Quote(config, expression)));
 
@@ -155,12 +149,12 @@ namespace MacroLanguage
 
       private static If ReduceIf(object[] ParseResults)
       {
-         var ifExpression = 
-            new If 
-               { 
-                  Condition = (ExpressionBase)ParseResults[2], 
-                  Consequent = (ExpressionBase)ParseResults[3], 
-                  Alternative = (ExpressionBase)ParseResults[4] 
+         var ifExpression =
+            new If
+               {
+                  Condition = (ExpressionBase)ParseResults[2],
+                  Consequent = (ExpressionBase)ParseResults[3],
+                  Alternative = (ExpressionBase)ParseResults[4]
                };
          return ifExpression;
       }
@@ -174,7 +168,7 @@ namespace MacroLanguage
          var lambda =
             new Lambda
                {
-                  ArgumentSymbols = (SymbolList) ParseResults[2],
+                  ArgumentSymbols = (SymbolList)ParseResults[2],
                   Body = (ExpressionBase)ParseResults[3]
                };
          return lambda;
@@ -198,8 +192,8 @@ namespace MacroLanguage
       private static ProcedureCall ReduceProcedureCall(object[] ParseResults)
       {
          var procedureCall = new ProcedureCall { Procedure = (ExpressionBase)ParseResults[1] };
-         foreach (var arg in (IEnumerable<object>)ParseResults[2])
-            procedureCall.Expressions.Add((ExpressionBase)arg);
+         foreach (var arg in ((ExpressionList)ParseResults[2]).Expressions)
+            procedureCall.Expressions.Add(arg);
          return procedureCall;
       }
 
@@ -215,7 +209,7 @@ namespace MacroLanguage
 
       private static ITerminal<object> Symbol(IParserConfigurator<object> Config)
       {
-         var symbol = Config.CreateTerminal(@"[a-zA-Z]([a-zA-Z0-9])*", ReduceSymbol);
+         var symbol = Config.CreateTerminal(@"([a-zA-Z]([a-zA-Z0-9])*)|\.", ReduceSymbol);
          symbol.DebugName = "smybol";
          return symbol;
       }
@@ -244,6 +238,25 @@ namespace MacroLanguage
          foreach (Symbol symbol in (IEnumerable)ParseResults[1])
             symbolList.Symbols.Add(symbol);
          return symbolList;
+      }
+
+      private static INonTerminal<object> ExpressionList(IParserConfigurator<object> Config, INonTerminal<object> Expression)
+      {
+         var expressionList = Config.CreateNonTerminal();
+         expressionList.DebugName = "expression-list";
+         expressionList.
+            AddProduction(expressionList, Expression)
+            .SetReduceFunction(
+               ParseResults =>
+                  {
+                     ((ExpressionList)ParseResults[0]).Expressions.Add((ExpressionBase)ParseResults[1]);
+                     return ParseResults[0];
+                  });
+         expressionList.
+            AddProduction()
+            .SetReduceFunction(ParseResults => new ExpressionList());
+
+         return expressionList;
       }
 
       private static INonTerminal<object> ListGeneric(
@@ -280,7 +293,7 @@ namespace MacroLanguage
    {
       public int LineNumber { get; set; }
 
-      public ParseException(string Message, Exception InnerException) 
+      public ParseException(string Message, Exception InnerException)
          : base(Message, InnerException)
       {
          // nothing to do

@@ -6,6 +6,8 @@
 
       void VisitDefinition(Definition Definition);
 
+      void VisitExpressionList(ExpressionList ExpressionList);
+
       void VisitIf(If If);
 
       void VisitLambda(Lambda Lambda);

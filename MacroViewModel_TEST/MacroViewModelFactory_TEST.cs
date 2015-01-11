@@ -14,6 +14,7 @@ namespace MacroViewModel_TEST
       {
          AssertCreatesExpectedViewModelType(typeof(Constant), typeof(ConstantVM));
          AssertCreatesExpectedViewModelType(typeof(Definition), typeof(DefinitionVM));
+         AssertCreatesExpectedViewModelType(typeof(ExpressionList), typeof(ExpressionListVM));
          AssertCreatesExpectedViewModelType(typeof(If), typeof(IfVM));
          AssertCreatesExpectedViewModelType(typeof(Lambda), typeof(LambdaVM));
          AssertCreatesExpectedViewModelType(typeof(Loop), typeof(LoopVM));
