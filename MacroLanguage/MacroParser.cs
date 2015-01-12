@@ -46,6 +46,8 @@ namespace MacroLanguage
          var expression = config.CreateNonTerminal();
          expression.DebugName = "expr";
 
+         ReduceToSelf(expression.AddProduction(NullTerminal(config)));
+
          ReduceToSelf(expression.AddProduction(ConstantBoolean(config)));
 
          ReduceToSelf(expression.AddProduction(ConstantString(config)));
@@ -96,16 +98,26 @@ namespace MacroLanguage
 
       private static ITerminal<object> ConstantString(IParserConfigurator<object> Config)
       {
-         var constant = Config.CreateTerminal("\"([^\"]|\\\\\")*\"|null", ReduceConstantString, true);
+         var constant = Config.CreateTerminal("\"([^\"]|\\\\\")*\"", ReduceConstantString, true);
          constant.DebugName = "const string-expr";
          return constant;
       }
 
       private static Constant ReduceConstantString(string ParseResults)
       {
-         if (ParseResults.Equals("null"))
-            return new Constant(null);
          return new Constant(ParseResults.Substring(1, ParseResults.Length - 2).Replace("\\\"", "\""));
+      }
+
+      private static ITerminal<object> NullTerminal(IParserConfigurator<object> Config)
+      {
+         var nullTerminal = Config.CreateTerminal("null", ReduceNullTerminal, true);
+         nullTerminal.DebugName = "null-expr";
+         return nullTerminal;
+      }
+
+      private static ExpressionList ReduceNullTerminal(string ParseResults)
+      {
+         return new ExpressionList();
       }
 
       private static ITerminal<object> ConstantInteger(IParserConfigurator<object> Config)
@@ -209,7 +221,7 @@ namespace MacroLanguage
 
       private static ITerminal<object> Symbol(IParserConfigurator<object> Config)
       {
-         var symbol = Config.CreateTerminal(@"([a-zA-Z]([a-zA-Z0-9])*)|\.", ReduceSymbol);
+         var symbol = Config.CreateTerminal(@"([a-zA-Z]([a-zA-Z0-9])*)|[\.+-*/><=]", ReduceSymbol);
          symbol.DebugName = "smybol";
          return symbol;
       }

@@ -90,6 +90,12 @@ namespace MacroLanguage
       private void VisitListExpressionBase<TExpression>(ListExpressionBase<TExpression> List, int LinebreakIndex)
          where TExpression : ExpressionBase
       {
+         if (List.Expressions.Count == 0)
+         {
+            Append("null");
+            return;
+         }
+
          Append("(");
 
          var index = 0;
