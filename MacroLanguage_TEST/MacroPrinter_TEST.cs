@@ -20,7 +20,7 @@ namespace MacroLanguage_TEST
       {
          var testCase = new MacroParser().Parse("(if True (lambda (x y z) (z x y)) (eq True False))");
 
-         AssertOutput(testCase, "(if True\n\t(lambda (x y z)\n\t\t(z\n\t\t\tx\n\t\t\ty))\n\t(eq\n\t\tTrue\n\t\tFalse))", true);
+         AssertOutput(testCase, "(if True\n\t(lambda (x y\n\t\tz)\n\t\t(z x\n\t\t\ty))\n\t(eq True\n\t\tFalse))", true);
       }
 
       private void AssertOutput(MacroBase Macro, string ExpectedOutput, bool Linebreaks)
