@@ -47,6 +47,7 @@
     <Compile Include="ExpressionListVM.cs" />
     <Compile Include="LambdaVM.cs" />
     <Compile Include="ListExpressionBaseVM.cs" />
+    <Compile Include="ProcedureVM.cs" />
     <Compile Include="SymbolListVM.cs" />
     <Compile Include="SymbolVM.cs" />
     <Compile Include="ConstantVM.cs" />
@@ -64,6 +65,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{13834f55-a326-4c25-9ca9-dc8c6282d3f5}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MacroRuntime\MacroRuntime.csproj">
+      <Project>{E204666E-3C0B-4794-977C-B5E4A6B757B0}</Project>
+      <Name>MacroRuntime</Name>
     </ProjectReference>
     <ProjectReference Include="..\Macro\Macro.csproj">
       <Project>{cc94e382-10da-4a49-9ecc-f3b185ec597a}</Project>
