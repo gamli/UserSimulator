@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Macro;
+using MacroRuntime;
 
 namespace MacroViewModel
 {
@@ -61,6 +62,12 @@ namespace MacroViewModel
 
                { typeof(SymbolList), Macro => 
                   new SymbolListVM((SymbolList)Macro) },
+
+               { typeof(Procedure), Macro => 
+                  new ProcedureVM((ProcedureBase)Macro) },
+
+               { typeof(IntrinsicProcedure), Macro => 
+                  new ProcedureVM((ProcedureBase)Macro) }
             };
       }
    }
