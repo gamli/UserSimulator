@@ -19,7 +19,6 @@ namespace MacroViewModel
       protected MacroBaseVM(T Model)
          : base(Model)
       {
-
       }
    }
 
@@ -29,7 +28,6 @@ namespace MacroViewModel
       protected MacroBaseVM(MacroBase Model)
          : base(Model)
       {
-
       }
    }
 }

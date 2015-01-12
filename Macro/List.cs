@@ -8,15 +8,21 @@ using System.Threading.Tasks;
 
 namespace Macro
 {
-   public abstract class ListExpressionBase<TExpression> : ExpressionBase
-      where TExpression : ExpressionBase
+   public class List : Expression
    {
-      public ObservableCollection<TExpression> Expressions { get; private set; }
+      public ObservableCollection<Expression> Expressions { get; private set; }
 
-      protected ListExpressionBase()
+      public List()
       {
-         Expressions = new ObservableCollection<TExpression>();
+         Expressions = new ObservableCollection<Expression>();
          Expressions.CollectionChanged += HandleItemsCollecionChanged;
+      }
+
+      public List(params Expression[] Expressions) 
+         : this()
+      {
+         foreach (var expression in Expressions)
+            this.Expressions.Add(expression);
       }
       private void HandleItemsCollecionChanged(object Sender, NotifyCollectionChangedEventArgs Args)
       {
@@ -24,22 +30,36 @@ namespace Macro
             foreach (MacroBase oldItem in Args.OldItems)
                if (oldItem != null)
                   oldItem.MacroChanged -= HandleItemMacroChanged;
+
          if (Args.NewItems != null)
             foreach (MacroBase newItem in Args.NewItems)
                if (newItem != null)
                   newItem.MacroChanged += HandleItemMacroChanged;
-         RaiseMacroChanged(this, new EventArgs());
+
+         OnMacroChanged();
       }
       private void HandleItemMacroChanged(object Sender, EventArgs Args)
       {
-         RaiseMacroChanged(Sender, Args);
+         OnMacroChanged();
+      }
+
+      public override void Accept(IVisitor Visitor)
+      {
+         Visitor.VisitList(this);
       }
 
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
-         var otherList = (ListExpressionBase<TExpression>)OtherMacro;
+         var otherList = (List)OtherMacro;
          return Expressions.SequenceEqual(otherList.Expressions);
       }
+
+      protected override int MacroGetHashCode()
+      {
+         return Expressions.GetHashCode();
+      }
+
+
 
       public override string ToString()
       {

@@ -46,34 +46,17 @@ namespace MacroLanguage
          var expression = config.CreateNonTerminal();
          expression.DebugName = "expr";
 
-         ReduceToSelf(expression.AddProduction(NullTerminal(config)));
+         expression.AddProduction(ConstantBoolean(config)).SetReduceToFirst();
 
-         ReduceToSelf(expression.AddProduction(ConstantBoolean(config)));
+         expression.AddProduction(ConstantString(config)).SetReduceToFirst();
 
-         ReduceToSelf(expression.AddProduction(ConstantString(config)));
+         expression.AddProduction(ConstantInteger(config)).SetReduceToFirst();
 
-         ReduceToSelf(expression.AddProduction(ConstantInteger(config)));
+         expression.AddProduction(ConstantDouble(config)).SetReduceToFirst();
 
-         ReduceToSelf(expression.AddProduction(ConstantDouble(config)));
+         expression.AddProduction(Symbol(config)).SetReduceToFirst();
 
-         var symbol = Symbol(config);
-         ReduceToSelf(expression.AddProduction(symbol));
-
-         ReduceToSelf(expression.AddProduction(Definition(config, symbol, expression)));
-
-         ReduceToSelf(expression.AddProduction(If(config, expression)));
-
-         var symbolList = SymbolList(config, symbol);
-
-         ReduceToSelf(expression.AddProduction(Lambda(config, expression, symbolList)));
-
-         ReduceToSelf(expression.AddProduction(Loop(config, expression)));
-
-         var expressionList = ExpressionList(config, expression);
-
-         ReduceToSelf(expression.AddProduction(ProcedureCall(config, expression, expressionList)));
-
-         ReduceToSelf(expression.AddProduction(Quote(config, expression)));
+         expression.AddProduction(List(config, expression)).SetReduceToFirst();
 
          return config.CreateParser();
       }
@@ -86,14 +69,9 @@ namespace MacroLanguage
 
       private static ITerminal<object> ConstantBoolean(IParserConfigurator<object> Config)
       {
-         var constant = Config.CreateTerminal("(True|False)", ReduceConstantBoolean, true);
+         var constant = Config.CreateTerminal("(True|False)", ParseResults => new Constant(bool.Parse(ParseResults)), true);
          constant.DebugName = "const bool-expr";
          return constant;
-      }
-
-      private static Constant ReduceConstantBoolean(string ParseResults)
-      {
-         return new Constant(bool.Parse(ParseResults));
       }
 
       private static ITerminal<object> ConstantString(IParserConfigurator<object> Config)
@@ -108,196 +86,51 @@ namespace MacroLanguage
          return new Constant(ParseResults.Substring(1, ParseResults.Length - 2).Replace("\\\"", "\""));
       }
 
-      private static ITerminal<object> NullTerminal(IParserConfigurator<object> Config)
-      {
-         var nullTerminal = Config.CreateTerminal("null", ReduceNullTerminal, true);
-         nullTerminal.DebugName = "null-expr";
-         return nullTerminal;
-      }
-
-      private static ExpressionList ReduceNullTerminal(string ParseResults)
-      {
-         return new ExpressionList();
-      }
-
       private static ITerminal<object> ConstantInteger(IParserConfigurator<object> Config)
       {
-         var constant = Config.CreateTerminal(@"-?\d+", ReduceConstantInteger, true);
+         var constant = Config.CreateTerminal(@"-?\d+", ParseResults => new Constant(int.Parse(ParseResults)), true);
          constant.DebugName = "const int-expr";
          return constant;
       }
 
-      private static Constant ReduceConstantInteger(string ParseResults)
-      {
-         return new Constant(int.Parse(ParseResults));
-      }
-
       private static ITerminal<object> ConstantDouble(IParserConfigurator<object> Config)
       {
-         var constant = Config.CreateTerminal(@"-?\d*\.\d+", ReduceConstantDouble, true);
+         var constant = Config.CreateTerminal(@"-?\d*\.\d+", ParseResults => new Constant(double.Parse(ParseResults, CultureInfo.InvariantCulture)), true);
          constant.DebugName = "const double-expr";
          return constant;
       }
 
-      private static Constant ReduceConstantDouble(string ParseResults)
-      {
-         return new Constant(double.Parse(ParseResults, CultureInfo.InvariantCulture));
-      }
-
-      private static INonTerminal<object> Definition(IParserConfigurator<object> Config, ITerminal<object> Symbol, INonTerminal<object> Expression)
-      {
-         return ListGeneric(Config, "define-expr", ReduceDefinition, "define", Symbol, Expression);
-      }
-
-      private static Definition ReduceDefinition(object[] ParseResults)
-      {
-         return new Definition { Symbol = (Symbol)ParseResults[2], Expression = (ExpressionBase)ParseResults[3] };
-      }
-
-      private static INonTerminal<object> If(IParserConfigurator<object> Config, INonTerminal<object> Expression)
-      {
-         return ListGeneric(Config, "if-expr", ReduceIf, "if", Expression, Expression, Expression);
-      }
-
-      private static If ReduceIf(object[] ParseResults)
-      {
-         var ifExpression =
-            new If
-               {
-                  Condition = (ExpressionBase)ParseResults[2],
-                  Consequent = (ExpressionBase)ParseResults[3],
-                  Alternative = (ExpressionBase)ParseResults[4]
-               };
-         return ifExpression;
-      }
-      private static INonTerminal<object> Lambda(IParserConfigurator<object> Config, INonTerminal<object> Expression, INonTerminal<object> SymbolList)
-      {
-         return ListGeneric(Config, "lambda-expr", ReduceLambda, "lambda", SymbolList, Expression);
-      }
-
-      private static Lambda ReduceLambda(object[] ParseResults)
-      {
-         var lambda =
-            new Lambda
-               {
-                  ArgumentSymbols = (SymbolList)ParseResults[2],
-                  Body = (ExpressionBase)ParseResults[3]
-               };
-         return lambda;
-      }
-
-      private static INonTerminal<object> Loop(IParserConfigurator<object> Config, INonTerminal<object> Expression)
-      {
-         return ListGeneric(Config, "loop-expr", ReduceLoop, "loop", Expression, Expression);
-      }
-
-      private static Loop ReduceLoop(object[] ParseResults)
-      {
-         return new Loop { Condition = (ExpressionBase)ParseResults[2], Body = (ExpressionBase)ParseResults[3] };
-      }
-
-      private static INonTerminal<object> ProcedureCall(IParserConfigurator<object> Config, INonTerminal<object> Expression, INonTerminal<object> Expressions)
-      {
-         return ListGeneric(Config, "function-call-expr", ReduceProcedureCall, Expression, Expressions);
-      }
-
-      private static ProcedureCall ReduceProcedureCall(object[] ParseResults)
-      {
-         var procedureCall = new ProcedureCall { Procedure = (ExpressionBase)ParseResults[1] };
-         foreach (var arg in ((ExpressionList)ParseResults[2]).Expressions)
-            procedureCall.Expressions.Add(arg);
-         return procedureCall;
-      }
-
-      private static INonTerminal<object> Quote(IParserConfigurator<object> Config, INonTerminal<object> Expression)
-      {
-         return ListGeneric(Config, "quote-expr", ReduceQuote, "quote", Expression);
-      }
-
-      private static Quote ReduceQuote(object[] ParseResults)
-      {
-         return new Quote { Expression = (ExpressionBase)ParseResults[2] };
-      }
-
       private static ITerminal<object> Symbol(IParserConfigurator<object> Config)
       {
-         var symbol = Config.CreateTerminal(@"([a-zA-Z]([a-zA-Z0-9])*)|[\.+-*/><=]", ReduceSymbol);
+         var symbol = Config.CreateTerminal(@"[^\(\)\s]*", ParseResults => new Symbol(ParseResults));
          symbol.DebugName = "smybol";
          return symbol;
       }
 
-      private static Symbol ReduceSymbol(string ParseResults)
+      private static INonTerminal<object> List(IParserConfigurator<object> Config, INonTerminal<object> Expression)
       {
-         return new Symbol(ParseResults);
-      }
+         var list = Config.CreateNonTerminal();
+         list
+            .AddProduction("nil")
+            .SetReduceFunction(ParseResults => new List());
 
-      private static INonTerminal<object> SymbolList(IParserConfigurator<object> Config, ITerminal<object> Symbol)
-      {
-         var symbols = Config.CreateNonTerminal();
-         symbols.
-            AddProduction(symbols, Symbol)
-            .SetReduceFunction(ParseResults => ((IEnumerable<object>)ParseResults[0]).Concat(new[] { ParseResults[1] }));
-         symbols.
-            AddProduction()
-            .SetReduceFunction(ParseResults => new List<object>());
-
-         return ListGeneric(Config, "symbol-list", ReduceSymbolList, symbols);
-      }
-
-      private static SymbolList ReduceSymbolList(object[] ParseResults)
-      {
-         var symbolList = new SymbolList();
-         foreach (Symbol symbol in (IEnumerable)ParseResults[1])
-            symbolList.Symbols.Add(symbol);
-         return symbolList;
-      }
-
-      private static INonTerminal<object> ExpressionList(IParserConfigurator<object> Config, INonTerminal<object> Expression)
-      {
-         var expressionList = Config.CreateNonTerminal();
-         expressionList.DebugName = "expression-list";
-         expressionList.
-            AddProduction(expressionList, Expression)
+         var expressionSequence = Config.CreateNonTerminal();
+         expressionSequence.DebugName = "expression-sequence";
+         expressionSequence.
+            AddProduction(expressionSequence, Expression)
             .SetReduceFunction(
                ParseResults =>
                   {
-                     ((ExpressionList)ParseResults[0]).Expressions.Add((ExpressionBase)ParseResults[1]);
+                     ((List)ParseResults[0]).Expressions.Add((Expression)ParseResults[1]);
                      return ParseResults[0];
                   });
-         expressionList.
+         expressionSequence.
             AddProduction()
-            .SetReduceFunction(ParseResults => new ExpressionList());
+            .SetReduceFunction(ParseResults => new List());
 
-         return expressionList;
-      }
-
-      private static INonTerminal<object> ListGeneric(
-         IParserConfigurator<object> Config,
-         string DebugName,
-         Func<object[], object> ReduceFunction,
-         params object[] ListElements)
-      {
-         var list = Config.CreateNonTerminal();
-         list.DebugName = DebugName;
-         var production = new object[ListElements.Length + 2];
-         production[0] = "(";
-         Array.Copy(ListElements, 0, production, 1, ListElements.Length);
-         production[production.Length - 1] = ")";
-         list
-            .AddProduction(production)
-            .SetReduceFunction(ReduceFunction);
+         list.AddProduction("(", expressionSequence, ")").SetReduceFunction(ParseResults => ParseResults[1]);
 
          return list;
-      }
-
-      private static void ReduceToSelf(IProduction<object> Production)
-      {
-         Production.SetReduceFunction(ReduceToSelf);
-      }
-
-      private static object ReduceToSelf(object[] ParseResults)
-      {
-         return ParseResults[0];
       }
    }
 

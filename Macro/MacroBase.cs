@@ -9,35 +9,22 @@ namespace Macro
    public abstract class MacroBase : NotifyPropertyChangedBase
    {
       public event EventHandler MacroChanged;
-      protected void RaiseMacroChanged(object Sender, EventArgs Args)
+      protected void OnMacroChanged()
       {
          var handler = MacroChanged;
          if (handler != null)
-            handler(Sender, Args);
+            handler(this, new EventArgs());
       }
 
       public override bool SetPropertyValue<TProperty>(ref TProperty BackingField, TProperty Value, [CallerMemberName]string PropertyName = null)
       {
-         var oldValue = BackingField;
          // ReSharper disable once ExplicitCallerInfoArgument we are not the caller of the method - our caller is
          var valueChanged = base.SetPropertyValue(ref BackingField, Value, PropertyName);
-         if (valueChanged && typeof(MacroBase).IsAssignableFrom(typeof(TProperty)))
-         {
-            if (oldValue != null)
-               ((MacroBase)((object)oldValue)).MacroChanged -= RaiseMacroChanged;
-            if (Value != null)
-               ((MacroBase)((object)Value)).MacroChanged += RaiseMacroChanged;
-         }
-         return valueChanged;
-      }
+       
+         if (valueChanged)
+            OnMacroChanged();
 
-      protected MacroBase()
-      {
-         PropertyChanged += HandlePropertyChanged;
-      }
-      private void HandlePropertyChanged(object Sender, PropertyChangedEventArgs Args)
-      {
-         RaiseMacroChanged(this, Args);
+         return valueChanged;
       }
 
       public abstract void Accept(IVisitor Visitor);
@@ -51,15 +38,11 @@ namespace Macro
       }
       protected abstract bool MacroEquals(MacroBase OtherMacro);
 
-      [ExcludeFromCodeCoverage]
       public override int GetHashCode()
       {
          return MacroGetHashCode();
       }
-      [ExcludeFromCodeCoverage]
-      protected virtual int MacroGetHashCode()
-      {
-         return 0; // TODO a correct implementation (to use macros in dictionaries implement properly)
-      }
+
+      protected abstract int MacroGetHashCode();
    }
 }

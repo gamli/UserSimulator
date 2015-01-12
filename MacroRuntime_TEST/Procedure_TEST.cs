@@ -15,10 +15,10 @@ namespace MacroRuntime_TEST
       {
          var context = new MockContext();
 
-         new ExpressionEvaluator(context).Evaluate((ExpressionBase)new MacroParser().Parse("(define var1 ((lambda () (quote someSymbol))))"));
+         new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(define var1 ((lambda () (quote someSymbol))))"));
          Assert.AreEqual(new Symbol("someSymbol"), context.GetValue(new Symbol("var1")));
 
-         new ExpressionEvaluator(context).Evaluate((ExpressionBase)new MacroParser().Parse("(define var2 ((lambda (x y z) z) 1 2 3))"));
+         new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(define var2 ((lambda (x y z) z) 1 2 3))"));
          Assert.AreEqual(new Constant(3), context.GetValue(new Symbol("var2")));
       }
 
@@ -29,34 +29,34 @@ namespace MacroRuntime_TEST
          try
          {
             var context = new MockContext();
-            new ExpressionEvaluator(context).Evaluate((ExpressionBase)new MacroParser().Parse("(define var2 ((lambda () 4711) 1))"));
+            new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(define var2 ((lambda () 4711) 1))"));
             Assert.Fail();
          }
          catch (RuntimeException e)
          {
-            Assert.AreEqual("Expected 0 argument(s) but got 1", e.Message);
+            Assert.AreEqual("Expected 0 argument(s) but got 1", e.InnerException.InnerException.Message);
          }
 
          try
          {
             var context = new MockContext();
-            new ExpressionEvaluator(context).Evaluate((ExpressionBase)new MacroParser().Parse("(define var2 ((lambda (x y z) z) 1 2 3 4))"));
+            new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(define var2 ((lambda (x y z) z) 1 2 3 4))"));
             Assert.Fail();
          }
          catch (RuntimeException e)
          {
-            Assert.AreEqual("Expected 3 argument(s) but got 4", e.Message);
+            Assert.AreEqual("Expected 3 argument(s) but got 4", e.InnerException.InnerException.Message);
          }
 
          try
          {
             var context = new MockContext();
-            new ExpressionEvaluator(context).Evaluate((ExpressionBase)new MacroParser().Parse("(define var2 ((lambda (x y z) z) 1 2))"));
+            new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(define var2 ((lambda (x y z) z) 1 2))"));
             Assert.Fail();
          }
          catch (RuntimeException e)
          {
-            Assert.AreEqual("Expected 3 argument(s) but got 2", e.Message);
+            Assert.AreEqual("Expected 3 argument(s) but got 2", e.InnerException.InnerException.Message);
          }
       }
 
@@ -65,17 +65,17 @@ namespace MacroRuntime_TEST
       {
          var context = new MockContext();
 
-         var procedure1 = new ExpressionEvaluator(context).Evaluate((ExpressionBase)new MacroParser().Parse("(lambda (x y z) z)"));
-         var procedure2 = new ExpressionEvaluator(context).Evaluate((ExpressionBase)new MacroParser().Parse("(lambda (x y z) z)"));
+         var procedure1 = new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(lambda (x y z) z)"));
+         var procedure2 = new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(lambda (x y z) z)"));
          Assert.AreEqual(procedure1, procedure2);
 
-         procedure2 = new ExpressionEvaluator(context).Evaluate((ExpressionBase)new MacroParser().Parse("(lambda (x z) z)"));
+         procedure2 = new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(lambda (x z) z)"));
          Assert.AreNotEqual(procedure1, procedure2);
 
-         procedure2 = new ExpressionEvaluator(new MockContext()).Evaluate((ExpressionBase)new MacroParser().Parse("(lambda (x y z) z)"));
+         procedure2 = new ExpressionEvaluator(new MockContext()).Evaluate((Expression)new MacroParser().Parse("(lambda (x y z) z)"));
          Assert.AreNotEqual(procedure1, procedure2);
 
-         procedure2 = new ExpressionEvaluator(context).Evaluate((ExpressionBase)new MacroParser().Parse("(lambda (x y z) x)"));
+         procedure2 = new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(lambda (x y z) x)"));
          Assert.AreNotEqual(procedure1, procedure2);
       }
    }

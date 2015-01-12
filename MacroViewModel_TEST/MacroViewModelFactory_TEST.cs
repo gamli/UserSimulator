@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Macro;
+using MacroRuntime;
 using MacroViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,28 +14,23 @@ namespace MacroViewModel_TEST
       public void Create_TEST()
       {
          AssertCreatesExpectedViewModelType(typeof(Constant), typeof(ConstantVM));
-         AssertCreatesExpectedViewModelType(typeof(Definition), typeof(DefinitionVM));
-         AssertCreatesExpectedViewModelType(typeof(ExpressionList), typeof(ExpressionListVM));
-         AssertCreatesExpectedViewModelType(typeof(If), typeof(IfVM));
-         AssertCreatesExpectedViewModelType(typeof(Lambda), typeof(LambdaVM));
-         AssertCreatesExpectedViewModelType(typeof(Loop), typeof(LoopVM));
-         AssertCreatesExpectedViewModelType(typeof(ProcedureCall), typeof(ProcedureCallVM));
-         AssertCreatesExpectedViewModelType(typeof(Quote), typeof(QuoteVM));
          AssertCreatesExpectedViewModelType(typeof(Symbol), typeof(SymbolVM));
-         AssertCreatesExpectedViewModelType(typeof(SymbolList), typeof(SymbolListVM));
+         AssertCreatesExpectedViewModelType(typeof(List), typeof(ListVM));
+         AssertCreatesExpectedViewModelType(typeof(Procedure), typeof(ProcedureVM));
+         AssertCreatesExpectedViewModelType(typeof(IntrinsicProcedure), typeof(ProcedureVM));
          Assert.AreEqual(MacroViewModelFactory.Instance.Create(null), null);
       }
 
       [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
       [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-      private void AssertCreatesExpectedViewModelType(Type ModelType, Type ExpectedViewModelType)
+      private static void AssertCreatesExpectedViewModelType(Type ModelType, Type ExpectedViewModelType)
       {
          var macroType = Type.GetType(ModelType.AssemblyQualifiedName);
          var macro = (MacroBase)macroType.GetConstructor(Type.EmptyTypes).Invoke(null);
          AssertCreatesExpectedViewModelType(macro, ExpectedViewModelType);
       }
 
-      private void AssertCreatesExpectedViewModelType(MacroBase Macro, Type ExpectedMacroViewModelType)
+      private static void AssertCreatesExpectedViewModelType(MacroBase Macro, Type ExpectedMacroViewModelType)
       {
          using (var macroViewModel = MacroViewModelFactory.Instance.Create(Macro))
             Assert.AreEqual(macroViewModel.GetType(), ExpectedMacroViewModelType);

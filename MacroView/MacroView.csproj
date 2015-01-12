@@ -51,34 +51,11 @@
     <Compile Include="ConstantView.xaml.cs">
       <DependentUpon>ConstantView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IfView.xaml.cs">
-      <DependentUpon>IfView.xaml</DependentUpon>
-    </Compile>
-    <Page Include="LambdaView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ExpressionListView.xaml">
+    <Page Include="ListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="SymbolListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ConstantView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="LoopView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ProcedureCallView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="IfView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -90,40 +67,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="QuoteView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="DefinitionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="LambdaView.xaml.cs">
-      <DependentUpon>LambdaView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ExpressionListView.xaml.cs">
-      <DependentUpon>ExpressionListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SymbolListView.xaml.cs">
-      <DependentUpon>SymbolListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LoopView.xaml.cs">
-      <DependentUpon>LoopView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ProcedureCallView.xaml.cs">
-      <DependentUpon>ProcedureCallView.xaml</DependentUpon>
+    <Compile Include="ListView.xaml.cs">
+      <DependentUpon>ListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MacroBaseView.xaml.cs">
       <DependentUpon>MacroBaseView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SymbolView.xaml.cs">
       <DependentUpon>SymbolView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="QuoteView.xaml.cs">
-      <DependentUpon>QuoteView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DefinitionView.xaml.cs">
-      <DependentUpon>DefinitionView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +110,10 @@
     <ProjectReference Include="..\IO\IO.csproj">
       <Project>{52c3838a-1365-4692-b464-b96cc9682349}</Project>
       <Name>IO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MacroRuntime\MacroRuntime.csproj">
+      <Project>{e204666e-3c0b-4794-977c-b5e4a6b757b0}</Project>
+      <Name>MacroRuntime</Name>
     </ProjectReference>
     <ProjectReference Include="..\MacroViewModel\MacroViewModel.csproj">
       <Project>{0cab8df3-0577-48bd-8fd8-84e1b848d99b}</Project>

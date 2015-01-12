@@ -5,18 +5,18 @@ namespace MacroRuntime_TEST
 {
    class MockContext : ContextBase
    {
-      protected override void SymbolNotFoundSetValue(Symbol Symbol, ExpressionBase Value)
+      protected override void SymbolNotFoundSetValue(Symbol Symbol, Expression Value)
       {
          SymbolNotFundSetValueValue = Value;
       }
 
-      public ExpressionBase SymbolNotFundSetValueValue { get; private set; }
+      public Expression SymbolNotFundSetValueValue { get; private set; }
 
-      protected override ExpressionBase SymbolNotFoundGetValue(Symbol Symbol)
+      protected override Expression SymbolNotFoundGetValue(Symbol Symbol)
       {
          return DefautlValue;
       }
 
-      public static readonly ExpressionBase DefautlValue = new Symbol("MockContext: DefautlValue");
+      public static readonly Expression DefautlValue = new Symbol("MockContext: DefautlValue");
    }
 }

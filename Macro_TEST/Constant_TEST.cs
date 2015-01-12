@@ -19,5 +19,24 @@ namespace Macro_TEST
          constant.Value = "moo";
          Assert.AreEqual(constant, clone);
       }
+
+      [TestMethod]
+      public void MacroChangedEvent_TEST()
+      {
+         var constant = new Constant("moo");
+         var test = false;
+         constant.MacroChanged += (Sender, Args) => test = true;
+
+         constant.Value = "x";
+         Assert.IsTrue(test);
+         test = false;
+
+         constant.Value = null;
+         Assert.IsTrue(test);
+         test = false;
+
+         constant.Value = false;
+         Assert.IsTrue(test);
+      }
    }
 }

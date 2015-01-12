@@ -10,19 +10,19 @@ using Macro;
 
 namespace MacroRuntime
 {
-   public abstract class ProcedureBase : ExpressionBase
+   public abstract class ProcedureBase : Expression
    {
       private ContextBase _definingContext;
       public ContextBase DefiningContext { get { return _definingContext; } set { SetPropertyValue(ref _definingContext, value); } }
 
-      private SymbolList _argumentSymbols;
-      public SymbolList ArgumentSymbols { get { return _argumentSymbols; } set { SetPropertyValue(ref _argumentSymbols, value); } }
+      private List _formalArguments;
+      public List FormalArguments { get { return _formalArguments; } set { SetPropertyValue(ref _formalArguments, value); } }
 
-      public ExpressionBase Call(ExpressionList ArgumentValues)
+      public Expression Call(List ArgumentValues)
       {
          var context = new HierarchicalContext(DefiningContext);
 
-         var argumentSymbols = ArgumentSymbols.Symbols;
+         var argumentSymbols = FormalArguments.Expressions.Cast<Symbol>().ToList();
          
          var argumentValues = ArgumentValues.Expressions;
          
@@ -32,7 +32,7 @@ namespace MacroRuntime
          if (argumentValues.Count != argumentSymbols.Count && !isVarargProcedure)
             throw 
                new RuntimeException(
-                  string.Format("Expected {0} argument(s) but got {1}", ArgumentSymbols.Expressions.Count, argumentValues.Count),
+                  string.Format("Expected {0} argument(s) but got {1}", FormalArguments.Expressions.Count, argumentValues.Count),
                   this,
                   context);
 
@@ -49,7 +49,7 @@ namespace MacroRuntime
             foreach (var symbolAndArgumentValue in fixedArgumentSymbols.Zip(argumentValues, Tuple.Create))
                context.DefineValue(symbolAndArgumentValue.Item1, symbolAndArgumentValue.Item2);
             
-            var varArgValues = new ExpressionList();
+            var varArgValues = new List();
             foreach (var varArgValue in argumentValues.Skip(argumentSymbols.Count - 1))
                varArgValues.Expressions.Add(varArgValue);
             context.DefineValue(new Symbol("."), varArgValues);
@@ -61,7 +61,7 @@ namespace MacroRuntime
          return ExecuteCall(context);
       }
 
-      protected abstract ExpressionBase ExecuteCall(ContextBase Context);
+      protected abstract Expression ExecuteCall(ContextBase Context);
 
       // TODO extract superclass from MacroBase to make this dummy implementation unnecessary
       [ExcludeFromCodeCoverage]
@@ -75,7 +75,7 @@ namespace MacroRuntime
          var otherProcedure = (ProcedureBase) OtherMacro;
          return 
             DefiningContext.Equals(otherProcedure.DefiningContext) && 
-            ArgumentSymbols.Equals(otherProcedure.ArgumentSymbols);
+            FormalArguments.Equals(otherProcedure.FormalArguments);
       }
    }
 }

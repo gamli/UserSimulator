@@ -27,23 +27,23 @@ namespace MacroRuntime
          AddIntrinsicFunction("dec", Decrement, _decrementVariableSymbol);
       }
 
-      private void AddIntrinsicFunction(string Symbol, Func<ContextBase, ExpressionBase> Function, params Symbol[] Arguments)
+      private void AddIntrinsicFunction(string Symbol, Func<ContextBase, Expression> Function, params Symbol[] Arguments)
       {
-         var argumentSymbols = new SymbolList();
+         var argumentSymbols = new List();
          foreach (var argument in Arguments)
-            argumentSymbols.Symbols.Add(argument);
-         DefineValue(new Symbol(Symbol), new IntrinsicProcedure { DefiningContext = this, ArgumentSymbols = argumentSymbols, Function = Function });
+            argumentSymbols.Expressions.Add(argument);
+         DefineValue(new Symbol(Symbol), new IntrinsicProcedure { DefiningContext = this, FormalArguments = argumentSymbols, Function = Function });
       }
 
       [ExcludeFromCodeCoverage]
-      protected override void SymbolNotFoundSetValue(Symbol Symbol, ExpressionBase Value)
+      protected override void SymbolNotFoundSetValue(Symbol Symbol, Expression Value)
       {
          var exceptionMessage = "SetValue: Symbol >>" + Symbol.Value + "<< is not defined (did you forget to 'define' first?)";
          throw new RuntimeException(exceptionMessage, Symbol, this);
       }
 
       [ExcludeFromCodeCoverage]
-      protected override ExpressionBase SymbolNotFoundGetValue(Symbol Symbol)
+      protected override Expression SymbolNotFoundGetValue(Symbol Symbol)
       {
          var exceptionMessage = "GetValue: Symbol >>" + Symbol.Value + "<< is not defined (did you forget to 'define' first?)";
          throw new RuntimeException(exceptionMessage, Symbol, this);
@@ -128,20 +128,20 @@ namespace MacroRuntime
          return new Constant(true);
       }
 
-      private ExpressionBase Begin(ContextBase Context)
+      private Expression Begin(ContextBase Context)
       {
-         return GetGenericValue<ExpressionList>(Context, _varArg).Expressions.LastOrDefault();
+         return GetGenericValue<List>(Context, _varArg).Expressions.LastOrDefault();
       }
 
       private readonly Symbol _equalsLeft = new Symbol("Left");
       private readonly Symbol _equalsRight = new Symbol("Right");
-      private ExpressionBase Equals(ContextBase Context)
+      private Expression Equals(ContextBase Context)
       {
-         return new Constant(Equals(GetGenericValue<ExpressionBase>(Context, _equalsLeft), GetGenericValue<ExpressionBase>(Context, _equalsRight)));
+         return new Constant(Equals(GetGenericValue<Expression>(Context, _equalsLeft), GetGenericValue<Expression>(Context, _equalsRight)));
       }
 
       private readonly Symbol _decrementVariableSymbol = new Symbol("VariableSymbol");
-      private ExpressionBase Decrement(ContextBase Context)
+      private Expression Decrement(ContextBase Context)
       {
          var variableValue = GetGenericValue<Constant>(Context, _decrementVariableSymbol);
          if(variableValue.Value is int)
@@ -169,7 +169,7 @@ namespace MacroRuntime
       }
 
       private T GetGenericValue<T>(ContextBase Context, Symbol Symbol)
-         where T : ExpressionBase
+         where T : Expression
       {
          try
          {

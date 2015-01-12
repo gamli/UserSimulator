@@ -8,6 +8,7 @@ using IO;
 using Macro;
 using MacroLanguage;
 using MacroRuntime;
+using Expression = Macro.Expression;
 using Window = IO.Window;
 
 namespace UserSimulator
@@ -33,8 +34,8 @@ namespace UserSimulator
       private IntPtr _lastWindow;
       public IntPtr LastWindow { get { return _lastWindow; } set { SetPropertyValue(ref _lastWindow, value); } }
 
-      private ExpressionBase _expression;
-      public ExpressionBase Expression
+      private Expression _expression;
+      public Expression Expression
       {
          get { return _expression; }
          set
@@ -71,7 +72,7 @@ namespace UserSimulator
             { 
                try
                {
-                  Expression = (ExpressionBase)_parser.Parse(_expressionText);
+                  Expression = (Expression)_parser.Parse(_expressionText);
                   ParserError = "Parsing successfull";
                }
                catch (ParseException e)
@@ -114,8 +115,8 @@ namespace UserSimulator
          }
       }
 
-      private ExpressionBase _evaluatedExpression;
-      public ExpressionBase EvaluatedExpression { get { return _evaluatedExpression; } private set { SetPropertyValue(ref _evaluatedExpression, value); } }
+      private Expression _evaluatedExpression;
+      public Expression EvaluatedExpression { get { return _evaluatedExpression; } private set { SetPropertyValue(ref _evaluatedExpression, value); } }
 
       private string _evaluatedExpressionText;
       public string EvaluatedExpressionText { get { return _evaluatedExpressionText; } set { SetPropertyValue(ref _evaluatedExpressionText, value); } }

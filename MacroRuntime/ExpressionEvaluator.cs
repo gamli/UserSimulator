@@ -17,7 +17,7 @@ namespace MacroRuntime
          _visitor = new ExpressionVisitor(Context);
       }
 
-      public ExpressionBase Evaluate(ExpressionBase Expression)
+      public Expression Evaluate(Expression Expression)
       {
          try
          {
@@ -33,7 +33,7 @@ namespace MacroRuntime
 
       private class ExpressionVisitor : IVisitor
       {
-         public ExpressionBase Value { get; private set; }
+         public Expression Value { get; private set; }
 
          private readonly ContextBase _context;
 
@@ -47,67 +47,104 @@ namespace MacroRuntime
             Value = Constant;
          }
 
-         public void VisitDefinition(Definition Definition)
-         {
-            var evaluatedExpression = EvaluateExpression<ExpressionBase>(Definition.Expression, _context);
-            _context.DefineValue(Definition.Symbol, evaluatedExpression);
-            Value = evaluatedExpression;
-         }
-
-         public void VisitExpressionList(ExpressionList ExpressionList)
-         {
-            Value = ExpressionList;
-         }
-
-         public void VisitIf(If If)
-         {
-            var condition = EvaluateExpression<ExpressionBase>(If.Condition, _context);
-            var consequentOrAlternative = ConvertToBoolean(condition) ? If.Consequent : If.Alternative;
-            Value = EvaluateExpression<ExpressionBase>(consequentOrAlternative, _context);
-         }
-
-         public void VisitLambda(Lambda Lambda)
-         {
-            Value = new Procedure { DefiningContext = _context, Lambda = Lambda, ArgumentSymbols = Lambda.ArgumentSymbols };
-         }
-
-         public void VisitLoop(Loop Loop)
-         {
-            while ((bool)EvaluateExpression<Constant>(Loop.Condition, _context).Value)
-               Value = EvaluateExpression<ExpressionBase>(Loop.Body, _context);
-         }
-
-         public void VisitProcedureCall(ProcedureCall ProcedureCall)
-         {
-            var procedure = EvaluateExpression<ProcedureBase>(ProcedureCall.Procedure, _context);
-            var evaluatedArgs = new ExpressionList();
-            foreach (var arg in ProcedureCall.Arguments)
-               evaluatedArgs.Expressions.Add(EvaluateExpression<ExpressionBase>(arg, _context));
-            Value = procedure.Call(evaluatedArgs);
-         }
-
-         public void VisitQuote(Quote Quote)
-         {
-            Value = Quote.Expression;
-         }
-
          public void VisitSymbol(Symbol Symbol)
          {
             Value = _context.GetValue(Symbol);
          }
 
-         public void VisitSymbolList(SymbolList SymbolList)
+         public void VisitList(List List)
          {
-            Value = SymbolList;
+            if (List.Expressions.Count > 0)
+            {
+               var first = List.Expressions.First();
+
+               var symbol = first as Symbol;
+               if (symbol != null)
+               {
+                  switch (symbol.Value)
+                  {
+                     case "define":
+                        EvaluateDefinition(List);
+                        break;
+                     case "if":
+                        EvaluateIf(List);
+                        break;
+                     case "lambda":
+                        EvaluateLambda(List);
+                        break;
+                     case "quote":
+                        EvaluateQuote(List);
+                        break;
+                     case "loop":
+                        EvaluateLoop(List);
+                        break;
+                     default:
+                        EvaluateProcedureCall(List);
+                        break;
+                  }
+               }
+               else
+                  EvaluateProcedureCall(List);
+            }
+            else
+               Value = List;
          }
 
-         private bool ConvertToBoolean(ExpressionBase Expression)
+         private void EvaluateDefinition(List Definition)
+         {
+            var evaluatedExpression = EvaluateExpression<Expression>(Definition.Expressions[2], _context);
+            _context.DefineValue((Symbol) Definition.Expressions[1], evaluatedExpression); // TODO is cast ok?
+            Value = evaluatedExpression;
+         }
+
+         private void EvaluateIf(List If)
+         {
+            var condition = EvaluateExpression<Expression>(If.Expressions[1], _context);
+            var consequentOrAlternative = ConvertToBoolean(condition) ? If.Expressions[2] : If.Expressions[3];
+            Value = EvaluateExpression<Expression>(consequentOrAlternative, _context);
+         }
+
+         private void EvaluateLambda(List Lambda)
+         {
+            Value = new Procedure { DefiningContext = _context, Lambda = Lambda, FormalArguments = (List)Lambda.Expressions[1] };// TODO is cast ok?
+         }
+
+         private void EvaluateLoop(List Loop)
+         {
+            while ((bool)EvaluateExpression<Constant>(Loop.Expressions[1], _context).Value)
+               Value = EvaluateExpression<Expression>(Loop.Expressions[2], _context);
+         }
+
+         private void EvaluateProcedureCall(List ProcedureCall)
+         {
+            var procedure = EvaluateExpression<ProcedureBase>(ProcedureCall.Expressions[0], _context);
+            var evaluatedArgs = 
+               new List(ProcedureCall.Expressions.Skip(1).Select(
+                  Expression => EvaluateExpression<Expression>(Expression, _context)).ToArray());
+            Value = procedure.Call(evaluatedArgs);
+         }
+
+         private void EvaluateQuote(List Quote)
+         {
+            Value = Quote.Expressions[1];
+         }
+
+
+         
+
+         private T EvaluateExpression<T>(Expression Expression, ContextBase Context)
+            where T : Expression
+         {
+            return (T)new ExpressionEvaluator(Context).Evaluate(Expression);
+         }
+
+         private bool ConvertToBoolean(Expression Expression)
          {
             var constant = Expression as Constant;
             if (constant != null)
                return Convert.ToBoolean(constant.Value);
 
-            var expressionList = Expression as ExpressionList;
+            var expressionList = Expression as List;
             if (expressionList != null)
                return expressionList.Expressions.Count != 0;
 
@@ -115,12 +152,6 @@ namespace MacroRuntime
                string.Format("Expression >> {0} << can not be converted to boolean", Expression),
                Expression,
                _context);
-         }
-
-         private T EvaluateExpression<T>(ExpressionBase Expression, ContextBase Context)
-            where T : ExpressionBase
-         {
-            return (T)new ExpressionEvaluator(Context).Evaluate(Expression);
          }
       }
    }

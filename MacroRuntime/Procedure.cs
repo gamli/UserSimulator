@@ -9,18 +9,23 @@ namespace MacroRuntime
 {
    public class Procedure : ProcedureBase
    {
-      private Lambda _lambda;
-      public Lambda Lambda { get { return _lambda; } set { SetPropertyValue(ref _lambda, value); } }
+      private List _lambda;
+      public List Lambda { get { return _lambda; } set { SetPropertyValue(ref _lambda, value); } }
 
-      protected override ExpressionBase ExecuteCall(ContextBase Context)
+      protected override Expression ExecuteCall(ContextBase Context)
       {
-         return new ExpressionEvaluator(Context).Evaluate(Lambda.Body);
+         return new ExpressionEvaluator(Context).Evaluate(Lambda.Expressions[2]);
       }
 
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
          var otherProcedure = (Procedure) OtherMacro;
          return Lambda.Equals(otherProcedure.Lambda) && base.MacroEquals(otherProcedure);
+      }
+
+      protected override int MacroGetHashCode()
+      {
+         return Lambda.GetHashCode();
       }
    }
 }

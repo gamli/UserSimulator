@@ -36,32 +36,11 @@ namespace MacroViewModel
                { typeof(Constant), Macro => 
                   new ConstantVM((Constant)Macro) },
 
-               { typeof(Definition), Macro => 
-                  new DefinitionVM((Definition)Macro) },
-
-               { typeof(ExpressionList), Macro => 
-                  new ExpressionListVM((ExpressionList)Macro) },
-
-               { typeof(If), Macro => 
-                  new IfVM((If)Macro) },
-
-               { typeof(Lambda), Macro => 
-                  new LambdaVM((Lambda)Macro) },
-
-               { typeof(Loop), Macro => 
-                  new LoopVM((Loop)Macro) },
-
-               { typeof(ProcedureCall), Macro => 
-                  new ProcedureCallVM((ProcedureCall)Macro) },
-
-               { typeof(Quote), Macro => 
-                  new QuoteVM((Quote)Macro) },
-
                { typeof(Symbol), Macro => 
                   new SymbolVM((Symbol)Macro) },
 
-               { typeof(SymbolList), Macro => 
-                  new SymbolListVM((SymbolList)Macro) },
+               { typeof(List), Macro => 
+                  new ListVM((List)Macro) },
 
                { typeof(Procedure), Macro => 
                   new ProcedureVM((ProcedureBase)Macro) },

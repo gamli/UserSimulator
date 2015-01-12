@@ -2,7 +2,7 @@
 
 namespace Macro
 {
-   public class Symbol : AtomicExpressionBase
+   public class Symbol : AtomicExpression
    {
       private string _value;
       public string Value { get { return _value; } set { SetPropertyValue(ref _value, value); } }
@@ -27,6 +27,11 @@ namespace Macro
       {
          var other = (Symbol)OtherMacro;
          return Value.Equals(other.Value);
+      }
+
+      protected override int MacroGetHashCode()
+      {
+         return Value.GetHashCode();
       }
 
       [ExcludeFromCodeCoverage]

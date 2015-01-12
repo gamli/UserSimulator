@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Macro;
+using MacroRuntime;
 
 namespace MacroViewModel
 {
-   public class ProcedureVM : ExpressionBaseVM
+   public class ProcedureVM : ExpressionVM
    {
-      public ProcedureVM(ExpressionBase Model) 
+      public ProcedureVM(ProcedureBase Model) 
          : base(Model)
       {
       }

@@ -39,7 +39,7 @@ namespace MacroRuntime_TEST
       [TestMethod]
       public void ExpressionList_TEST()
       {
-         var expressionList = new ExpressionList();
+         var expressionList = new List();
          Assert.AreEqual(expressionList, new ExpressionEvaluator(new RuntimeContext(IntPtr.Zero)).Evaluate(expressionList));
       }
 
@@ -54,20 +54,27 @@ namespace MacroRuntime_TEST
       public void Lambda_TEST()
       {
          var context = new RuntimeContext(IntPtr.Zero);
-         var argumentSymbols = new SymbolList();
-         var lambda = new Lambda { ArgumentSymbols = argumentSymbols, Body = new Symbol("y")};
-         AssertExpressionEvaluatesTo(new Procedure { DefiningContext = context, ArgumentSymbols = argumentSymbols, Lambda = lambda }, "(lambda () y)", context);
-         argumentSymbols.Symbols.Add(new Symbol("x"));
-         argumentSymbols.Symbols.Add(new Symbol("y"));
-         AssertExpressionEvaluatesTo(new Procedure { DefiningContext = context, ArgumentSymbols = argumentSymbols, Lambda = lambda }, "(lambda (x y) y)", context);
+         var argumentSymbols = new List();
+         var lambda = SpecialForms.Lambda(argumentSymbols, new Symbol("y"));
+         AssertExpressionEvaluatesTo(
+            new Procedure { DefiningContext = context, FormalArguments = argumentSymbols, Lambda = lambda }, 
+            "(lambda () y)", 
+            context);
+
+         argumentSymbols.Expressions.Add(new Symbol("x"));
+         argumentSymbols.Expressions.Add(new Symbol("y"));
+         AssertExpressionEvaluatesTo(
+            new Procedure { DefiningContext = context, FormalArguments = argumentSymbols, Lambda = lambda }, 
+            "(lambda (x y) y)", 
+            context);
       }
 
 
       [TestMethod]
-      public void SymbolList_TEST()
+      public void List_TEST()
       {
-         var symbolList = new SymbolList();
-         Assert.AreEqual(symbolList, new ExpressionEvaluator(new RuntimeContext(IntPtr.Zero)).Evaluate(symbolList));
+         var emptyList = new List();
+         Assert.AreEqual(emptyList, new ExpressionEvaluator(new RuntimeContext(IntPtr.Zero)).Evaluate(emptyList));
       }
 
       [TestMethod]
@@ -77,11 +84,11 @@ namespace MacroRuntime_TEST
          var counter = 10;
          context.DefineValue(
             new Symbol("loopTestCondition"),
-            new IntrinsicProcedure { Function = ContextBase => new Constant(counter-- > 0), ArgumentSymbols = new SymbolList(), DefiningContext = context });
+            new IntrinsicProcedure { Function = ContextBase => new Constant(counter-- > 0), FormalArguments = new List(), DefiningContext = context });
          var result = 0;
          context.DefineValue(
             new Symbol("loopTestBody"),
-            new IntrinsicProcedure { Function = ContextBase => new Constant(++result), ArgumentSymbols = new SymbolList(), DefiningContext = context });
+            new IntrinsicProcedure { Function = ContextBase => new Constant(++result), FormalArguments = new List(), DefiningContext = context });
 
          AssertExpressionEvaluatesTo(new Constant(10), "(loop (loopTestCondition) (loopTestBody))", context);
          Assert.AreEqual(-1, counter);
@@ -124,7 +131,7 @@ namespace MacroRuntime_TEST
          var context = new RuntimeContext(IntPtr.Zero);
          context.DefineValue(
             new Symbol("SomeFun"), 
-            new IntrinsicProcedure { Function = SomeFun, ArgumentSymbols = new SymbolList(), DefiningContext = context });
+            new IntrinsicProcedure { Function = SomeFun, FormalArguments = new List(), DefiningContext = context });
          var evaluator = new ExpressionEvaluator(context);
 
          try
@@ -140,12 +147,12 @@ namespace MacroRuntime_TEST
       }
 
       [ExcludeFromCodeCoverage]
-      private ExpressionBase SomeFun(ContextBase Context)
+      private Expression SomeFun(ContextBase Context)
       {
          throw new NotImplementedException("SomeFun");
       }
 
-      private void AssertExpressionEvaluatesTo(ExpressionBase ExpectedValue, string Expression, ContextBase Context = null)
+      private void AssertExpressionEvaluatesTo(Expression ExpectedValue, string Expression, ContextBase Context = null)
       {
          if(Context == null)
             Context = new RuntimeContext(IntPtr.Zero);
@@ -154,9 +161,9 @@ namespace MacroRuntime_TEST
          Assert.AreEqual(ExpectedValue, value);
       }
 
-      private ExpressionBase ParseExpression(string Expression)
+      private Expression ParseExpression(string Expression)
       {
-         return (ExpressionBase)new MacroParser().Parse(Expression);
+         return (Expression)new MacroParser().Parse(Expression);
       }
    }
 }

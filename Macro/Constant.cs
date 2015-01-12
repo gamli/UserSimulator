@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Macro
 {
-   public class Constant : AtomicExpressionBase
+   public class Constant : AtomicExpression
    {
       private object _value;
       public object Value { get { return _value; } set { SetPropertyValue(ref _value, value); } }
@@ -29,12 +29,17 @@ namespace Macro
          return Value == null ? otherConstantExpression.Value == null : Value.Equals(otherConstantExpression.Value);
       }
 
+      protected override int MacroGetHashCode()
+      {
+         return Value.GetHashCode();
+      }
+
       [ExcludeFromCodeCoverage]
       public override string ToString()
       {
          return 
             Value == null 
-               ? "null" 
+               ? "" 
                : Value is string 
                   ? "\"" + Value + "\"" 
                   : Value is double 

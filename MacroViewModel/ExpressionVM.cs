@@ -3,11 +3,11 @@ using Macro;
 
 namespace MacroViewModel
 {
-   public class SymbolVM : ExpressionVM
+   public abstract class ExpressionVM : MacroBaseVM<Expression>
    {
       [ExcludeFromCodeCoverage]
-      public SymbolVM(Symbol Model)
-         : base (Model)
+      protected ExpressionVM(Expression Model) 
+         : base(Model)
       {
       }
    }

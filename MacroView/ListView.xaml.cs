@@ -1,11 +1,11 @@
 ﻿namespace MacroView
 {
    /// <summary>
-   /// Interaction logic for PauseView.xaml
+   /// Interaction logic for BlockView.xaml
    /// </summary>
-   public partial class QuoteView
+   public partial class ListView
    {
-      public QuoteView()
+      public ListView()
       {
          InitializeComponent();
       }

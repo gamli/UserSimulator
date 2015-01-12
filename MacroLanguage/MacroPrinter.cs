@@ -42,57 +42,16 @@ namespace MacroLanguage
             Append(value == null ? "null" : value.ToString());
       }
 
-      public void VisitDefinition(Definition Definition)
-      {
-         VisitListExpressionBase(Definition, 1);
-      }
-
-      public void VisitExpressionList(ExpressionList ExpressionList)
-      {
-         VisitListExpressionBase(ExpressionList, ExpressionList.Expressions.Count);
-      }
-
-      public void VisitIf(If If)
-      {
-         VisitListExpressionBase(If, 1);
-      }
-
-      public void VisitLambda(Lambda Lambda)
-      {
-         VisitListExpressionBase(Lambda, 1);
-      }
-
-      public void VisitLoop(Loop Loop)
-      {
-         VisitListExpressionBase(Loop, 1);
-      }
-
-      public void VisitProcedureCall(ProcedureCall ProcedureCall)
-      {
-         VisitListExpressionBase(ProcedureCall, 0);
-      }
-
-      public void VisitQuote(Quote Quote)
-      {
-         VisitListExpressionBase(Quote, 1);
-      }
-
       public void VisitSymbol(Symbol Symbol)
       {
          Append(Symbol.Value);
       }
 
-      public void VisitSymbolList(SymbolList SymbolList)
-      {
-         VisitListExpressionBase(SymbolList, SymbolList.Symbols.Count);
-      }
-
-      private void VisitListExpressionBase<TExpression>(ListExpressionBase<TExpression> List, int LinebreakIndex)
-         where TExpression : ExpressionBase
+      public void VisitList(List List)
       {
          if (List.Expressions.Count == 0)
          {
-            Append("null");
+            Append("nil");
             return;
          }
 
@@ -103,10 +62,10 @@ namespace MacroLanguage
          {
             expression.Accept(this);
 
-            if (_linebreaks && index == LinebreakIndex)
+            if (_linebreaks && index == 1)
                IncreaseIndent();
 
-            if (_linebreaks && index >= LinebreakIndex)
+            if (_linebreaks && index >= 1)
                AppendNewLine();
             else
                Append(" ");
@@ -116,7 +75,7 @@ namespace MacroLanguage
          if(List.Expressions.Count != 0)
             List.Expressions.Last().Accept(this);
          
-         if(_linebreaks && index > LinebreakIndex)
+         if(_linebreaks && index > 1)
             DecreaseIndent();
 
          Append(")");

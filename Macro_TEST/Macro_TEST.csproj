@@ -51,18 +51,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="SymbolList_TEST.cs" />
-    <Compile Include="List_TEST_Base.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Loop_TEST.cs" />
-    <Compile Include="If_TEST.cs" />
     <Compile Include="Constant_TEST.cs" />
-    <Compile Include="MacroBase_TEST.cs" />
-    <Compile Include="Definition_TEST.cs" />
-    <Compile Include="ProcedureCall_TEST.cs" />
-    <Compile Include="Quote_TEST.cs" />
-    <Compile Include="SpecialFormBase_TEST.cs" />
-    <Compile Include="Lambda_TEST.cs" />
+    <Compile Include="SpecialForms_TEST.cs" />
+    <Compile Include="List_TEST.cs" />
+    <Compile Include="Symbol_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

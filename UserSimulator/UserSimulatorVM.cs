@@ -15,11 +15,11 @@ namespace UserSimulator
       private readonly NotifyingTransformedProperty<ImageSource> _lastWindowshotVM;
       public ImageSource LastWindowshotVM { get { return _lastWindowshotVM.Value; } }
 
-      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _expressionVM;
-      public ExpressionBaseVM ExpressionVM { get { return _expressionVM.Value; } }
+      private readonly NotifyingTransformedProperty<ExpressionVM> _expressionVM;
+      public ExpressionVM ExpressionVM { get { return _expressionVM.Value; } }
 
-      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _evaluatedExpressionVM;
-      public ExpressionBaseVM EvaluatedExpressionVM { get { return _evaluatedExpressionVM.Value; } }
+      private readonly NotifyingTransformedProperty<ExpressionVM> _evaluatedExpressionVM;
+      public ExpressionVM EvaluatedExpressionVM { get { return _evaluatedExpressionVM.Value; } }
 
       public UserSimulatorVM(UserSimulatorModel Model)
          : base(Model)
@@ -31,17 +31,17 @@ namespace UserSimulator
                () => Application.Current.Dispatcher.Invoke(() => DrawingImage2WpfImageSource(Model.LastWindowshot)));
 
          _expressionVM =
-            new NotifyingTransformedProperty<ExpressionBaseVM>(
+            new NotifyingTransformedProperty<ExpressionVM>(
                new[] { "Expression" }, "ExpressionVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Expression),
+               () => (ExpressionVM)MacroViewModelFactory.Instance.Create(Model.Expression),
                ViewModel => ViewModel.Dispose());
 
          _evaluatedExpressionVM =
-            new NotifyingTransformedProperty<ExpressionBaseVM>(
+            new NotifyingTransformedProperty<ExpressionVM>(
                new[] { "EvaluatedExpression" }, "EvaluatedExpressionVM",
                Model, this,
-               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.EvaluatedExpression),
+               () => (ExpressionVM)MacroViewModelFactory.Instance.Create(Model.EvaluatedExpression),
                ViewModel => ViewModel.Dispose());
       }
 

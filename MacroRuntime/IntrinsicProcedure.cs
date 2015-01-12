@@ -9,10 +9,10 @@ namespace MacroRuntime
 {
    public class IntrinsicProcedure : ProcedureBase
    {
-      private Func<ContextBase, ExpressionBase> _function;
-      public Func<ContextBase, ExpressionBase> Function { get { return _function; } set { SetPropertyValue(ref _function, value); } }
+      private Func<ContextBase, Expression> _function;
+      public Func<ContextBase, Expression> Function { get { return _function; } set { SetPropertyValue(ref _function, value); } }
 
-      protected override ExpressionBase ExecuteCall(ContextBase Context)
+      protected override Expression ExecuteCall(ContextBase Context)
       {
          return Function(Context);
       }
@@ -24,6 +24,11 @@ namespace MacroRuntime
          if(equals)
             equals &= base.MacroEquals(otherIntrinsicProcedure);
          return equals;
+      }
+
+      protected override int MacroGetHashCode()
+      {
+         return Function.GetHashCode();
       }
    }
 }

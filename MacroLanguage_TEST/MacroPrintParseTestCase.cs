@@ -10,7 +10,8 @@ namespace MacroLanguage_TEST
       {
          var text = new StringBuilder();
 
-         var macro = new ProcedureCall { Procedure = new Symbol("funTEST") };
+         var macro = new List();
+         macro.Expressions.Add(new Symbol("funTEST"));
          text.Append("(funTEST");
 
          macro.Expressions.Add(new Constant(true));
@@ -19,8 +20,8 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(new Constant(false));
          text.Append(" False");
 
-         macro.Expressions.Add(new ExpressionList());
-         text.Append(" null");
+         macro.Expressions.Add(new List());
+         text.Append(" nil");
 
          macro.Expressions.Add(new Constant("Some \" String"));
          text.Append(" \"Some \\\" String\"");
@@ -31,29 +32,23 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(new Constant(4711.1174));
          text.Append(" 4711.1174");
 
-         macro.Expressions.Add(new If { Condition = new Constant(true), Consequent = new Constant("Consequent"), Alternative = new Constant("Alternative") });
+         macro.Expressions.Add(SpecialForms.If(new Constant(true), new Constant("Consequent"),new Constant("Alternative")));
          text.Append(" (if True \"Consequent\" \"Alternative\")");
 
-         macro.Expressions.Add(new Loop { Condition = new Constant(true), Body = new ProcedureCall { Procedure = new Symbol("fun") } });
+         macro.Expressions.Add(SpecialForms.Loop(new Constant(true), SpecialForms.ProcedureCall(new Symbol("fun"))));
          text.Append(" (loop True (fun))");
 
-         var procedureCall = new ProcedureCall { Procedure = new Symbol("fun") };
-         procedureCall.Expressions.Add(new Constant("arg"));
-         macro.Expressions.Add(procedureCall);
+         macro.Expressions.Add(SpecialForms.ProcedureCall(new Symbol("fun"), new Constant("arg")));
          text.Append(" (fun \"arg\")");
 
-         macro.Expressions.Add(new Quote { Expression = new ProcedureCall { Procedure = new Symbol("fun") } });
+         macro.Expressions.Add(SpecialForms.Quote(SpecialForms.ProcedureCall(new Symbol("fun"))));
          text.Append(" (quote (fun))");
 
-         macro.Expressions.Add(new Definition { Symbol = new Symbol("var"), Expression = new Constant(4711) });
+         macro.Expressions.Add(SpecialForms.Define(new Symbol("var"), new Constant(4711)));
          text.Append(" (define var 4711)");
 
-         var lambdaBody = new ProcedureCall { Procedure = new Symbol("mult") };
-         lambdaBody.Expressions.Add(new Symbol("x"));
-         lambdaBody.Expressions.Add(new Symbol("x"));
-         var lambda = new Lambda { ArgumentSymbols = new SymbolList(), Body = lambdaBody };
-         lambda.ArgumentSymbols.Expressions.Add(new Symbol("x"));
-         macro.Expressions.Add(lambda);
+         var symbolX = new Symbol("x");
+         macro.Expressions.Add(SpecialForms.Lambda(new List(symbolX), SpecialForms.ProcedureCall(new Symbol("mult"), symbolX, symbolX)));
          text.Append(" (lambda (x) (mult x x))");
 
          text.Append(")");

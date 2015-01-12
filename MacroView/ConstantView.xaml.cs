@@ -25,7 +25,7 @@ namespace MacroView
          FrameworkElement element = Container as FrameworkElement;
          if (element != null && ConstantVM is ConstantVM)
          {
-            var constantValueType = ((ConstantVM)ConstantVM).Model.Value.GetType();
+            var constantValueType = ((Constant)((ExpressionVM)ConstantVM).Model).Value.GetType();
             if (constantValueType == typeof(bool))
                return element.FindResource("booleanTemplate") as DataTemplate;
             if (constantValueType == typeof(string))

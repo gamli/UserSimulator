@@ -6,9 +6,9 @@ namespace MacroRuntime
 {
    public abstract class ContextBase
    {
-      private readonly Dictionary<string, ExpressionBase> _values = new Dictionary<string, ExpressionBase>();
+      private readonly Dictionary<string, Expression> _values = new Dictionary<string, Expression>();
 
-      public void DefineValue(Symbol Symbol, ExpressionBase Value)
+      public void DefineValue(Symbol Symbol, Expression Value)
       {
          try
          {
@@ -21,22 +21,22 @@ namespace MacroRuntime
          }
       }
 
-      public void SetValue(Symbol Symbol, ExpressionBase Value)
+      public void SetValue(Symbol Symbol, Expression Value)
       {
          if (_values.ContainsKey(Symbol.Value))
             _values[Symbol.Value] = Value;
          SymbolNotFoundSetValue(Symbol, Value);
       }
 
-      protected abstract void SymbolNotFoundSetValue(Symbol Symbol, ExpressionBase Value);
+      protected abstract void SymbolNotFoundSetValue(Symbol Symbol, Expression Value);
 
-      public ExpressionBase GetValue(Symbol Symbol)
+      public Expression GetValue(Symbol Symbol)
       {
          if (_values.ContainsKey(Symbol.Value))
             return _values[Symbol.Value];
          return SymbolNotFoundGetValue(Symbol);
       }
 
-      protected abstract ExpressionBase SymbolNotFoundGetValue(Symbol Symbol);
+      protected abstract Expression SymbolNotFoundGetValue(Symbol Symbol);
    }
 }
