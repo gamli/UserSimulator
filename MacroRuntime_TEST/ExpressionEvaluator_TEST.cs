@@ -35,6 +35,14 @@ namespace MacroRuntime_TEST
          Assert.AreEqual(new Constant("Hello World"), context.GetValue(new Symbol("var")));
       }
 
+
+      [TestMethod]
+      public void ExpressionList_TEST()
+      {
+         var expressionList = new ExpressionList();
+         Assert.AreEqual(expressionList, new ExpressionEvaluator(new RuntimeContext(IntPtr.Zero)).Evaluate(expressionList));
+      }
+
       [TestMethod]
       public void If_TEST()
       {
@@ -56,11 +64,10 @@ namespace MacroRuntime_TEST
 
 
       [TestMethod]
-      [ExpectedException(typeof(RuntimeException))]
-      [ExcludeFromCodeCoverage]
       public void SymbolList_TEST()
       {
-         new ExpressionEvaluator(new RuntimeContext(IntPtr.Zero)).Evaluate(new SymbolList());
+         var symbolList = new SymbolList();
+         Assert.AreEqual(symbolList, new ExpressionEvaluator(new RuntimeContext(IntPtr.Zero)).Evaluate(symbolList));
       }
 
       [TestMethod]
