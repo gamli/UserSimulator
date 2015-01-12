@@ -19,7 +19,7 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(new Constant(false));
          text.Append(" False");
 
-         macro.Expressions.Add(new Constant(null));
+         macro.Expressions.Add(new ExpressionList());
          text.Append(" null");
 
          macro.Expressions.Add(new Constant("Some \" String"));
