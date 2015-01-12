@@ -1,6 +1,6 @@
 ﻿namespace Macro
 {
-   public abstract class SpecialFormBase : ListExpressionBase<ExpressionBase>
+   public abstract class SpecialFormBase : ExpressionList
    {
       private Symbol _specialFormSymbol;
       public Symbol SpecialFormSymbol { get { return _specialFormSymbol; } set { SetPropertyValue(ref _specialFormSymbol, value); } }

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Macro
 {
-   public class ProcedureCall : ListExpressionBase<ExpressionBase>
+   public class ProcedureCall : ExpressionList
    {
       private ExpressionBase _procedure;
       public ExpressionBase Procedure 
