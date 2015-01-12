@@ -24,15 +24,10 @@ namespace MacroRuntime
             Expression.Accept(_visitor);
             return _visitor.Value;
          }
-         catch (RuntimeException e)
-         {
-            Logger.Instance.Log("ExpressionEvaluator.Evaluate: " + e.Message);
-            throw;
-         }
          catch (Exception e)
          {
             Logger.Instance.Log("ExpressionEvaluator.Evaluate: " + e.Message);
-            throw new RuntimeException("Unknown exception", Expression, _context, e);
+            throw new RuntimeException("Exception during evaluation", Expression, _context, e);
          }
       }
 

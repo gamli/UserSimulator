@@ -13,19 +13,19 @@
          <RowDefinition Height="25"/>
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
-         <ColumnDefinition Width="5*"/>
+         <ColumnDefinition Width="*"/>
          <ColumnDefinition Width="5"/>
-         <ColumnDefinition Width="2*"/>
+         <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
 
       <!-- first row -->
 
-      <Grid DataContext="{Binding ExpressionVM}" Grid.Row="0" Grid.Column="0">
+      <Grid Grid.Row="0" Grid.Column="0">
          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <StackPanel>
-               <macroview:MacroBaseView HorizontalAlignment="Left" VerticalAlignment="Top"/>
-               <Separator Margin="0 48 0 48"/>
-               <macroview:MacroBaseView x:Name="_moo" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <StackPanel Orientation="Horizontal">
+               <macroview:MacroBaseView DataContext="{Binding ExpressionVM}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 48 0"/>
+               <TextBlock Text="=>" FontWeight="Bold" FontSize="48"/>
+               <macroview:MacroBaseView DataContext="{Binding EvaluatedExpressionVM}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="48 0 0 0"/>
             </StackPanel>
          </ScrollViewer>
       </Grid>
@@ -36,11 +36,13 @@
          <Grid.RowDefinitions>
             <RowDefinition Height="5*"/>
             <RowDefinition Height="5"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="2*"/>
          </Grid.RowDefinitions>
          <avalonEdit:TextEditor x:Name="_codeEditor" ShowLineNumbers="True" LostFocus="CodeEditorLostFocus" Grid.Row="0"/>
          <GridSplitter Grid.Row="1" Width="5" HorizontalAlignment="Stretch"/>
          <TextBlock Text="{Binding Model.ParserError}" Grid.Row="2"/>
+         <TextBlock Text="{Binding Model.EvaluatedExpressionText}" Grid.Row="3"/>
       </Grid>
 
       <!-- second row -->

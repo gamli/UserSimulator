@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using System.Text;
 using System.Timers;
 using System.Windows;
 using Common;
 using IO;
 using Macro;
 using MacroLanguage;
+using MacroRuntime;
 using Window = IO.Window;
 
 namespace UserSimulator
@@ -79,12 +81,44 @@ namespace UserSimulator
             }
          }
       }
-
       readonly MacroParser _parser = new MacroParser();
 
       private string _parserError;
       public string ParserError { get { return _parserError; } set { SetPropertyValue(ref _parserError, value); } }
 
+      public void EvaluateExpression()
+      {
+         try
+         {
+            EvaluatedExpressionText = "evaluating ...";
+            EvaluatedExpression = new ExpressionEvaluator(new RuntimeContext(LastWindow)).Evaluate(Expression);
+            EvaluatedExpressionText = EvaluatedExpression.ToString();
+         }
+         catch (RuntimeException e)
+         {
+            var sb = new StringBuilder();
+            Action<Exception> errorGenerator = null;
+            errorGenerator = 
+               Exception =>
+                  {
+                     if(Exception.InnerException != null)
+                        errorGenerator(Exception.InnerException);
+                     sb.Append(Exception.Message);
+                     var runtimeException = Exception as RuntimeException;
+                     if(runtimeException != null)
+                        sb.Append(" at expression >> ").Append(runtimeException.Macro.ToString()).Append(" <<");
+                     sb.Append("\n");
+                  };
+            errorGenerator(e);
+            EvaluatedExpressionText = sb.ToString();
+         }
+      }
+
+      private ExpressionBase _evaluatedExpression;
+      public ExpressionBase EvaluatedExpression { get { return _evaluatedExpression; } private set { SetPropertyValue(ref _evaluatedExpression, value); } }
+
+      private string _evaluatedExpressionText;
+      public string EvaluatedExpressionText { get { return _evaluatedExpressionText; } set { SetPropertyValue(ref _evaluatedExpressionText, value); } }
 
       public UserSimulatorModel(int ScreenshotInterval = 100)
       {
@@ -92,15 +126,13 @@ namespace UserSimulator
             Application.GetResourceStream(
                new Uri("pack://application:,,,/UserSimulator;component/Resources/ErrorScreenshot.png"));
          if (screenshotErrorImage != null)
-            LastWindowshot =
-               Image.FromStream(screenshotErrorImage.Stream);
-         var initialFunction = new ProcedureCall { Procedure = new Symbol("print") };
-         initialFunction.Expressions.Add(new Constant("Hello World"));
-         Expression = initialFunction;         
+            LastWindowshot = Image.FromStream(screenshotErrorImage.Stream);
          UpdateWindowshot();
          _timer = new Timer(ScreenshotInterval);
          _timer.Elapsed += (Sender, Args) => UpdateWindowshot();
          _timer.Start();
+         ExpressionText = "(add 4700 11)";
+         EvaluateExpression();
       }
 
       private void UpdateWindowshot()

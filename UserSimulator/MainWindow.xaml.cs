@@ -42,7 +42,7 @@ namespace UserSimulator
 
       private void ButtonExecuteClick(object Sender, RoutedEventArgs E)
       {
-         _moo.DataContext = new ExpressionEvaluator(new RuntimeContext(_model.LastWindow)).Evaluate(_model.Expression);
+         _model.EvaluateExpression();
       }
 
       private void ButtonSaveClick(object Sender, RoutedEventArgs E)

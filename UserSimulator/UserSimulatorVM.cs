@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Common;
+using Macro;
 using MacroViewModel;
 
 namespace UserSimulator
@@ -16,6 +17,9 @@ namespace UserSimulator
 
       private readonly NotifyingTransformedProperty<ExpressionBaseVM> _expressionVM;
       public ExpressionBaseVM ExpressionVM { get { return _expressionVM.Value; } }
+
+      private readonly NotifyingTransformedProperty<ExpressionBaseVM> _evaluatedExpressionVM;
+      public ExpressionBaseVM EvaluatedExpressionVM { get { return _evaluatedExpressionVM.Value; } }
 
       public UserSimulatorVM(UserSimulatorModel Model)
          : base(Model)
@@ -31,6 +35,13 @@ namespace UserSimulator
                new[] { "Expression" }, "ExpressionVM",
                Model, this,
                () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.Expression),
+               ViewModel => ViewModel.Dispose());
+
+         _evaluatedExpressionVM =
+            new NotifyingTransformedProperty<ExpressionBaseVM>(
+               new[] { "EvaluatedExpression" }, "EvaluatedExpressionVM",
+               Model, this,
+               () => (ExpressionBaseVM)MacroViewModelFactory.Instance.Create(Model.EvaluatedExpression),
                ViewModel => ViewModel.Dispose());
       }
 
