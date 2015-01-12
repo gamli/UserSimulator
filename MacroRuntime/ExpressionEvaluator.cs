@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Configuration;
 using Macro;
 
 namespace MacroRuntime
@@ -58,15 +59,15 @@ namespace MacroRuntime
             Value = evaluatedExpression;
          }
 
-         // TODO should not happen?
          public void VisitExpressionList(ExpressionList ExpressionList)
          {
-            throw new RuntimeException("Can not evaluate expression list", ExpressionList, _context);
+            Value = ExpressionList;
          }
 
          public void VisitIf(If If)
          {
-            var consequentOrAlternative = (bool)EvaluateExpression<Constant>(If.Condition, _context).Value ? If.Consequent : If.Alternative;
+            var condition = EvaluateExpression<ExpressionBase>(If.Condition, _context);
+            var consequentOrAlternative = ConvertToBoolean(condition) ? If.Consequent : If.Alternative;
             Value = EvaluateExpression<ExpressionBase>(consequentOrAlternative, _context);
          }
 
@@ -100,10 +101,25 @@ namespace MacroRuntime
             Value = _context.GetValue(Symbol);
          }
 
-         // TODO should not happen?
          public void VisitSymbolList(SymbolList SymbolList)
          {
-            throw new RuntimeException("Can not evaluate symbol list", SymbolList, _context);
+            Value = SymbolList;
+         }
+
+         private bool ConvertToBoolean(ExpressionBase Expression)
+         {
+            var constant = Expression as Constant;
+            if (constant != null)
+               return Convert.ToBoolean(constant.Value);
+
+            var expressionList = Expression as ExpressionList;
+            if (expressionList != null)
+               return expressionList.Expressions.Count != 0;
+
+            throw new RuntimeException(
+               string.Format("Expression >> {0} << can not be converted to boolean", Expression),
+               Expression,
+               _context);
          }
 
          private T EvaluateExpression<T>(ExpressionBase Expression, ContextBase Context)
