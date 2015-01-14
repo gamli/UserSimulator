@@ -14,6 +14,7 @@ namespace Macro_TEST
          // ReSharper disable once EqualExpressionComparison - for reference equals. is this code even necessary in MacroBase???
          Assert.IsTrue(constant.Equals(constant));
          Assert.AreNotEqual(constant, new Symbol((string)constant.Value));
+         Assert.IsFalse(constant.Equals(null));
       }
    }
 }

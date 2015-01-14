@@ -30,9 +30,9 @@ namespace Macro
       public abstract void Accept(IVisitor Visitor);
       public override bool Equals(object Other)
       {
-         if (Other == this)
+         if (Other == this) // TODO necessary?
             return true;
-         if (Other == null || Other.GetType() != GetType())
+         if (Other == null || Other.GetType() != GetType()) // TODO null check necessary?
             return false;
          return MacroEquals((MacroBase)Other);
       }

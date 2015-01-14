@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Macro_TEST
 {
    [TestClass]
-   class List_TEST
+   public class List_TEST
    {
       [TestMethod]
       public void CloneAndEqualsAndAccept_TEST()
