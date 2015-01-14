@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuntimeContext.cs" />
     <Compile Include="RuntimeException.cs" />
+    <Compile Include="TypeConversion.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -59,6 +60,10 @@
     <ProjectReference Include="..\IO\IO.csproj">
       <Project>{52c3838a-1365-4692-b464-b96cc9682349}</Project>
       <Name>IO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MacroLanguage\MacroLanguage.csproj">
+      <Project>{7E46C7EE-A768-4225-A4BB-DE2D7FFB149D}</Project>
+      <Name>MacroLanguage</Name>
     </ProjectReference>
     <ProjectReference Include="..\Macro\Macro.csproj">
       <Project>{cc94e382-10da-4a49-9ecc-f3b185ec597a}</Project>
