@@ -8,6 +8,11 @@ namespace MacroRuntime
 {
    public class ExpressionEvaluator
    {
+      public static Expression Evaluate(Expression Expression, ContextBase Context)
+      {
+         return new ExpressionEvaluator(Context).Evaluate(Expression);
+      }
+
       private readonly ExpressionVisitor _visitor;
       private readonly ContextBase _context;
 
@@ -62,7 +67,7 @@ namespace MacroRuntime
          public override void VisitIf(List If)
          {
             var condition = EvaluateExpression<Expression>(If.Expressions[1], _context);
-            var consequentOrAlternative = ConvertToBoolean(condition) ? If.Expressions[2] : If.Expressions[3];
+            var consequentOrAlternative = TypeConversion.ConvertToBoolean(condition, _context) ? If.Expressions[2] : If.Expressions[3];
             Value = EvaluateExpression<Expression>(consequentOrAlternative, _context);
          }
 
@@ -87,7 +92,7 @@ namespace MacroRuntime
 
          public override void VisitLoop(List Loop)
          {
-            while ((bool)EvaluateExpression<Constant>(Loop.Expressions[1], _context).Value)
+            while (TypeConversion.ConvertToBoolean(EvaluateExpression<Expression>(Loop.Expressions[1], _context), _context))
                Value = EvaluateExpression<Expression>(Loop.Expressions[2], _context);
          }
 
@@ -101,22 +106,6 @@ namespace MacroRuntime
             where T : Expression
          {
             return (T)new ExpressionEvaluator(Context).Evaluate(Expression);
-         }
-
-         private bool ConvertToBoolean(Expression Expression)
-         {
-            var constant = Expression as Constant;
-            if (constant != null)
-               return Convert.ToBoolean(constant.Value);
-
-            var expressionList = Expression as List;
-            if (expressionList != null)
-               return expressionList.Expressions.Count != 0;
-
-            throw new RuntimeException(
-               string.Format("Expression >> {0} << can not be converted to boolean", Expression),
-               Expression,
-               _context);
          }
       }
    }
