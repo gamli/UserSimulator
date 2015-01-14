@@ -16,28 +16,16 @@ namespace UserSimulator
          InitializeComponent();
 
          _model = new UserSimulatorModel();
-         _model.PropertyChanged += 
-            (Sender, Args) => 
-               {
-                  if (Args.PropertyName == "ExpressionText")
-                     _codeEditor.Document.Text = _model.ExpressionText;
-               };
          var viewModel = new UserSimulatorVM(_model);
          DataContext = viewModel;
 
          InitializeProgram();         
       }
 
-      private void CodeEditorLostFocus(object Sender, RoutedEventArgs E)
-      {
-         _model.ExpressionText = _codeEditor.Text;
-      }
-
       private void InitializeProgram()
       {
          if (File.Exists("data"))
             _model.ExpressionText = File.ReadAllText("data");
-         _codeEditor.Document.Text = _model.ExpressionText;
       }
 
       private void ButtonExecuteClick(object Sender, RoutedEventArgs E)

@@ -127,7 +127,11 @@ namespace UserSimulator
             Application.GetResourceStream(
                new Uri("pack://application:,,,/UserSimulator;component/Resources/ErrorScreenshot.png"));
          if (screenshotErrorImage != null)
-            LastWindowshot = Image.FromStream(screenshotErrorImage.Stream);
+            using (var screenshotImageStream = screenshotErrorImage.Stream)
+            {
+               LastWindowshot = Image.FromStream(screenshotImageStream);
+               screenshotErrorImage.Stream.Dispose();
+            }
          UpdateWindowshot();
          _timer = new Timer(ScreenshotInterval);
          _timer.Elapsed += (Sender, Args) => UpdateWindowshot();

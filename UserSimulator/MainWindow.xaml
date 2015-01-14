@@ -39,7 +39,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="2*"/>
          </Grid.RowDefinitions>
-         <avalonEdit:TextEditor x:Name="_codeEditor" ShowLineNumbers="True" LostFocus="CodeEditorLostFocus" Grid.Row="0"/>
+         <macroview:LISPishView Text="{Binding Model.ExpressionText}" Grid.Row="0" FontSize="14"/>
          <GridSplitter Grid.Row="1" Width="5" HorizontalAlignment="Stretch"/>
          <TextBlock Text="{Binding Model.ParserError}" Grid.Row="2"/>
          <TextBlock Text="{Binding Model.EvaluatedExpressionText}" Grid.Row="3"/>
