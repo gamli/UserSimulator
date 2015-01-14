@@ -30,11 +30,6 @@ namespace MacroLanguage
             _parser = CreateParser();
             throw new ParseException(e.Message, e) { LineNumber = e.LexerState.CurrentLineNumber };
          }
-         catch (LexerException e)
-         {
-            _parser = CreateParser();
-            throw new ParseException(e.Message, e) { LineNumber = e.LineNumber };
-         }
       }
 
       private IParser<object> _parser;
@@ -45,6 +40,8 @@ namespace MacroLanguage
 
          var expression = config.CreateNonTerminal();
          expression.DebugName = "expr";
+
+         expression.AddProduction(ConstantNull(config)).SetReduceToFirst();
 
          expression.AddProduction(ConstantBoolean(config)).SetReduceToFirst();
 
@@ -58,6 +55,8 @@ namespace MacroLanguage
 
          expression.AddProduction(List(config, expression)).SetReduceToFirst();
 
+         expression.AddProduction(QuoteSyntacticSugar(config, expression)).SetReduceToFirst();
+
          return config.CreateParser();
       }
 
@@ -65,6 +64,13 @@ namespace MacroLanguage
       {
          var config = ParserFactory.Configure<object>();
          return config;
+      }
+
+      private static ITerminal<object> ConstantNull(IParserConfigurator<object> Config)
+      {
+         var constant = Config.CreateTerminal("null", ParseResults => new Constant(null), true);
+         constant.DebugName = "const null-expr";
+         return constant;
       }
 
       private static ITerminal<object> ConstantBoolean(IParserConfigurator<object> Config)
@@ -102,7 +108,7 @@ namespace MacroLanguage
 
       private static ITerminal<object> Symbol(IParserConfigurator<object> Config)
       {
-         var symbol = Config.CreateTerminal(@"[^\(\)\s]+", ParseResults => new Symbol(ParseResults));
+         var symbol = Config.CreateTerminal(@"[^'\(\)\s]+", ParseResults => new Symbol(ParseResults));
          symbol.DebugName = "smybol";
          return symbol;
       }
@@ -124,13 +130,25 @@ namespace MacroLanguage
                      ((List)ParseResults[0]).Expressions.Add((Expression)ParseResults[1]);
                      return ParseResults[0];
                   });
-         expressionSequence.
-            AddProduction()
+         expressionSequence
+            .AddProduction()
             .SetReduceFunction(ParseResults => new List());
 
-         list.AddProduction("(", expressionSequence, ")").SetReduceFunction(ParseResults => ParseResults[1]);
+         list
+            .AddProduction("(", expressionSequence, ")")
+            .SetReduceFunction(ParseResults => ParseResults[1]);
 
          return list;
+      }
+
+      private static INonTerminal<object> QuoteSyntacticSugar(IParserConfigurator<object> Config, INonTerminal<object> Expression)
+      {
+         var quoteSyntacticSugar = Config.CreateNonTerminal();
+         quoteSyntacticSugar
+            .AddProduction("'", Expression)
+            .SetReduceFunction(ParseResults => SpecialForms.Quote((Expression) ParseResults[1]));
+
+         return quoteSyntacticSugar;
       }
    }
 

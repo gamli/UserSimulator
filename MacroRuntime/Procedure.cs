@@ -20,7 +20,7 @@ namespace MacroRuntime
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
          var otherProcedure = (Procedure) OtherMacro;
-         return Lambda.Equals(otherProcedure.Lambda) && base.MacroEquals(otherProcedure);
+         return Equals(Lambda, otherProcedure.Lambda) && base.MacroEquals(otherProcedure);
       }
 
       protected override int MacroGetHashCode()

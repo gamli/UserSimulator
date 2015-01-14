@@ -56,9 +56,8 @@ namespace Macro
 
       protected override int MacroGetHashCode()
       {
-         return Expressions.GetHashCode();
+         return Expressions.Aggregate(0, (AggregatedHashCode, Expression) => AggregatedHashCode ^ Expression.GetHashCode());
       }
-
 
 
       public override string ToString()

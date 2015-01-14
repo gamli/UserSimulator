@@ -26,12 +26,12 @@ namespace Macro
       protected override bool MacroEquals(MacroBase OtherMacro)
       {
          var other = (Symbol)OtherMacro;
-         return Value.Equals(other.Value);
+         return Equals(Value, other.Value);
       }
 
       protected override int MacroGetHashCode()
       {
-         return Value.GetHashCode();
+         return Value == null ? 0 : Value.GetHashCode();
       }
 
       [ExcludeFromCodeCoverage]

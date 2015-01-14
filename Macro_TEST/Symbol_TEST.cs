@@ -1,4 +1,5 @@
-﻿using Macro;
+﻿using System.Collections.Generic;
+using Macro;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Macro_TEST
@@ -18,6 +19,36 @@ namespace Macro_TEST
 
          symbol.Value = "moo";
          Assert.AreEqual(symbol, clone);
+      }
+
+      [TestMethod]
+      public void MacroGetHashCode_TEST()
+      {
+         var symbol1 = new Symbol("moo");
+         var symbol2 = new Symbol("moo");
+         var symbol3 = new Symbol("booo");
+         var symbol4 = new Symbol(null);
+
+         var set = new HashSet<Symbol> { symbol1 };
+         Assert.IsTrue(set.Contains(symbol1));
+         Assert.IsTrue(set.Contains(symbol2));
+         Assert.IsFalse(set.Contains(symbol3));
+         Assert.IsFalse(set.Contains(symbol4));
+
+         set.Add(symbol2);
+         Assert.AreEqual(set.Count, 1);
+
+         set.Add(symbol3);
+         Assert.IsTrue(set.Contains(symbol1));
+         Assert.IsTrue(set.Contains(symbol2));
+         Assert.IsTrue(set.Contains(symbol3));
+         Assert.IsFalse(set.Contains(symbol4));
+
+         set.Add(symbol4);
+         Assert.IsTrue(set.Contains(symbol1));
+         Assert.IsTrue(set.Contains(symbol2));
+         Assert.IsTrue(set.Contains(symbol3));
+         Assert.IsTrue(set.Contains(symbol4));
       }
 
       [TestMethod]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Macro;
 using MacroLanguage;
@@ -36,6 +37,29 @@ namespace MacroRuntime_TEST
 
          intrinsicProcedure2 = new ExpressionEvaluator(new RuntimeContext(IntPtr.Zero)).Evaluate((Expression)new MacroParser().Parse("pause"));
          Assert.AreNotEqual(intrinsicProcedure1, intrinsicProcedure2);
+      }
+
+      [TestMethod]
+      public void MacroGetHashCode_TEST()
+      {
+         var context = new RuntimeContext(IntPtr.Zero);
+
+         var intrinsicProcedure1 = new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("move"));
+         var intrinsicProcedure2 = new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("move"));
+         var intrinsicProcedure3 = new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("position"));
+
+         var set = new HashSet<Expression> { intrinsicProcedure1 };
+         Assert.IsTrue(set.Contains(intrinsicProcedure1));
+         Assert.IsTrue(set.Contains(intrinsicProcedure2));
+         Assert.IsFalse(set.Contains(intrinsicProcedure3));
+
+         set.Add(intrinsicProcedure2);
+         Assert.AreEqual(set.Count, 1);
+
+         set.Add(intrinsicProcedure3);
+         Assert.IsTrue(set.Contains(intrinsicProcedure1));
+         Assert.IsTrue(set.Contains(intrinsicProcedure2));
+         Assert.IsTrue(set.Contains(intrinsicProcedure3));
       }
    }
 }

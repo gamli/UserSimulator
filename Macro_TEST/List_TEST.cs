@@ -26,6 +26,47 @@ namespace Macro_TEST
       }
 
       [TestMethod]
+      public void MacroGetHashCode_TEST()
+      {
+         var list1 = new List(new Constant("moo"));
+         var list2 = new List(new Constant("moo"));
+         var list3 = new List(new Constant("foo"));
+         var list4 = new List(new Constant("moo"), new Constant("foo"));
+         var list5 = new List();
+
+         var set = new HashSet<List> { list1 };
+         Assert.IsTrue(set.Contains(list1));
+         Assert.IsTrue(set.Contains(list2));
+         Assert.IsFalse(set.Contains(list3));
+         Assert.IsFalse(set.Contains(list4));
+         Assert.IsFalse(set.Contains(list5));
+
+         set.Add(list2);
+         Assert.AreEqual(set.Count, 1);
+
+         set.Add(list3);
+         Assert.IsTrue(set.Contains(list1));
+         Assert.IsTrue(set.Contains(list2));
+         Assert.IsTrue(set.Contains(list3));
+         Assert.IsFalse(set.Contains(list4));
+         Assert.IsFalse(set.Contains(list5));
+
+         set.Add(list4);
+         Assert.IsTrue(set.Contains(list1));
+         Assert.IsTrue(set.Contains(list2));
+         Assert.IsTrue(set.Contains(list3));
+         Assert.IsTrue(set.Contains(list4));
+         Assert.IsFalse(set.Contains(list5));
+
+         set.Add(list5);
+         Assert.IsTrue(set.Contains(list1));
+         Assert.IsTrue(set.Contains(list2));
+         Assert.IsTrue(set.Contains(list3));
+         Assert.IsTrue(set.Contains(list4));
+         Assert.IsTrue(set.Contains(list5));
+      }
+
+      [TestMethod]
       public void MacroChangedEvent_TEST()
       {
          var list = new List(new Symbol("moo"), new Constant(true), new List());

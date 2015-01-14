@@ -8,19 +8,26 @@ namespace Macro
 {
    public static class SpecialForms
    {
+      public static readonly Symbol DefineSymbol = new Symbol("define");
+      public static readonly Symbol IfSymbol = new Symbol("if");
+      public static readonly Symbol LambdaSymbol = new Symbol("lambda");
+      public static readonly Symbol QuoteSymbol = new Symbol("quote");
+      public static readonly Symbol LoopSymbol = new Symbol("loop");
+
+
       public static List Define(Symbol Symbol, Expression Expression)
       {
-         return new List(new Symbol("define"), Symbol, Expression);
+         return new List(DefineSymbol, Symbol, Expression);
       }
 
       public static List If(Expression Condition, Expression Consequent, Expression Alternative)
       {
-         return new List(new Symbol("if"), Condition, Consequent, Alternative);
+         return new List(IfSymbol, Condition, Consequent, Alternative);
       }
 
       public static List Lambda(Expression FormalArguments, Expression Body)
       {
-         return new List(new Symbol("lambda"), FormalArguments, Body);
+         return new List(LambdaSymbol, FormalArguments, Body);
       }
 
       public static List ProcedureCall(Expression Procedure, params Expression[] Arguments)
@@ -35,12 +42,12 @@ namespace Macro
 
       public static List Quote(Expression Expression)
       {
-         return new List(new Symbol("quote"), Expression);
+         return new List(QuoteSymbol, Expression);
       }
 
       public static List Loop(Expression Condition, Expression Body)
       {
-         return new List(new Symbol("loop"), Condition, Body);
+         return new List(LoopSymbol, Condition, Body);
       }
    }
 }

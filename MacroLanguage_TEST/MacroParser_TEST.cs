@@ -24,6 +24,26 @@ namespace MacroLanguage_TEST
          AssertParseResult(testCase.Item1, testCase.Item2);
       }
 
+      [TestMethod]
+      public void NilAlias_TEST()
+      {
+         AssertParseResult("nil", new List());
+         AssertParseResult("()", new List());
+      }
+
+      [TestMethod]
+      public void QuoteSyntacticSugar_TEST()
+      {
+         AssertParseResult("(quote (fun))", SpecialForms.Quote(new List(new Symbol("fun"))));
+         AssertParseResult("'(fun)", SpecialForms.Quote(new List(new Symbol("fun"))));
+
+         AssertParseResult("(quote fun)", SpecialForms.Quote(new Symbol("fun")));
+         AssertParseResult("'fun", SpecialForms.Quote(new Symbol("fun")));
+
+         AssertParseResult("(quote \"fun\")", SpecialForms.Quote(new Constant("fun")));
+         AssertParseResult("'\"fun\"", SpecialForms.Quote(new Constant("fun")));
+      }
+
       private void AssertParseResult(string Text, MacroBase ExpectedMacro)
       {
          var macro = _parser.Parse(Text);

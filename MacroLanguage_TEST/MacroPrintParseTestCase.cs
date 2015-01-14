@@ -14,6 +14,9 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(new Symbol("funTEST"));
          text.Append("(funTEST");
 
+         macro.Expressions.Add(new Constant(null));
+         text.Append(" null");
+
          macro.Expressions.Add(new Constant(true));
          text.Append(" True");
 
@@ -42,7 +45,7 @@ namespace MacroLanguage_TEST
          text.Append(" (fun \"arg\")");
 
          macro.Expressions.Add(SpecialForms.Quote(SpecialForms.ProcedureCall(new Symbol("fun"))));
-         text.Append(" (quote (fun))");
+         text.Append(" '(fun)");
 
          macro.Expressions.Add(SpecialForms.Define(new Symbol("var"), new Constant(4711)));
          text.Append(" (define var 4711)");

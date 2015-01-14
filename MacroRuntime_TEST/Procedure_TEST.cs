@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Macro;
 using MacroLanguage;
@@ -77,6 +78,60 @@ namespace MacroRuntime_TEST
 
          procedure2 = new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(lambda (x y z) x)"));
          Assert.AreNotEqual(procedure1, procedure2);
+      }
+
+      [TestMethod]
+      public void MacroGetHashCode_TEST()
+      {
+         var context = new RuntimeContext(IntPtr.Zero);
+
+         var procedure1 = new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(lambda (x y z) z)"));
+         var procedure2 = new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(lambda (x y z) z)"));
+         var procedure3 = new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(lambda (x z) z)"));
+
+         var set = new HashSet<Expression> { procedure1 };
+         Assert.IsTrue(set.Contains(procedure1));
+         Assert.IsTrue(set.Contains(procedure2));
+         Assert.IsFalse(set.Contains(procedure3));
+
+         set.Add(procedure2);
+         Assert.AreEqual(1, set.Count);
+         Assert.IsTrue(set.Contains(procedure1));
+         Assert.IsTrue(set.Contains(procedure2));
+         Assert.IsFalse(set.Contains(procedure3));
+
+         set.Add(procedure3);
+         Assert.IsTrue(set.Contains(procedure1));
+         Assert.IsTrue(set.Contains(procedure2));
+         Assert.IsTrue(set.Contains(procedure3));
+      }
+
+      [TestMethod]
+      public void VarArg_TEST()
+      {
+         var context = new RuntimeContext(IntPtr.Zero);
+
+         var xy = (List)new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("((lambda (.) .) 'x 'y)"));
+         Assert.AreEqual(2, xy.Expressions.Count);
+         Assert.AreEqual(new Symbol("x"), xy.Expressions[0]);
+         Assert.AreEqual(new Symbol("y"), xy.Expressions[1]);
+
+         var y = (List)new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("((lambda (arg .) .) 'x 'y)"));
+         Assert.AreEqual(1, y.Expressions.Count);
+         Assert.AreEqual(new Symbol("y"), y.Expressions[0]);
+
+         var empty = (List)new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("((lambda (arg .) .) 'x)"));
+         Assert.AreEqual(0, empty.Expressions.Count);
+
+         try
+         {
+            new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("((lambda (arg1 arg2 .) .) 'x)"));
+            Assert.Fail();
+         }
+         catch (RuntimeException)
+         {
+            // everything ok - not enough arguments
+         }
       }
    }
 }

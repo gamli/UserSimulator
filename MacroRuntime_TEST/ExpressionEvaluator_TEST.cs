@@ -15,6 +15,8 @@ namespace MacroRuntime_TEST
       [TestMethod]
       public void Constant_TEST()
       {
+         AssertExpressionEvaluatesTo(new Constant(null), "null");
+
          AssertExpressionEvaluatesTo(new Constant(true), "True");
          AssertExpressionEvaluatesTo(new Constant(false), "False");
 
@@ -125,6 +127,14 @@ namespace MacroRuntime_TEST
       }
 
       [TestMethod]
+      public void BooleanConversion_TEST()
+      {
+         AssertExpressionEvaluatesTo(new Constant(2), "(if nil 1 2)");
+         AssertExpressionEvaluatesTo(new Constant(2), "(if () 1 2)");
+         AssertExpressionEvaluatesTo(new Constant(1), "(if (quote (any valid list)) 1 2)");
+      }
+
+      [TestMethod]
       [ExcludeFromCodeCoverage]
       public void ExceptionHandling_TEST()
       {
@@ -143,6 +153,26 @@ namespace MacroRuntime_TEST
          {
             Assert.AreEqual("SomeFun", e.InnerException.Message);
             Assert.IsTrue(e.InnerException is NotImplementedException);
+         }
+
+         try
+         {
+            evaluator.Evaluate(ParseExpression("(if \"somethingThatIsNotConvertibleToBoolean\" 1 2)"));
+            Assert.Fail();
+         }
+         catch (RuntimeException e)
+         {
+            Assert.IsTrue(e.InnerException is FormatException);
+         }
+
+         try
+         {
+            evaluator.Evaluate(SpecialForms.If(SpecialForms.Quote(new Symbol("doesNotEvaluateToBoolean")), new Constant(1), new Constant(2)));
+            Assert.Fail();
+         }
+         catch (RuntimeException)
+         {
+            // everything ok
          }
       }
 
