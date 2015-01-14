@@ -102,7 +102,7 @@ namespace MacroLanguage
 
       private static ITerminal<object> Symbol(IParserConfigurator<object> Config)
       {
-         var symbol = Config.CreateTerminal(@"[^\(\)\s]*", ParseResults => new Symbol(ParseResults));
+         var symbol = Config.CreateTerminal(@"[^\(\)\s]+", ParseResults => new Symbol(ParseResults));
          symbol.DebugName = "smybol";
          return symbol;
       }
