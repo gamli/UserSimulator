@@ -6,33 +6,65 @@ using System.Linq;
 using System.Threading;
 using IO;
 using Macro;
+using MacroLanguage;
 
 namespace MacroRuntime
 {
    public class RuntimeContext : ContextBase
    {
       private readonly IntPtr _targetWindow;
+      private readonly MacroParser _parser = new MacroParser();
 
       public RuntimeContext(IntPtr TargetWindow)
       {
          _targetWindow = TargetWindow;
 
-         AddIntrinsicFunction("move", MouseMove, _mouseMoveDeltaX, _mouseMoveDeltaY);
-         AddIntrinsicFunction("position", MousePosition, _mousePositionX, _mousePositionY);
-         AddIntrinsicFunction("pause", Pause, _pauseDuration);
-         AddIntrinsicFunction("click", LeftClick);
-         AddIntrinsicFunction("windowshot", Windowshot, _windowshotX, _windowshotY, _windowshotImageUrl);
-         AddIntrinsicFunction("begin", Begin, _varArg);
-         AddIntrinsicFunction("eq", Equals, _equalsLeft, _equalsRight);
-         AddIntrinsicFunction("dec", Decrement, _decrementVariableSymbol);
+         AddIntrinsicProcedure("=", Equal, _equalLeft, _equalRight);
+
+         AddIntrinsicProcedure("constant?", IsConstant, _isConstantExpression);
+         AddIntrinsicProcedure("list?", IsList, _isListExpression);
+         AddIntrinsicProcedure("symbol?", IsSymbol, _isSymbolExpression);
+
+         AddIntrinsicProcedure("<", Less, _lessLeft, _lessRight);
+         AddIntrinsicProcedure(">", Greater, _greaterLeft, _greaterRight);
+         AddIntrinsicProcedure("or", Or, _orLeft, _orRight);
+         AddIntrinsicProcedure("and", And, _andLeft, _andRight);
+
+         AddIntrinsicProcedure("+", Add, _addLeft, _addRight);
+         AddIntrinsicProcedure("-", Sub, _subLeft, _subRight);
+         AddIntrinsicProcedure("*", Mul, _mulLeft, _mulRight);
+         AddIntrinsicProcedure("/", Div, _divLeft, _divRight);
+         AddIntrinsicProcedure("abs", Abs, _absValue);
+
+         AddIntrinsicProcedure("car", Car, _carList);
+         AddIntrinsicProcedure("cdr", Cdr, _cdrList);
+
+         AddIntrinsicProcedure("move", MouseMove, _mouseMoveDeltaX, _mouseMoveDeltaY);
+         AddIntrinsicProcedure("position", MousePosition, _mousePositionX, _mousePositionY);
+         AddIntrinsicProcedure("pause", Pause, _pauseDuration);
+         AddIntrinsicProcedure("click", LeftClick);
+         AddIntrinsicProcedure("windowshot", Windowshot, _windowshotX, _windowshotY, _windowshotImageUrl);
+
+         AddDerivedProcedure("last", "(if (and list (cdr list)) (last (cdr list)) (car list))", "list");
+         AddDerivedProcedure("begin", "(last .)", ".");
+         AddDerivedProcedure("<=", "(or (< left right) (= left right))", "left", "right");
+         AddDerivedProcedure(">=", "(or (> left right) (= left right))", "left", "right");
       }
 
-      private void AddIntrinsicFunction(string Symbol, Func<ContextBase, Expression> Function, params Symbol[] Arguments)
+      private void AddIntrinsicProcedure(string Symbol, Func<ContextBase, Expression> Procedure, params Symbol[] FormalArguments)
       {
-         var argumentSymbols = new List();
-         foreach (var argument in Arguments)
-            argumentSymbols.Expressions.Add(argument);
-         DefineValue(new Symbol(Symbol), new IntrinsicProcedure { DefiningContext = this, FormalArguments = argumentSymbols, Function = Function });
+         var formalArguments = new List();
+         foreach (var argument in FormalArguments)
+            formalArguments.Expressions.Add(argument);
+         DefineValue(new Symbol(Symbol), new IntrinsicProcedure { DefiningContext = this, FormalArguments = formalArguments, Function = Procedure });
+      }
+
+      private void AddDerivedProcedure(string Symbol, string Body, params string[] FormalArguments)
+      {
+         var body = (Expression)_parser.Parse(Body);
+         Expression[] formalArguments = FormalArguments.Select(FormArg => new Symbol(FormArg)).ToArray();
+         var lambda = SpecialForms.Lambda(new List(formalArguments), body);
+         DefineValue(new Symbol(Symbol), ExpressionEvaluator.Evaluate(lambda, this));
       }
 
       [ExcludeFromCodeCoverage]
@@ -49,7 +81,134 @@ namespace MacroRuntime
          throw new RuntimeException(exceptionMessage, Symbol, this);
       }
 
-      private readonly Symbol _varArg = new Symbol(".");
+      // TODO currently not needed - remove? private readonly Symbol _varArg = new Symbol(".");
+
+      private readonly Symbol _isConstantExpression = new Symbol("Expression");
+      private Expression IsConstant(ContextBase Context)
+      {
+         return new Constant(GetGenericValue<Expression>(Context, _isSymbolExpression).GetType() == typeof(Constant));
+      }
+
+      private readonly Symbol _isListExpression = new Symbol("Expression");
+      private Expression IsList(ContextBase Context)
+      {
+         return new Constant(GetGenericValue<Expression>(Context, _isSymbolExpression).GetType() == typeof(List));
+      }
+
+      private readonly Symbol _isSymbolExpression = new Symbol("Expression");
+      private Expression IsSymbol(ContextBase Context)
+      {
+         return new Constant(GetGenericValue<Expression>(Context, _isSymbolExpression).GetType() == typeof(Symbol));
+      }
+
+      private readonly Symbol _addLeft = new Symbol("Left");
+      private readonly Symbol _addRight = new Symbol("Right");
+      private Expression Add(ContextBase Context)
+      {
+         dynamic left = GetGenericValue<Constant>(Context, _addLeft).Value;
+         dynamic right = GetGenericValue<Constant>(Context, _addRight).Value;
+         return new Constant(left + right);
+      }
+
+      private readonly Symbol _subLeft = new Symbol("Left");
+      private readonly Symbol _subRight = new Symbol("Right");
+      private Expression Sub(ContextBase Context)
+      {
+         dynamic left = GetGenericValue<Constant>(Context, _subLeft).Value;
+         dynamic right = GetGenericValue<Constant>(Context, _subRight).Value;
+         return new Constant(left - right);
+      }
+
+      private readonly Symbol _mulLeft = new Symbol("Left");
+      private readonly Symbol _mulRight = new Symbol("Right");
+      private Expression Mul(ContextBase Context)
+      {
+         dynamic left = GetGenericValue<Constant>(Context, _mulLeft).Value;
+         dynamic right = GetGenericValue<Constant>(Context, _mulRight).Value;
+         return new Constant(left * right);
+      }
+
+      private readonly Symbol _divLeft = new Symbol("Left");
+      private readonly Symbol _divRight = new Symbol("Right");
+      private Expression Div(ContextBase Context)
+      {
+         dynamic left = GetGenericValue<Constant>(Context, _divLeft).Value;
+         dynamic right = GetGenericValue<Constant>(Context, _divRight).Value;
+         return new Constant(left / right);
+      }
+
+      private readonly Symbol _lessLeft = new Symbol("Left");
+      private readonly Symbol _lessRight = new Symbol("Right");
+      private Expression Less(ContextBase Context)
+      {
+         dynamic left = GetGenericValue<Constant>(Context, _lessLeft).Value;
+         dynamic right = GetGenericValue<Constant>(Context, _lessRight).Value;
+         return new Constant(left < right);
+      }
+
+      private readonly Symbol _greaterLeft = new Symbol("Left");
+      private readonly Symbol _greaterRight = new Symbol("Right");
+      private Expression Greater(ContextBase Context)
+      {
+         dynamic left = GetGenericValue<Constant>(Context, _greaterLeft).Value;
+         dynamic right = GetGenericValue<Constant>(Context, _greaterRight).Value;
+         return new Constant(left > right);
+      }
+
+      private readonly Symbol _orLeft = new Symbol("Left");
+      private readonly Symbol _orRight = new Symbol("Right");
+      private Expression Or(ContextBase Context)
+      {
+         dynamic left = TypeConversion.ConvertToBoolean(GetGenericValue<Constant>(Context, _orLeft), Context);
+         dynamic right = TypeConversion.ConvertToBoolean(GetGenericValue<Constant>(Context, _orRight), Context);
+         return new Constant(left || right);
+      }
+
+      private readonly Symbol _andLeft = new Symbol("Left");
+      private readonly Symbol _andRight = new Symbol("Right");
+      private Expression And(ContextBase Context)
+      {
+         dynamic left = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _andLeft), Context);
+         dynamic right = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _andRight), Context);
+         return new Constant(left && right);
+      }
+
+      private readonly Symbol _equalLeft = new Symbol("Left");
+      private readonly Symbol _equalRight = new Symbol("Right");
+      private Expression Equal(ContextBase Context)
+      {
+         return
+            new Constant(
+               Equals(
+                  GetGenericValue<Expression>(Context, _equalLeft),
+                  GetGenericValue<Expression>(Context, _equalRight)));
+      }
+
+      private readonly Symbol _absValue = new Symbol("Value");
+      private Expression Abs(ContextBase Context)
+      {
+         dynamic numeric = GetGenericValue<Constant>(Context, _absValue);
+         return Math.Abs(numeric.Value);
+      }
+
+      private readonly Symbol _carList = new Symbol("List");
+      private Expression Car(ContextBase Context)
+      {
+         var list = GetGenericValue<List>(Context, _carList);
+         if (list.Expressions.Count == 0)
+            throw new RuntimeException("Cannot get car of empty list", list, this);
+         return list.Expressions.First();
+      }
+
+      private readonly Symbol _cdrList = new Symbol("List");
+      private Expression Cdr(ContextBase Context)
+      {
+         var list = GetGenericValue<List>(Context, _cdrList);
+         if (list.Expressions.Count == 0)
+            throw new RuntimeException("Cannot get cdr of empty list", list, this);
+         return new List(list.Expressions.Skip(1).ToArray());
+      }
+
 
       private readonly Symbol _mouseMoveDeltaX = new Symbol("DeltaX");
       private readonly Symbol _mouseMoveDeltaY = new Symbol("DeltaY");
@@ -126,29 +285,6 @@ namespace MacroRuntime
                   }
          }
          return new Constant(true);
-      }
-
-      private Expression Begin(ContextBase Context)
-      {
-         return GetGenericValue<List>(Context, _varArg).Expressions.LastOrDefault();
-      }
-
-      private readonly Symbol _equalsLeft = new Symbol("Left");
-      private readonly Symbol _equalsRight = new Symbol("Right");
-      private Expression Equals(ContextBase Context)
-      {
-         return new Constant(Equals(GetGenericValue<Expression>(Context, _equalsLeft), GetGenericValue<Expression>(Context, _equalsRight)));
-      }
-
-      private readonly Symbol _decrementVariableSymbol = new Symbol("VariableSymbol");
-      private Expression Decrement(ContextBase Context)
-      {
-         var variableValue = GetGenericValue<Constant>(Context, _decrementVariableSymbol);
-         if(variableValue.Value is int)
-            return new Constant(((int)variableValue.Value) - 1);
-         if (variableValue.Value is double)
-            return new Constant(((double)variableValue.Value) - 1);
-         throw new RuntimeException("Can only decrement int or double", GetValue(new Symbol("dec")), Context);
       }
 
       private T GetConstantValue<T>(ContextBase Context, Symbol Symbol)
