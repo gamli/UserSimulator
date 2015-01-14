@@ -35,6 +35,9 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(new Constant(4711.1174));
          text.Append(" 4711.1174");
 
+         macro.Expressions.Add(new List(new Constant(4711), new Symbol("some-symbol")));
+         text.Append(" (4711 some-symbol)");
+
          macro.Expressions.Add(SpecialForms.If(new Constant(true), new Constant("Consequent"),new Constant("Alternative")));
          text.Append(" (if True \"Consequent\" \"Alternative\")");
 

@@ -5,7 +5,7 @@ using Macro;
 
 namespace MacroLanguage
 {
-   public class MacroPrinter : IVisitor
+   public class MacroPrinter : SpecialFormAwareVisitor
    {
       public static string Print(MacroBase Macro, bool Linebreaks)
       {
@@ -29,7 +29,7 @@ namespace MacroLanguage
          return _sb.ToString();
       }
 
-      public void VisitConstant(Constant Constant)
+      public override void VisitConstant(Constant Constant)
       {
          var value = Constant.Value;
 
@@ -42,19 +42,49 @@ namespace MacroLanguage
             Append(value == null ? "null" : value.ToString());
       }
 
-      public void VisitSymbol(Symbol Symbol)
+      public override void VisitSymbol(Symbol Symbol)
       {
          Append(Symbol.Value);
       }
 
-      public void VisitList(List List)
+      public override void VisitNil(List Nil)
       {
-         if (List.Expressions.Count == 0)
-         {
-            Append("nil");
-            return;
-         }
+         Append("nil");
+      }
 
+      public override void VisitDefinition(List Definition)
+      {
+         PrintList(Definition, 1);
+      }
+
+      public override void VisitIf(List If)
+      {
+         PrintList(If, 1);
+      }
+
+      public override void VisitLambda(List Lambda)
+      {
+         PrintList(Lambda, 1);
+      }
+
+      public override void VisitProcedureCall(List ProcedureCall)
+      {
+         PrintList(ProcedureCall, 1);
+      }
+
+      public override void VisitQuote(List Quote)
+      {
+         Append("'");
+         Quote.Expressions[1].Accept(this);
+      }
+
+      public override void VisitLoop(List Loop)
+      {
+         PrintList(Loop, 1);
+      }
+
+      public void PrintList(List List, int LinebreakIndex)
+      {
          Append("(");
 
          var index = 0;
@@ -62,20 +92,20 @@ namespace MacroLanguage
          {
             expression.Accept(this);
 
-            if (_linebreaks && index == 1)
+            if (_linebreaks && index == LinebreakIndex)
                IncreaseIndent();
 
-            if (_linebreaks && index >= 1)
+            if (_linebreaks && index >= LinebreakIndex)
                AppendNewLine();
             else
                Append(" ");
 
             index++;
          }
-         if(List.Expressions.Count != 0)
+         if (List.Expressions.Count != 0)
             List.Expressions.Last().Accept(this);
-         
-         if(_linebreaks && index > 1)
+
+         if (_linebreaks && index > LinebreakIndex)
             DecreaseIndent();
 
          Append(")");

@@ -107,6 +107,7 @@ namespace MacroRuntime_TEST
       }
 
       [TestMethod]
+      [ExcludeFromCodeCoverage]
       public void VarArg_TEST()
       {
          var context = new RuntimeContext(IntPtr.Zero);
