@@ -136,7 +136,7 @@ namespace UserSimulator
          _timer = new Timer(ScreenshotInterval);
          _timer.Elapsed += (Sender, Args) => UpdateWindowshot();
          _timer.Start();
-         ExpressionText = "(add 4700 11)";
+         ExpressionText = "(+ 4700 11)";
          EvaluateExpression();
       }
 

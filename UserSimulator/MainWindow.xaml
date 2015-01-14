@@ -41,8 +41,12 @@
          </Grid.RowDefinitions>
          <macroview:LISPishView Text="{Binding Model.ExpressionText}" Grid.Row="0" FontSize="14"/>
          <GridSplitter Grid.Row="1" Width="5" HorizontalAlignment="Stretch"/>
-         <TextBlock Text="{Binding Model.ParserError}" Grid.Row="2"/>
-         <TextBlock Text="{Binding Model.EvaluatedExpressionText}" Grid.Row="3"/>
+         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <TextBlock Text="{Binding Model.ParserError}"/>
+         </ScrollViewer>
+         <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <TextBlock Text="{Binding Model.EvaluatedExpressionText}"/>
+         </ScrollViewer>
       </Grid>
 
       <!-- second row -->
