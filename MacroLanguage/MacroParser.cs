@@ -19,8 +19,7 @@ namespace MacroLanguage
          {
             var firstMessage = ast.ParserMessages.First();
             throw
-               new ParseException(
-                  string.Join("\r\n", ast.ParserMessages.Select(ParserMessage => ParserMessage.Message)))
+               new ParseException(string.Join("\r\n", ast.ParserMessages.Select(ParserMessage => ParserMessage.Message)))
                   {
                      Line = firstMessage.Location.Line,
                      Column = firstMessage.Location.Column,

@@ -39,7 +39,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="2*"/>
          </Grid.RowDefinitions>
-         <macroview:LISPishView Text="{Binding Model.ExpressionText}" Grid.Row="0" FontSize="14"/>
+         <macroview:LISPishView Text="{Binding Model.ExpressionText}" ParserErrorPosition="{Binding Model.ParserErrorPosition}" Grid.Row="0" FontSize="14"/>
          <GridSplitter Grid.Row="1" Width="5" HorizontalAlignment="Stretch"/>
          <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <TextBlock Text="{Binding Model.ParserError}"/>

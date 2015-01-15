@@ -72,12 +72,14 @@ namespace UserSimulator
             { 
                try
                {
-                  Expression = (Expression)_parser.Parse(_expressionText);
+                  ParserErrorPosition = -1;
                   ParserError = "Parsing successfull";
+                  Expression = (Expression)_parser.Parse(_expressionText);
                }
                catch (ParseException e)
                {
-                  ParserError = "(LINE: " + e.Line + ") " + e.Message;
+                  ParserError = "(LINE: " + (e.Line + 1) + ", COLOUMN: " + (e.Column + 1) + ") " + e.Message;
+                  ParserErrorPosition = e.Position;
                }
             }
          }
@@ -87,6 +89,9 @@ namespace UserSimulator
       private string _parserError;
       public string ParserError { get { return _parserError; } set { SetPropertyValue(ref _parserError, value); } }
 
+      private int _parserErrorPosition;
+      public int ParserErrorPosition { get { return _parserErrorPosition; } set { SetPropertyValue(ref _parserErrorPosition, value); } }
+      
       public void EvaluateExpression()
       {
          try
