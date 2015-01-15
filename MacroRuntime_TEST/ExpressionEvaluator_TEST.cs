@@ -17,8 +17,8 @@ namespace MacroRuntime_TEST
       {
          AssertExpressionEvaluatesTo(new Constant(null), "null");
 
-         AssertExpressionEvaluatesTo(new Constant(true), "True");
-         AssertExpressionEvaluatesTo(new Constant(false), "False");
+         AssertExpressionEvaluatesTo(new Constant(true), "true");
+         AssertExpressionEvaluatesTo(new Constant(false), "false");
 
          AssertExpressionEvaluatesTo(new Constant("test with >> \" <<"), "\"test with >> \\\" <<\"");
 
@@ -48,8 +48,8 @@ namespace MacroRuntime_TEST
       [TestMethod]
       public void If_TEST()
       {
-         AssertExpressionEvaluatesTo(new Constant(1), "(if True (pause 1) (pause 2))");
-         AssertExpressionEvaluatesTo(new Constant(2), "(if False (pause 1) (pause 2))");
+         AssertExpressionEvaluatesTo(new Constant(1), "(if true (pause 1) (pause 2))");
+         AssertExpressionEvaluatesTo(new Constant(2), "(if false (pause 1) (pause 2))");
       }
 
       [TestMethod]

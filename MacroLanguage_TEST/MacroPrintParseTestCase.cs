@@ -18,10 +18,10 @@ namespace MacroLanguage_TEST
          text.Append(" null");
 
          macro.Expressions.Add(new Constant(true));
-         text.Append(" True");
+         text.Append(" true");
 
          macro.Expressions.Add(new Constant(false));
-         text.Append(" False");
+         text.Append(" false");
 
          macro.Expressions.Add(new List());
          text.Append(" nil");
@@ -39,10 +39,10 @@ namespace MacroLanguage_TEST
          text.Append(" (4711 some-symbol)");
 
          macro.Expressions.Add(SpecialForms.If(new Constant(true), new Constant("Consequent"),new Constant("Alternative")));
-         text.Append(" (if True \"Consequent\" \"Alternative\")");
+         text.Append(" (if true \"Consequent\" \"Alternative\")");
 
          macro.Expressions.Add(SpecialForms.Loop(new Constant(true), SpecialForms.ProcedureCall(new Symbol("fun"))));
-         text.Append(" (loop True (fun))");
+         text.Append(" (loop true (fun))");
 
          macro.Expressions.Add(SpecialForms.ProcedureCall(new Symbol("fun"), new Constant("arg")));
          text.Append(" (fun \"arg\")");

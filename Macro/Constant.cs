@@ -39,12 +39,14 @@ namespace Macro
       {
          return 
             Value == null 
-               ? "" 
+               ? "null" 
                : Value is string 
-                  ? "\"" + Value + "\"" 
+                  ? "\"" + ((string)Value).Replace("\"", "\\\"") + "\"" 
                   : Value is double 
                      ? ((double)Value).ToString(CultureInfo.InvariantCulture) 
-                     : Value.ToString();
+                     : Value is bool
+                        ? (bool)Value ? "true" : "false"
+                        :Value.ToString();
       }
    }
 }

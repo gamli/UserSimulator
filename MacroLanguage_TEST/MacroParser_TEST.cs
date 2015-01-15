@@ -72,6 +72,16 @@ namespace MacroLanguage_TEST
          {
             // everything ok
          }
+
+         try
+         {
+            _parser.Parse("(lambda (arg1 arg2) (+ arg1 arg2)");
+            Assert.Fail();
+         }
+         catch (ParseException)
+         {
+            // everything ok
+         }
       }
    }
 }

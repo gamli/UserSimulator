@@ -26,10 +26,10 @@ namespace MacroLanguage_TEST
       private void AssertOutput(MacroBase Macro, string ExpectedOutput, bool Linebreaks)
       {
          var output = Print(Macro, Linebreaks);
+         Assert.AreEqual(output, ExpectedOutput);
          var parser = new MacroParser();
          var parsedProgram = parser.Parse(output);
          Assert.AreEqual(Macro, parsedProgram);
-         Assert.AreEqual(output, ExpectedOutput);
       }
 
       private string Print(MacroBase Macro, bool Linebreaks)

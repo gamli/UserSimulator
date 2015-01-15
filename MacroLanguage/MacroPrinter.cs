@@ -31,15 +31,7 @@ namespace MacroLanguage
 
       public override void VisitConstant(Constant Constant)
       {
-         var value = Constant.Value;
-
-         var stringValue = value as string;
-         if (stringValue != null)
-            Append("\"" + stringValue.Replace("\"", "\\\"") + "\"");
-         else if (value is double)
-            Append(((double)value).ToString(CultureInfo.InvariantCulture));
-         else
-            Append(value == null ? "null" : value.ToString());
+         Append(Constant.ToString());
       }
 
       public override void VisitSymbol(Symbol Symbol)

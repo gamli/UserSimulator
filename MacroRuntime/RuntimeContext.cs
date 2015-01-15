@@ -18,7 +18,7 @@ namespace MacroRuntime
       public RuntimeContext(IntPtr TargetWindow)
       {
          _targetWindow = TargetWindow;
-
+         
          AddIntrinsicProcedure("=", Equal, _equalLeft, _equalRight);
 
          AddIntrinsicProcedure("constant?", IsConstant, _isConstantExpression);

@@ -77,7 +77,7 @@ namespace UserSimulator
                }
                catch (ParseException e)
                {
-                  ParserError = "(LINE: " + e.LineNumber + ") " + e.Message;
+                  ParserError = "(LINE: " + e.Line + ") " + e.Message;
                }
             }
          }
