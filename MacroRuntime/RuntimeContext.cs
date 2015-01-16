@@ -18,7 +18,9 @@ namespace MacroRuntime
       public RuntimeContext(IntPtr TargetWindow)
       {
          _targetWindow = TargetWindow;
-         
+
+         AddIntrinsicProcedure("eval", Eval, _evalExpression);
+
          AddIntrinsicProcedure("=", Equal, _equalLeft, _equalRight);
 
          AddIntrinsicProcedure("constant?", IsConstant, _isConstantExpression);
@@ -182,6 +184,12 @@ namespace MacroRuntime
                Equals(
                   GetGenericValue<Expression>(Context, _equalLeft),
                   GetGenericValue<Expression>(Context, _equalRight)));
+      }
+
+      private readonly Symbol _evalExpression = new Symbol("Expression");
+      private Expression Eval(ContextBase Context)
+      {
+         return new ExpressionEvaluator(Context).Evaluate(GetGenericValue<Expression>(Context, _evalExpression));
       }
 
       private readonly Symbol _absValue = new Symbol("Value");

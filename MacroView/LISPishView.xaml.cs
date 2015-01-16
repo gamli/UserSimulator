@@ -26,7 +26,7 @@ namespace MacroView
    /// </summary>
    public partial class LISPishView
    {
-      private ParserErrorImage _parserErrorImage = new ParserErrorImage();
+      private readonly ParserErrorImage _parserErrorImage = new ParserErrorImage();
 
       public LISPishView()
       {
