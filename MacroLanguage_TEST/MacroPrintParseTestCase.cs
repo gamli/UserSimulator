@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Macro;
+using MacroLanguage;
 
 namespace MacroLanguage_TEST
 {
@@ -13,6 +14,18 @@ namespace MacroLanguage_TEST
          var macro = new List();
          macro.Expressions.Add(new Symbol("funTEST"));
          text.Append("(funTEST");
+
+         macro.Expressions.Add(new Symbol("-"));
+         text.Append(" -");
+
+         macro.Expressions.Add(new Symbol("4711ASymbolStartingWithANumber"));
+         text.Append(" 4711ASymbolStartingWithANumber");
+
+         const string CRAZY_SYMBOL = IronyLispishGrammar.EXTRA_SYMBOL_CHARACTERS + "ASymbolWithSpecial" +
+                                    IronyLispishGrammar.EXTRA_SYMBOL_CHARACTERS + "Characters" +
+                                    IronyLispishGrammar.EXTRA_SYMBOL_CHARACTERS;
+         macro.Expressions.Add(new Symbol(CRAZY_SYMBOL));
+         text.Append(" " + CRAZY_SYMBOL);
 
          macro.Expressions.Add(new Constant(null));
          text.Append(" null");
@@ -34,6 +47,12 @@ namespace MacroLanguage_TEST
 
          macro.Expressions.Add(new Constant(4711.1174));
          text.Append(" 4711.1174");
+
+         macro.Expressions.Add(new Constant(-4711));
+         text.Append(" -4711");
+
+         macro.Expressions.Add(new Constant(-4711.1174));
+         text.Append(" -4711.1174");
 
          macro.Expressions.Add(new List(new Constant(4711), new Symbol("some-symbol")));
          text.Append(" (4711 some-symbol)");

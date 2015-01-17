@@ -59,7 +59,7 @@ namespace MacroRuntime_TEST
          sw.Start();
          Assert.AreEqual(new Constant(100), evaluator.Evaluate(ParseExpression("(pause 100)")));
          sw.Stop();
-         Assert.IsTrue(sw.ElapsedMilliseconds >= 100);
+         Assert.IsTrue(sw.ElapsedMilliseconds >= 99); // the sleep function is not that exact
 
          // TODO this can really hurt: Assert.AreEqual(true, evaluator.Evaluate(ParseExpression("(click)")));
 
