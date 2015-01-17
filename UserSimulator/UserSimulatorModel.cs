@@ -117,7 +117,10 @@ namespace UserSimulator
                   };
             errorGenerator(e);
             EvaluatedExpressionText = sb.ToString();
-            EvaluationErrorPosition = 10;
+            var innermostRuntimeException = e;
+            while (innermostRuntimeException.InnerException is RuntimeException)
+               innermostRuntimeException = (RuntimeException) innermostRuntimeException.InnerException;
+            EvaluationErrorPosition = (int)innermostRuntimeException.Macro.Data["TextLocation"];
          }
       }
 

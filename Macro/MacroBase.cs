@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Common;
 
@@ -6,6 +7,13 @@ namespace Macro
 {
    public abstract class MacroBase : NotifyPropertyChangedBase
    {
+      protected MacroBase()
+      {
+         Data = new Dictionary<string, object>();
+      }
+
+      public Dictionary<string, object> Data { get; private set; }
+
       public event EventHandler MacroChanged;
       protected void OnMacroChanged()
       {

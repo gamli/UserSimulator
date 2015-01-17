@@ -34,6 +34,7 @@ namespace MacroLanguage
       [ExcludeFromCodeCoverage]
       private MacroBase BuildMacroFromAst(ParseTreeNode AstNode)
       {
+         MacroBase macro;
          switch (AstNode.Term.Name)
          {
             case "expression":
@@ -42,26 +43,39 @@ namespace MacroLanguage
                switch (AstNode.ChildNodes[0].Token.Text)
                {
                   case "nil":
-                     return new List();
+                     macro = new List();
+                     break;
                   case "null":
-                     return new Constant(null);
+                     macro = new Constant(null);
+                     break;
                   default:
                      throw new ParseException("Unknown constant  >> " + AstNode.Token.Text + " <<");
                }
+               break;
             case "boolean":
-               return new Constant(AstNode.ChildNodes.Single().Token.Text == "true");
+               macro = new Constant(AstNode.ChildNodes.Single().Token.Text == "true");
+               break;
             case "string":
             case "number":
-               return new Constant(AstNode.Token.Value);
+               macro = new Constant(AstNode.Token.Value);
+               break;
             case "list":
-               return new List(AstNode.ChildNodes[1].ChildNodes.Select(BuildMacroFromAst).Cast<Expression>().ToArray());
+               macro = new List(AstNode.ChildNodes[1].ChildNodes.Select(BuildMacroFromAst).Cast<Expression>().ToArray());
+               break;
             case "symbol":
-               return new Symbol(AstNode.Token.Text);
+               macro = new Symbol(AstNode.Token.Text);
+               break;
             case "quoted-expression-alias":
-               return SpecialForms.Quote((Expression) BuildMacroFromAst(AstNode.ChildNodes[1]));
+               macro = SpecialForms.Quote((Expression)BuildMacroFromAst(AstNode.ChildNodes[1]));
+               break;
             default:
                throw new ParseException("Unknown construct in ast node >> " + AstNode + " <<");
          }
+
+         macro.Data.Add("TextLocation", AstNode.Span.Location.Position);
+         macro.Data.Add("TextLength", AstNode.Span.Length);
+
+         return macro;
       }
 
       private readonly Parser _parser;
