@@ -5,7 +5,6 @@ using System.Timers;
 using System.Windows;
 using Common;
 using IO;
-using Macro;
 using MacroLanguage;
 using MacroRuntime;
 using Expression = Macro.Expression;

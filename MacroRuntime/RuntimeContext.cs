@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
@@ -66,7 +65,8 @@ namespace MacroRuntime
       private void AddDerivedProcedure(string Symbol, string Body, params string[] FormalArguments)
       {
          var body = (Expression)_parser.Parse(Body);
-         Expression[] formalArguments = FormalArguments.Select(FormArg => new Symbol(FormArg)).ToArray();
+         var formalArguments = FormalArguments.Select(FormArg => new Symbol(FormArg)).ToArray();
+         // ReSharper disable once CoVariantArrayConversion - this is ok, since the constructor uses the array read only
          var lambda = SpecialForms.Lambda(new List(formalArguments), body);
          DefineValue(new Symbol(Symbol), ExpressionEvaluator.Evaluate(lambda, this));
       }

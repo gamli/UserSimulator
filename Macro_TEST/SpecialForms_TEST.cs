@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using Macro;
+﻿using Macro;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Macro_TEST

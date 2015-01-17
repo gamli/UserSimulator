@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Linq.Expressions;
 using Macro;
 using MacroViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

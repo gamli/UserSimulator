@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace Macro
+﻿namespace Macro
 {
    public class MacroCloner
    {
@@ -25,7 +23,7 @@ namespace Macro
          {
             var clone = new List();
             foreach (var expression in List.Expressions)
-               clone.Expressions.Add(MacroCloner.Clone(expression));
+               clone.Expressions.Add(Clone(expression));
             Clone = clone;
          }
 

@@ -2,7 +2,6 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:macroview="clr-namespace:MacroView;assembly=MacroView"
-        xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         Title="MainWindow" Height="350" Width="525">
    <Grid>
       

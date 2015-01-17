@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Channels;
-using System.Text;
-using System.Threading.Tasks;
-using Irony;
+﻿using Irony;
 using Irony.Parsing;
-using Irony.Parsing.Construction;
 
 namespace MacroLanguage
 {
