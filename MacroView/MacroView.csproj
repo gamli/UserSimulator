@@ -178,11 +178,6 @@
     <Resource Include="Resources\LambdaIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\LispishSyntaxDefinition.xshd">
-      <SubType>Designer</SubType>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\ParserErrorIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -72,8 +72,8 @@ namespace UserSimulator
                try
                {
                   ParserErrorPosition = -1;
-                  ParserError = "Parsing successfull";
                   Expression = (Expression)_parser.Parse(_expressionText);
+                  ParserError = "Parsing successfull";
                }
                catch (ParseException e)
                {
@@ -95,6 +95,7 @@ namespace UserSimulator
       {
          try
          {
+            EvaluationErrorPosition = -1;
             EvaluatedExpressionText = "evaluating ...";
             EvaluatedExpression = new ExpressionEvaluator(new RuntimeContext(LastWindow)).Evaluate(Expression);
             EvaluatedExpressionText = EvaluatedExpression.ToString();
@@ -116,6 +117,7 @@ namespace UserSimulator
                   };
             errorGenerator(e);
             EvaluatedExpressionText = sb.ToString();
+            EvaluationErrorPosition = 10;
          }
       }
 
@@ -124,6 +126,9 @@ namespace UserSimulator
 
       private string _evaluatedExpressionText;
       public string EvaluatedExpressionText { get { return _evaluatedExpressionText; } set { SetPropertyValue(ref _evaluatedExpressionText, value); } }
+
+      private int _evaluationErrorPosition;
+      public int EvaluationErrorPosition { get { return _evaluationErrorPosition; } set { SetPropertyValue(ref _evaluationErrorPosition, value); } }
 
       public UserSimulatorModel(int ScreenshotInterval = 100)
       {
