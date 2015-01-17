@@ -32,7 +32,7 @@ namespace MacroLanguage
          const string EXTRA_SYMBOL_CHARACTERS = "._+*/=<>:?!";
          var symbol = new IdentifierTerminal("symbol", EXTRA_SYMBOL_CHARACTERS + Strings.DecimalDigits + "-", EXTRA_SYMBOL_CHARACTERS);
 
-         var quotedExpressionAlias = new NonTerminal("quoted-expression-alias", (Sender, Args) => Console.Write("oO")) { Rule = ToTerm("'") + expression };
+         var quotedExpressionAlias = new NonTerminal("quoted-expression-alias") { Rule = ToTerm("'") + expression };
 
          expression.Rule = constant | booleanConstant | stringConstant | numberConstant | list | symbol | quotedExpressionAlias;
 
