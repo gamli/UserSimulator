@@ -5,6 +5,7 @@ using System.Timers;
 using System.Windows;
 using Common;
 using IO;
+using Macro;
 using MacroLanguage;
 using MacroRuntime;
 using Expression = Macro.Expression;
@@ -56,8 +57,10 @@ namespace UserSimulator
       }
       private void HandleExpressionChanged()
       {
+         if(Expression == null)
+            return;
          // ReSharper disable once ExplicitCallerInfoArgument
-         SetPropertyValue(ref _expressionText, MacroPrinter.Print(_expression, true), "ExpressionText");
+         SetPropertyValue(ref _expressionText, MacroPrinter.Print(Expression, true), "ExpressionText");
       }
 
 
@@ -77,8 +80,9 @@ namespace UserSimulator
                }
                catch (ParseException e)
                {
-                  ParserError = "(LINE: " + (e.Line + 1) + ", COLOUMN: " + (e.Column + 1) + ") " + e.Message;
+                  Expression = null;
                   ParserErrorPosition = e.Position;
+                  ParserError = "(LINE: " + (e.Line + 1) + ", COLOUMN: " + (e.Column + 1) + ") " + e.Message;
                }
             }
          }
@@ -97,8 +101,8 @@ namespace UserSimulator
          {
             EvaluationErrorPosition = -1;
             EvaluatedExpressionText = "evaluating ...";
-            EvaluatedExpression = new ExpressionEvaluator(new RuntimeContext(LastWindow)).Evaluate(Expression);
-            EvaluatedExpressionText = EvaluatedExpression.ToString();
+            EvaluatedExpression = Expression == null ? null : new ExpressionEvaluator(new RuntimeContext(LastWindow)).Evaluate(Expression);
+            EvaluatedExpressionText = EvaluatedExpression == null ? null : EvaluatedExpression.ToString();
          }
          catch (RuntimeException e)
          {
@@ -112,7 +116,10 @@ namespace UserSimulator
                      sb.Append(Exception.Message);
                      var runtimeException = Exception as RuntimeException;
                      if(runtimeException != null)
-                        sb.Append(" at expression >> ").Append(runtimeException.Macro.ToString()).Append(" <<");
+                     {
+                        var macro = runtimeException.Macro;
+                        sb.Append(" at expression >> ").Append(macro != null ? macro.ToString() : "null").Append(" <<");
+                     }
                      sb.Append("\n");
                   };
             errorGenerator(e);

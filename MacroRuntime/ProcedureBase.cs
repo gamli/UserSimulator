@@ -41,7 +41,7 @@ namespace MacroRuntime
                      context);
 
             var fixedArgumentSymbols = argumentSymbols.Take(argumentSymbols.Count - 1);
-            foreach (var symbolAndArgumentValue in fixedArgumentSymbols.Zip(argumentValues, Tuple.Create))
+            foreach (var symbolAndArgumentValue in fixedArgumentSymbols.Zip<Symbol, Expression, Tuple<Symbol, Expression>>(argumentValues, Tuple.Create))
                context.DefineValue(symbolAndArgumentValue.Item1, symbolAndArgumentValue.Item2);
             
             var varArgValues = new List();
@@ -50,7 +50,7 @@ namespace MacroRuntime
             context.DefineValue(new Symbol("."), varArgValues);
          }
          else
-            foreach (var symbolAndArgumentValue in argumentSymbols.Zip(argumentValues, Tuple.Create))
+            foreach (var symbolAndArgumentValue in argumentSymbols.Zip<Symbol, Expression, Tuple<Symbol, Expression>>(argumentValues, Tuple.Create))
                context.DefineValue(symbolAndArgumentValue.Item1, symbolAndArgumentValue.Item2);
 
          return ExecuteCall(context);

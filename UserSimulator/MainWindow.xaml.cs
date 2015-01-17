@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
+using System.Windows.Input;
 
 namespace UserSimulator
 {
@@ -17,6 +18,12 @@ namespace UserSimulator
          _model = new UserSimulatorModel();
          var viewModel = new UserSimulatorVM(_model);
          DataContext = viewModel;
+
+         PreviewKeyUp += (Sender, Args) =>
+         {
+            if (Args.Key == Key.Enter && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+               _model.EvaluateExpression();
+         };
 
          InitializeProgram();         
       }

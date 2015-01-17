@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Linq;
+using System.Globalization;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Xml;
 using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Highlighting;
-using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Rendering;
 
 namespace MacroView
@@ -25,11 +23,13 @@ namespace MacroView
       {
          InitializeComponent();
 
-         _editor.PreviewKeyUp += (Sender, Args) =>
+         _editor.PreviewKeyDown += (Sender, Args) =>
             {
-               if (Args.Key == Key.Enter && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+               if ((Args.Key == Key.F || Args.Key == Key.Enter) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                {
-                  Text = _editor.Text;
+                  var editorText = _editor.Text;
+                  Text = "";
+                  Text = editorText;
                   Args.Handled = true;
                }
             };
@@ -38,7 +38,9 @@ namespace MacroView
                Text = _editor.Text;
             };
 
-         _editor.TextArea.TextView.LineTransformers.Add(_syntaxHighlighter);
+         var textView = _editor.TextArea.TextView;
+         textView.LineTransformers.Add(_syntaxHighlighter);
+         textView.ElementGenerators.Add(new ImageConstant());
       }
 
       public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
@@ -129,7 +131,9 @@ namespace MacroView
             _quoteSyntax = new Regex(@"'"),
             _lambdaFormalArgs = new Regex(@"lambda\s*\(.*\)"),
 
-            _specialFunctions = new Regex(@"eval|=|constant\?|list\?|symbol\?|<=|>=|<|>|or|and|\+|-|\*|/|abs|car|cdr|append|move|position|pause|click|windowshot|list|last|begin"),
+            _specialFunctions =
+               new Regex(
+                  @"eval|=|constant\?|list\?|symbol\?|<=|>=|<|>|or|and|\+|-|\*|/|abs|car|cdr|append|move|position|pause|click|windowshot|list|last|begin"),
 
             _booleanTrue = new Regex(@"true"),
             _booleanFalse = new Regex(@"false"),
@@ -166,10 +170,10 @@ namespace MacroView
                var shiftedPosition = Math.Max(ParserErrorPosition - 1, 0);
                var shiftedPositionInLine = shiftedPosition - Line.Offset;
                StyleLinePart(
-                  shiftedPosition, 
-                  Line.Length - shiftedPositionInLine, 
-                  FontStyles.Italic, 
-                  FontWeights.Bold, 
+                  shiftedPosition,
+                  Line.Length - shiftedPositionInLine,
+                  FontStyles.Italic,
+                  FontWeights.Bold,
                   Brushes.Red,
                   Brushes.Yellow);
             }
@@ -259,6 +263,74 @@ namespace MacroView
                Index < 0 ||
                Index >= Text.Length ||
                _separator.IsMatch(Text[Index].ToString());
+         }
+      }
+      private sealed class ImageConstant : VisualLineElementGenerator
+      {
+         readonly static Regex IMAGE_REGEX = new Regex(@"""([0-9A-F]*)""");
+
+         Match FindMatch(int StartOffset)
+         {
+            var endOffset = CurrentContext.VisualLine.LastDocumentLine.EndOffset;
+            var document = CurrentContext.Document;
+            var relevantText = document.GetText(StartOffset, endOffset - StartOffset);
+            return IMAGE_REGEX.Match(relevantText);
+         }
+
+         public override int GetFirstInterestedOffset(int StartOffset)
+         {
+            var match = FindMatch(StartOffset);
+            return match.Success ? (StartOffset + match.Index) + 1 : -1;
+         }
+
+         public override VisualLineElement ConstructElement(int Offset)
+         {
+            var match = FindMatch(Offset - 1);
+            if (match.Success && match.Index == 0)
+            {
+               var hexValue = match.Groups[1].Value;
+               var bitmap = LoadBitmapFromHexValue(hexValue);
+               if (bitmap != null)
+               {
+                  var image =
+                     new Image
+                     {
+                        Source = bitmap,
+                        MaxWidth = 18,
+                        MaxHeight = 18,
+                        ToolTip =
+                           new Image { Source = bitmap }
+                     };
+                  return new InlineObjectElement(match.Length - 2, image);
+               }
+            }
+            return null;
+         }
+
+         static BitmapImage LoadBitmapFromHexValue(string HexValue)
+         {
+            try
+            {
+               var binaryValue = new byte[HexValue.Length / 2];
+               for (var i = 0; i < HexValue.Length; i += 2)
+                  binaryValue[i / 2] = byte.Parse(HexValue.Substring(i, 2), NumberStyles.AllowHexSpecifier);
+
+               using (var stream = new MemoryStream())
+               {
+                  stream.Write(binaryValue, 0, binaryValue.Length);
+                  var bitmap = new BitmapImage();
+                  bitmap.BeginInit();
+                  bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                  bitmap.StreamSource = stream;
+                  bitmap.EndInit();
+                  bitmap.Freeze();
+                  return bitmap;
+               }
+            }
+            catch (Exception) // don't care
+            {
+               return null;
+            }
          }
       }
    }
