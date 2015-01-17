@@ -40,6 +40,7 @@ namespace MacroRuntime
 
          AddIntrinsicProcedure("car", Car, _carList);
          AddIntrinsicProcedure("cdr", Cdr, _cdrList);
+         AddIntrinsicProcedure("append", Append, _appendListLeft, _appendListRight);
 
          AddIntrinsicProcedure("move", MouseMove, _mouseMoveDeltaX, _mouseMoveDeltaY);
          AddIntrinsicProcedure("position", MousePosition, _mousePositionX, _mousePositionY);
@@ -47,6 +48,7 @@ namespace MacroRuntime
          AddIntrinsicProcedure("click", LeftClick);
          AddIntrinsicProcedure("windowshot", Windowshot, _windowshotX, _windowshotY, _windowshotImageUrl);
 
+         AddDerivedProcedure("list", ".", ".");
          AddDerivedProcedure("last", "(if (and list (cdr list)) (last (cdr list)) (car list))", "list");
          AddDerivedProcedure("begin", "(last .)", ".");
          AddDerivedProcedure("<=", "(or (< left right) (= left right))", "left", "right");
@@ -215,6 +217,15 @@ namespace MacroRuntime
          if (list.Expressions.Count == 0)
             throw new RuntimeException("Cannot get cdr of empty list", list, this);
          return new List(list.Expressions.Skip(1).ToArray());
+      }
+
+      private readonly Symbol _appendListLeft = new Symbol("ListLeft");
+      private readonly Symbol _appendListRight = new Symbol("ListRight");
+      private Expression Append(ContextBase Context)
+      {
+         var listLeft = GetGenericValue<List>(Context, _appendListLeft);
+         var listRight = GetGenericValue<List>(Context, _appendListRight);
+         return new List(listLeft.Expressions.Concat(listRight.Expressions).ToArray());
       }
 
 
