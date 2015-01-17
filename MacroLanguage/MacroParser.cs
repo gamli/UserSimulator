@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Irony.Parsing;
 using Macro;
@@ -30,6 +31,7 @@ namespace MacroLanguage
          return macro;
       }
 
+      [ExcludeFromCodeCoverage]
       private MacroBase BuildMacroFromAst(ParseTreeNode AstNode)
       {
          switch (AstNode.Term.Name)

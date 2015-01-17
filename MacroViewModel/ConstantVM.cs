@@ -3,6 +3,7 @@ using Macro;
 
 namespace MacroViewModel
 {
+   [ExcludeFromCodeCoverage]
    public class ConstantVM : ExpressionVM
    {
       public new Constant Model
@@ -10,7 +11,6 @@ namespace MacroViewModel
          get { return (Constant) base.Model; }
       }
 
-      [ExcludeFromCodeCoverage]
       public ConstantVM(Constant Model)
          : base(Model)
       {

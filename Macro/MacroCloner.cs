@@ -7,16 +7,16 @@
       {
          var programCloneVisitor = new CloneVisitor();
          Macro.Accept(programCloneVisitor);
-         return (TMacro)programCloneVisitor.Clone;
+         return (TMacro)programCloneVisitor.ClonedMacro;
       }
 
       private class CloneVisitor : IVisitor
       {
-         public MacroBase Clone { get; private set; }
+         public MacroBase ClonedMacro { get; private set; }
 
          public void VisitConstant(Constant Constant)
          {
-            Clone = new Constant(Constant.Value);
+            ClonedMacro = new Constant(Constant.Value);
          }
 
          public void VisitList(List List)
@@ -24,12 +24,12 @@
             var clone = new List();
             foreach (var expression in List.Expressions)
                clone.Expressions.Add(Clone(expression));
-            Clone = clone;
+            ClonedMacro = clone;
          }
 
          public void VisitSymbol(Symbol Symbol)
          {
-            Clone = new Symbol(Symbol.Value);
+            ClonedMacro = new Symbol(Symbol.Value);
          }
       }
    }
