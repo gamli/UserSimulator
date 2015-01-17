@@ -154,3 +154,12 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+/packages/Irony.0.9.0/tools/Irony.Interpreter.dll
+/packages/Irony.0.9.0/lib/net45
+/packages/Irony.0.9.0/lib/net45/Irony.dll
+/packages/Irony.0.9.0/lib/net45/Irony.xml
+/packages/Irony.0.9.0/tools
+/packages/Irony.0.9.0/tools/FastColoredTextBox.dll
+/packages/Irony.0.9.0/tools/Irony.dll
+/packages/Irony.0.9.0/tools/Irony.GrammarExplorer.exe
+/packages/Irony.0.9.0/tools/Irony.GrammarExplorer.exe.config
