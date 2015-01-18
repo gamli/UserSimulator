@@ -5,6 +5,11 @@ namespace MacroRuntime_TEST
 {
    class MockContext : ContextBase
    {
+      protected override bool SymbolNotFoundIsValueDefined(Symbol Symbol)
+      {
+         return true;
+      }
+
       protected override void SymbolNotFoundSetValue(Symbol Symbol, Expression Value)
       {
          SymbolNotFundSetValueValue = Value;

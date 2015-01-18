@@ -71,17 +71,22 @@ namespace MacroRuntime
          DefineValue(new Symbol(Symbol), ExpressionEvaluator.Evaluate(lambda, this));
       }
 
+      protected override bool SymbolNotFoundIsValueDefined(Symbol Symbol)
+      {
+         return false;
+      }
+
       [ExcludeFromCodeCoverage]
       protected override void SymbolNotFoundSetValue(Symbol Symbol, Expression Value)
       {
-         var exceptionMessage = "SetValue: Symbol >>" + Symbol.Value + "<< is not defined (did you forget to 'define' first?)";
+         var exceptionMessage = "SetValue: Symbol >>" + Symbol.Value + "<< is not defined (did you forget to define first?)";
          throw new RuntimeException(exceptionMessage, Symbol, this);
       }
 
       [ExcludeFromCodeCoverage]
       protected override Expression SymbolNotFoundGetValue(Symbol Symbol)
       {
-         var exceptionMessage = "GetValue: Symbol >>" + Symbol.Value + "<< is not defined (did you forget to 'define' first?)";
+         var exceptionMessage = "GetValue: Symbol >>" + Symbol.Value + "<< is not defined (did you forget to define first?)";
          throw new RuntimeException(exceptionMessage, Symbol, this);
       }
 

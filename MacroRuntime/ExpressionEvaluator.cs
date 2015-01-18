@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Macro;
 
@@ -12,11 +14,9 @@ namespace MacroRuntime
       }
 
       private readonly ExpressionVisitor _visitor;
-      private readonly ContextBase _context;
 
       public ExpressionEvaluator(ContextBase Context)
       {
-         _context = Context;
          _visitor = new ExpressionVisitor(Context);
       }
 
@@ -24,25 +24,29 @@ namespace MacroRuntime
       {
          try
          {
-            Expression.Accept(_visitor);
+            _visitor.Value = null;
+            _visitor.Continuation = Expression;
+            while (_visitor.Value == null)
+               _visitor.Continuation.Accept(_visitor);
             return _visitor.Value;
          }
          catch (Exception e)
          {
             Logger.Instance.Log("ExpressionEvaluator.Evaluate: " + e.Message);
-            throw new RuntimeException("Exception during evaluation", Expression, _context, e);
+            throw new RuntimeException("Exception during evaluation", _visitor.Value ?? _visitor.Continuation, _visitor.Context, e);
          }
       }
 
       private class ExpressionVisitor : SpecialFormAwareVisitor
       {
-         public Expression Value { get; private set; }
+         public Expression Value { get; set; }
+         public Expression Continuation { get; set; }
 
-         private readonly ContextBase _context;
+         public ContextBase Context { get; private set; }
 
          public ExpressionVisitor(ContextBase Context)
          {
-            _context = Context;
+            this.Context = Context;
          }
 
          public override void VisitConstant(Constant Constant)
@@ -57,30 +61,106 @@ namespace MacroRuntime
 
          public override void VisitDefinition(List Definition)
          {
-            var evaluatedExpression = EvaluateExpression<Expression>(Definition.Expressions[2], _context);
-            _context.DefineValue((Symbol)Definition.Expressions[1], evaluatedExpression); // TODO is cast ok?
+            var evaluatedExpression = EvaluateExpression<Expression>(Definition.Expressions[2], Context);
+            Context.DefineValue((Symbol)Definition.Expressions[1], evaluatedExpression); // TODO is cast ok?
             Value = evaluatedExpression;
          }
 
          public override void VisitIf(List If)
          {
-            var condition = EvaluateExpression<Expression>(If.Expressions[1], _context);
-            var consequentOrAlternative = TypeConversion.ConvertToBoolean(condition, _context) ? If.Expressions[2] : If.Expressions[3];
-            Value = EvaluateExpression<Expression>(consequentOrAlternative, _context);
+            var condition = EvaluateExpression<Expression>(If.Expressions[1], Context);
+            Continuation = TypeConversion.ConvertToBoolean(condition, Context) ? If.Expressions[2] : If.Expressions[3];
          }
 
          public override void VisitLambda(List Lambda)
          {
-            Value = new Procedure { DefiningContext = _context, Lambda = Lambda, FormalArguments = (List)Lambda.Expressions[1] };// TODO is cast ok?
+            Value = new Procedure
+            {
+               DefiningContext = Context,
+               Lambda = Lambda,
+               FormalArguments = (List)Lambda.Expressions[1]
+            }; // TODO is cast ok?
          }
 
          public override void VisitProcedureCall(List ProcedureCall)
          {
-            var procedure = EvaluateExpression<ProcedureBase>(ProcedureCall.Expressions[0], _context);
-            var evaluatedArgs =
-               new List(ProcedureCall.Expressions.Skip(1).Select(
-                  Expression => EvaluateExpression<Expression>(Expression, _context)).ToArray());
-            Value = procedure.Call(evaluatedArgs);
+            var procedureBase = EvaluateExpression<ProcedureBase>(ProcedureCall.Expressions[0], Context);
+            var evaluatedArguments = 
+               ProcedureCall.Expressions.Skip(1).Select(
+                  Expression => EvaluateExpression<Expression>(Expression, Context)).ToList();
+
+            InitializeProcedureCallContext(ProcedureCall, procedureBase, evaluatedArguments);
+
+            var procedure = procedureBase as Procedure;
+            if (procedure != null)
+               Continuation = procedure.Lambda.Expressions[2];
+            else
+               Value = ((IntrinsicProcedure)procedureBase).Function(Context);
+         }
+
+         private void InitializeProcedureCallContext(List ProcedureCall, ProcedureBase Procedure, IEnumerable<Expression> EvaluatedArguments)
+         {
+            var callerContext = Context;
+
+            Context = new HierarchicalContext(Procedure.DefiningContext);
+
+            var argumentSymbols = Procedure.FormalArguments.Expressions.Cast<Symbol>().ToList();
+            var argumentValues = EvaluatedArguments.ToList();
+
+            if (IsVarargProcedure(argumentSymbols))
+            {
+               if (argumentValues.Count < argumentSymbols.Count - 1)
+                  throw
+                     new RuntimeException(
+                        string.Format("Expected minimum of {0} argument(s) but got {1}", argumentSymbols.Count - 1,
+                           argumentValues.Count),
+                        ProcedureCall,
+                        callerContext);
+
+               var fixedArgumentCount = Procedure.FormalArguments.Expressions.Count - 1;
+               SetVarargProcedureArguments(
+                  argumentSymbols, 
+                  argumentValues.Take(fixedArgumentCount),
+                  argumentValues.Skip(fixedArgumentCount));
+            }
+            else
+            {
+
+               if (argumentValues.Count != argumentSymbols.Count && !IsVarargProcedure(argumentSymbols))
+                  throw
+                     new RuntimeException(
+                        string.Format("Expected {0} argument(s) but got {1}",
+                           Procedure.FormalArguments.Expressions.Count, argumentValues.Count),
+                        ProcedureCall,
+                        callerContext);
+
+               SetFixedargProcedureArguments(argumentSymbols, argumentValues);
+            }
+         }
+
+         private void SetFixedargProcedureArguments(
+            IEnumerable<Symbol> ArgumentSymbols, 
+            IEnumerable<Expression> ArgumentValues)
+         {
+            foreach (var symbolAndArgumentValue in ArgumentSymbols.Zip(ArgumentValues, Tuple.Create))
+               Context.DefineValue(symbolAndArgumentValue.Item1, symbolAndArgumentValue.Item2);
+         }
+
+         private void SetVarargProcedureArguments(
+            IEnumerable<Symbol> ArgumentSymbols, 
+            IEnumerable<Expression> FixedArgumentValues,
+            IEnumerable<Expression> VariableArgumentValues)
+         {
+            foreach (var symbolAndArgumentValue in FixedArgumentValues.Zip(ArgumentSymbols, Tuple.Create))
+               Context.DefineValue(symbolAndArgumentValue.Item2, symbolAndArgumentValue.Item1);
+
+            var variableArgumentsList = new List(VariableArgumentValues.ToArray());
+            Context.DefineValue(new Symbol("."), variableArgumentsList);
+         }
+
+         private static bool IsVarargProcedure(List<Symbol> ArgumentSymbols)
+         {
+            return (ArgumentSymbols.Count != 0 && ArgumentSymbols.Last().Value == ".");
          }
 
          public override void VisitQuote(List Quote)
@@ -90,15 +170,17 @@ namespace MacroRuntime
 
          public override void VisitLoop(List Loop)
          {
-            while (TypeConversion.ConvertToBoolean(EvaluateExpression<Expression>(Loop.Expressions[1], _context), _context))
-               Value = EvaluateExpression<Expression>(Loop.Expressions[2], _context);
+            var context = Context;
+
+            while (TypeConversion.ConvertToBoolean(EvaluateExpression<Expression>(Loop.Expressions[1], context), context))
+               Value = EvaluateExpression<Expression>(Loop.Expressions[2], context);
          }
 
          public override void VisitSymbol(Symbol Symbol)
          {
-            Value = _context.GetValue(Symbol);
+            Value = Context.GetValue(Symbol);
          }
-         
+
 
          private T EvaluateExpression<T>(Expression Expression, ContextBase Context)
             where T : Expression

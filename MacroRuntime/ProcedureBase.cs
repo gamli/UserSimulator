@@ -12,52 +12,7 @@ namespace MacroRuntime
 
       private List _formalArguments;
       public List FormalArguments { get { return _formalArguments; } set { SetPropertyValue(ref _formalArguments, value); } }
-
-      public Expression Call(List ArgumentValues)
-      {
-         var context = new HierarchicalContext(DefiningContext);
-
-         var argumentSymbols = FormalArguments.Expressions.Cast<Symbol>().ToList();
-         
-         var argumentValues = ArgumentValues.Expressions;
-         
-         var isVarargProcedure =
-            (argumentSymbols.Count != 0 && argumentSymbols.Last().Value == ".");
-
-         if (argumentValues.Count != argumentSymbols.Count && !isVarargProcedure)
-            throw 
-               new RuntimeException(
-                  string.Format("Expected {0} argument(s) but got {1}", FormalArguments.Expressions.Count, argumentValues.Count),
-                  this,
-                  context);
-
-         if (isVarargProcedure)
-         {
-            if (argumentValues.Count < argumentSymbols.Count - 1)
-               throw
-                  new RuntimeException(
-                     string.Format("Expected minimum of {0} argument(s) but got {1}", argumentSymbols.Count - 1, argumentValues.Count),
-                     this,
-                     context);
-
-            var fixedArgumentSymbols = argumentSymbols.Take(argumentSymbols.Count - 1);
-            foreach (var symbolAndArgumentValue in fixedArgumentSymbols.Zip<Symbol, Expression, Tuple<Symbol, Expression>>(argumentValues, Tuple.Create))
-               context.DefineValue(symbolAndArgumentValue.Item1, symbolAndArgumentValue.Item2);
-            
-            var varArgValues = new List();
-            foreach (var varArgValue in argumentValues.Skip(argumentSymbols.Count - 1))
-               varArgValues.Expressions.Add(varArgValue);
-            context.DefineValue(new Symbol("."), varArgValues);
-         }
-         else
-            foreach (var symbolAndArgumentValue in argumentSymbols.Zip<Symbol, Expression, Tuple<Symbol, Expression>>(argumentValues, Tuple.Create))
-               context.DefineValue(symbolAndArgumentValue.Item1, symbolAndArgumentValue.Item2);
-
-         return ExecuteCall(context);
-      }
-
-      protected abstract Expression ExecuteCall(ContextBase Context);
-
+      
       // TODO extract superclass from MacroBase to make this dummy implementation unnecessary
       [ExcludeFromCodeCoverage]
       public override void Accept(IVisitor Visitor)

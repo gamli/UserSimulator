@@ -21,6 +21,15 @@ namespace MacroRuntime
          }
       }
 
+      public bool IsValueDefined(Symbol Symbol)
+      {
+         if (_values.ContainsKey(Symbol.Value))
+            return true;
+         return SymbolNotFoundIsValueDefined(Symbol);
+      }
+
+      protected abstract bool SymbolNotFoundIsValueDefined(Symbol Symbol);
+
       public void SetValue(Symbol Symbol, Expression Value)
       {
          if (_values.ContainsKey(Symbol.Value))

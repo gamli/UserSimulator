@@ -123,25 +123,26 @@ namespace MacroView
          public string EvaluationErrorMessage { private get; set; }
 
          private const string SEPARATOR = @"\(|\)|\s|""|'";
-         private readonly Regex _separator = new Regex(SEPARATOR);
+         private readonly Regex _separator = new Regex(SEPARATOR, RegexOptions.Compiled);
          private readonly Regex
-            _procedureCall = new Regex(@"\(\s*([^\(\)\s""']*)\b"),
+            _procedureCall = new Regex(@"\(\s*([^\(\)\s""']*)\b", RegexOptions.Compiled),
 
-            _specialForms = new Regex(@"define|if|lambda|quote|\."),
-            _quoteSyntax = new Regex(@"'"),
-            _lambdaFormalArgs = new Regex(@"lambda\s*\(.*\)"),
+            _specialForms = new Regex(@"define|if|lambda|quote|\.", RegexOptions.Compiled),
+            _quoteSyntax = new Regex(@"'", RegexOptions.Compiled),
+            _lambdaFormalArgs = new Regex(@"lambda\s*\([^\(\)""']*\)", RegexOptions.Compiled),
 
             _specialFunctions =
                new Regex(
-                  @"eval|=|constant\?|list\?|symbol\?|<=|>=|<|>|or|and|\+|-|\*|/|abs|car|cdr|append|move|position|pause|click|windowshot|list|last|begin"),
+                  @"eval|=|constant\?|list\?|symbol\?|<=|>=|<|>|or|and|\+|-|\*|/|abs|car|cdr|append|move|position|pause|click|windowshot|list|last|begin", 
+                  RegexOptions.Compiled),
 
-            _booleanTrue = new Regex(@"true"),
-            _booleanFalse = new Regex(@"false"),
+            _booleanTrue = new Regex(@"true", RegexOptions.Compiled),
+            _booleanFalse = new Regex(@"false", RegexOptions.Compiled),
 
-            _number = new Regex(@"\d+(\.[0-9]+)?|\.[0-9]+"),
+            _number = new Regex(@"\d+(\.[0-9]+)?|\.[0-9]+", RegexOptions.Compiled),
 
-            _string = new Regex(@"""([^""]|\"")*"""),
-            _escapedCharacter = new Regex(@"\\.");
+            _string = new Regex(@"""([^""]|\"")*""", RegexOptions.Compiled),
+            _escapedCharacter = new Regex(@"\\.", RegexOptions.Compiled);
 
          protected override void ColorizeLine(DocumentLine Line)
          {
@@ -156,7 +157,7 @@ namespace MacroView
             StyleRegex(_booleanTrue, Line, false, FontStyles.Oblique, FontWeights.SemiBold, Brushes.Green);
             StyleRegex(_booleanFalse, Line, false, FontStyles.Oblique, FontWeights.SemiBold, Brushes.Red);
 
-            StyleRegex(_number, Line, false, FontStyles.Oblique, Brushes.DimGray);
+            StyleRegex(_number, Line, false, Brushes.DimGray);
 
             StyleRegex(_string, Line, true, Brushes.DarkRed);
             StyleRegex(_escapedCharacter, Line, true, Brushes.DeepPink);
