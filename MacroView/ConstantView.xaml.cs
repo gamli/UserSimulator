@@ -30,10 +30,8 @@ namespace MacroView
                return element.FindResource("booleanTemplate") as DataTemplate;
             if (constantValueType == typeof(string))
                return element.FindResource("stringTemplate") as DataTemplate;
-            if (constantValueType == typeof(int))
-               return element.FindResource("integerTemplate") as DataTemplate;
-            if (constantValueType == typeof(double))
-               return element.FindResource("doubleTemplate") as DataTemplate;
+            if (constantValueType == typeof(decimal))
+               return element.FindResource("decimalTemplate") as DataTemplate;
          }
          return null;
       }

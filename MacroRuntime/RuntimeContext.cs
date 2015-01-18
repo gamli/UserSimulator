@@ -47,9 +47,13 @@ namespace MacroRuntime
          AddIntrinsicProcedure("click", LeftClick);
          AddIntrinsicProcedure("windowshot", Windowshot, _windowshotX, _windowshotY, _windowshotImageUrl);
 
-         AddDerivedProcedure("list", ".", ".");
+         AddDerivedProcedure("first", "lst", "(car lst)");
+         AddDerivedProcedure("rest", "lst", "(cdr lst)");
          AddDerivedProcedure("last", "(if (and list (cdr list)) (last (cdr list)) (car list))", "list");
+         AddDerivedProcedure("list", ".", ".");
+
          AddDerivedProcedure("begin", "(last .)", ".");
+         
          AddDerivedProcedure("<=", "(or (< left right) (= left right))", "left", "right");
          AddDerivedProcedure(">=", "(or (> left right) (= left right))", "left", "right");
       }
@@ -114,8 +118,8 @@ namespace MacroRuntime
       private readonly Symbol _addRight = new Symbol("Right");
       private Expression Add(ContextBase Context)
       {
-         dynamic left = GetGenericValue<Constant>(Context, _addLeft).Value;
-         dynamic right = GetGenericValue<Constant>(Context, _addRight).Value;
+         var left = (decimal) GetGenericValue<Constant>(Context, _addLeft).Value;
+         var right = (decimal) GetGenericValue<Constant>(Context, _addRight).Value;
          return new Constant(left + right);
       }
 
@@ -123,8 +127,8 @@ namespace MacroRuntime
       private readonly Symbol _subRight = new Symbol("Right");
       private Expression Sub(ContextBase Context)
       {
-         dynamic left = GetGenericValue<Constant>(Context, _subLeft).Value;
-         dynamic right = GetGenericValue<Constant>(Context, _subRight).Value;
+         var left = (decimal)GetGenericValue<Constant>(Context, _subLeft).Value;
+         var right = (decimal)GetGenericValue<Constant>(Context, _subRight).Value;
          return new Constant(left - right);
       }
 
@@ -132,8 +136,8 @@ namespace MacroRuntime
       private readonly Symbol _mulRight = new Symbol("Right");
       private Expression Mul(ContextBase Context)
       {
-         dynamic left = GetGenericValue<Constant>(Context, _mulLeft).Value;
-         dynamic right = GetGenericValue<Constant>(Context, _mulRight).Value;
+         var left = (decimal)GetGenericValue<Constant>(Context, _mulLeft).Value;
+         var right = (decimal)GetGenericValue<Constant>(Context, _mulRight).Value;
          return new Constant(left * right);
       }
 
@@ -141,8 +145,8 @@ namespace MacroRuntime
       private readonly Symbol _divRight = new Symbol("Right");
       private Expression Div(ContextBase Context)
       {
-         dynamic left = GetGenericValue<Constant>(Context, _divLeft).Value;
-         dynamic right = GetGenericValue<Constant>(Context, _divRight).Value;
+         var left = (decimal)GetGenericValue<Constant>(Context, _divLeft).Value;
+         var right = (decimal)GetGenericValue<Constant>(Context, _divRight).Value;
          return new Constant(left / right);
       }
 
@@ -150,8 +154,8 @@ namespace MacroRuntime
       private readonly Symbol _lessRight = new Symbol("Right");
       private Expression Less(ContextBase Context)
       {
-         dynamic left = GetGenericValue<Constant>(Context, _lessLeft).Value;
-         dynamic right = GetGenericValue<Constant>(Context, _lessRight).Value;
+         var left = (decimal)GetGenericValue<Constant>(Context, _lessLeft).Value;
+         var right = (decimal)GetGenericValue<Constant>(Context, _lessRight).Value;
          return new Constant(left < right);
       }
 
@@ -159,8 +163,8 @@ namespace MacroRuntime
       private readonly Symbol _greaterRight = new Symbol("Right");
       private Expression Greater(ContextBase Context)
       {
-         dynamic left = GetGenericValue<Constant>(Context, _greaterLeft).Value;
-         dynamic right = GetGenericValue<Constant>(Context, _greaterRight).Value;
+         var left = (decimal)GetGenericValue<Constant>(Context, _greaterLeft).Value;
+         var right = (decimal)GetGenericValue<Constant>(Context, _greaterRight).Value;
          return new Constant(left > right);
       }
 
@@ -168,8 +172,8 @@ namespace MacroRuntime
       private readonly Symbol _orRight = new Symbol("Right");
       private Expression Or(ContextBase Context)
       {
-         dynamic left = TypeConversion.ConvertToBoolean(GetGenericValue<Constant>(Context, _orLeft), Context);
-         dynamic right = TypeConversion.ConvertToBoolean(GetGenericValue<Constant>(Context, _orRight), Context);
+         var left = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _orLeft), Context);
+         var right = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _orRight), Context);
          return new Constant(left || right);
       }
 
@@ -177,8 +181,8 @@ namespace MacroRuntime
       private readonly Symbol _andRight = new Symbol("Right");
       private Expression And(ContextBase Context)
       {
-         dynamic left = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _andLeft), Context);
-         dynamic right = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _andRight), Context);
+         var left = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _andLeft), Context);
+         var right = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _andRight), Context);
          return new Constant(left && right);
       }
 
@@ -202,8 +206,8 @@ namespace MacroRuntime
       private readonly Symbol _absValue = new Symbol("Value");
       private Expression Abs(ContextBase Context)
       {
-         dynamic numeric = GetGenericValue<Constant>(Context, _absValue);
-         return Math.Abs(numeric.Value);
+         var numeric = (decimal)GetGenericValue<Constant>(Context, _absValue).Value;
+         return new Constant(Math.Abs(numeric));
       }
 
       private readonly Symbol _carList = new Symbol("List");
@@ -221,7 +225,7 @@ namespace MacroRuntime
          var list = GetGenericValue<List>(Context, _cdrList);
          if (list.Expressions.Count == 0)
             throw new RuntimeException("Cannot get cdr of empty list", list, this);
-         return new List(list.Expressions.Skip(1).ToArray());
+         return new List(list.Expressions.Skip(1));
       }
 
       private readonly Symbol _appendListLeft = new Symbol("ListLeft");
@@ -230,7 +234,7 @@ namespace MacroRuntime
       {
          var listLeft = GetGenericValue<List>(Context, _appendListLeft);
          var listRight = GetGenericValue<List>(Context, _appendListRight);
-         return new List(listLeft.Expressions.Concat(listRight.Expressions).ToArray());
+         return new List(listLeft.Expressions.Concat(listRight.Expressions));
       }
 
 
@@ -238,8 +242,8 @@ namespace MacroRuntime
       private readonly Symbol _mouseMoveDeltaY = new Symbol("DeltaY");
       private Constant MouseMove(ContextBase Context)
       {
-         Mouse.X += GetConstantValue<int>(Context, _mouseMoveDeltaX);
-         Mouse.Y += GetConstantValue<int>(Context, _mouseMoveDeltaY);
+         Mouse.X += (int)GetConstantValue<decimal>(Context, _mouseMoveDeltaX);
+         Mouse.Y += (int)GetConstantValue<decimal>(Context, _mouseMoveDeltaY);
 
          return new Constant(true);
       }
@@ -252,7 +256,7 @@ namespace MacroRuntime
          int screenX, screenY;
          Window.ClientToScreen(
             _targetWindow,
-            GetConstantValue<int>(Context, _mousePositionX), GetConstantValue<int>(Context, _mousePositionY),
+            (int)GetConstantValue<decimal>(Context, _mousePositionX), (int)GetConstantValue<decimal>(Context, _mousePositionY),
             out screenX, out screenY);
          Mouse.Position = new Mouse.MousePoint(screenX, screenY);
 
@@ -263,8 +267,8 @@ namespace MacroRuntime
       private readonly Symbol _pauseDuration = new Symbol("Duration");
       private Constant Pause(ContextBase Context)
       {
-         var milliseconds = GetConstantValue<int>(Context, _pauseDuration);
-         Thread.Sleep(milliseconds);
+         var milliseconds = GetConstantValue<decimal>(Context, _pauseDuration);
+         Thread.Sleep((int) milliseconds);
 
          return new Constant(milliseconds);
       }
@@ -289,8 +293,8 @@ namespace MacroRuntime
          using (var clippedWindowContent = new Bitmap(image.Width, image.Height))
          using (var clippedWindowContentGraphics = Graphics.FromImage(clippedWindowContent))
          {
-            var windowshotX = GetConstantValue<int>(Context, _windowshotX);
-            var windowshotY = GetConstantValue<int>(Context, _windowshotY);
+            var windowshotX = (int)GetConstantValue<decimal>(Context, _windowshotX);
+            var windowshotY = (int)GetConstantValue<decimal>(Context, _windowshotY);
 
             clippedWindowContentGraphics.DrawImage(
                windowContent,

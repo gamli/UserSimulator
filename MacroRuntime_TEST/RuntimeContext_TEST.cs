@@ -57,7 +57,7 @@ namespace MacroRuntime_TEST
 
          var sw = new Stopwatch();
          sw.Start();
-         Assert.AreEqual(new Constant(100), evaluator.Evaluate(ParseExpression("(pause 100)")));
+         Assert.AreEqual(new Constant(100m), evaluator.Evaluate(ParseExpression("(pause 100)")));
          sw.Stop();
          Assert.IsTrue(sw.ElapsedMilliseconds >= 99); // the sleep function is not that exact
 
@@ -88,16 +88,6 @@ namespace MacroRuntime_TEST
          var evaluator = new ExpressionEvaluator(context);
 
          evaluator.Evaluate((Expression)new MacroParser().Parse("(pause 10)"));
-
-         try
-         {
-            evaluator.Evaluate((Expression)new MacroParser().Parse("(pause 10.05)"));
-            Assert.Fail();
-         }
-         catch (RuntimeException)
-         {
-            // everything ok
-         }
 
          try
          {

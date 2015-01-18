@@ -29,12 +29,7 @@
       </DataTemplate>
 
       <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
-      <DataTemplate x:Key="integerTemplate" DataType="macrovm:ConstantVM">
-         <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-      </DataTemplate>
-
-      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
-      <DataTemplate x:Key="doubleTemplate" DataType="macrovm:ConstantVM">
+      <DataTemplate x:Key="decimalTemplate" DataType="macrovm:ConstantVM">
          <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"/>
       </DataTemplate>
       

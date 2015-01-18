@@ -19,7 +19,7 @@ namespace MacroRuntime_TEST
          Assert.AreEqual(new Symbol("someSymbol"), context.GetValue(new Symbol("var1")));
 
          new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("(define var2 ((lambda (x y z) z) 1 2 3))"));
-         Assert.AreEqual(new Constant(3), context.GetValue(new Symbol("var2")));
+         Assert.AreEqual(new Constant(3m), context.GetValue(new Symbol("var2")));
       }
 
       [TestMethod]

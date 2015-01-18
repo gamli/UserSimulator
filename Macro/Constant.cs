@@ -42,8 +42,8 @@ namespace Macro
                ? "null" 
                : Value is string 
                   ? "\"" + ((string)Value).Replace("\"", "\\\"") + "\"" 
-                  : Value is double 
-                     ? ((double)Value).ToString(CultureInfo.InvariantCulture) 
+                  : Value is decimal 
+                     ? ((decimal)Value).ToString(CultureInfo.InvariantCulture) 
                      : Value is bool
                         ? (bool)Value ? "true" : "false"
                         :Value.ToString();

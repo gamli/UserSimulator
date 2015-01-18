@@ -42,19 +42,19 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(new Constant("Some \" String"));
          text.Append(" \"Some \\\" String\"");
 
-         macro.Expressions.Add(new Constant(4711));
+         macro.Expressions.Add(new Constant(4711m));
          text.Append(" 4711");
 
-         macro.Expressions.Add(new Constant(4711.1174));
+         macro.Expressions.Add(new Constant(4711.1174m));
          text.Append(" 4711.1174");
 
-         macro.Expressions.Add(new Constant(-4711));
+         macro.Expressions.Add(new Constant(-4711m));
          text.Append(" -4711");
 
-         macro.Expressions.Add(new Constant(-4711.1174));
+         macro.Expressions.Add(new Constant(-4711.1174m));
          text.Append(" -4711.1174");
 
-         macro.Expressions.Add(new List(new Constant(4711), new Symbol("some-symbol")));
+         macro.Expressions.Add(new List(new Constant(4711m), new Symbol("some-symbol")));
          text.Append(" (4711 some-symbol)");
 
          macro.Expressions.Add(SpecialForms.If(new Constant(true), new Constant("Consequent"),new Constant("Alternative")));
@@ -69,7 +69,7 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(SpecialForms.Quote(SpecialForms.ProcedureCall(new Symbol("fun"))));
          text.Append(" '(fun)");
 
-         macro.Expressions.Add(SpecialForms.Define(new Symbol("var"), new Constant(4711)));
+         macro.Expressions.Add(SpecialForms.Define(new Symbol("var"), new Constant(4711m)));
          text.Append(" (define var 4711)");
 
          var symbolX = new Symbol("x");

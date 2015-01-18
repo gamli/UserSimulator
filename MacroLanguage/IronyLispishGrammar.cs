@@ -1,4 +1,5 @@
-﻿using Irony;
+﻿using System;
+using Irony;
 using Irony.Parsing;
 
 namespace MacroLanguage
@@ -18,6 +19,8 @@ namespace MacroLanguage
          var stringConstant = TerminalFactory.CreateCSharpString("string");
 
          var numberConstant = TerminalFactory.CreateCSharpNumber("number");
+         numberConstant.DefaultIntTypes = new[] { TypeCode.Decimal };
+         numberConstant.DefaultFloatType = TypeCode.Decimal;
          numberConstant.Options |= NumberOptions.AllowSign;
          numberConstant.Priority = 1; // to solve conflict with symbol
 
