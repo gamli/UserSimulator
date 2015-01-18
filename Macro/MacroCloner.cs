@@ -1,4 +1,6 @@
-﻿namespace Macro
+﻿using System.Linq;
+
+namespace Macro
 {
    public class MacroCloner
    {
@@ -21,10 +23,7 @@
 
          public void VisitList(List List)
          {
-            var clone = new List();
-            foreach (var expression in List.Expressions)
-               clone.Expressions.Add(Clone(expression));
-            ClonedMacro = clone;
+            ClonedMacro = new List(List.Expressions.Select(Clone).ToArray());
          }
 
          public void VisitSymbol(Symbol Symbol)
