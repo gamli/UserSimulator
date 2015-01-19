@@ -35,6 +35,7 @@ namespace MacroRuntime
          AddIntrinsicProcedure("-", Sub, _subLeft, _subRight);
          AddIntrinsicProcedure("*", Mul, _mulLeft, _mulRight);
          AddIntrinsicProcedure("/", Div, _divLeft, _divRight);
+         AddIntrinsicProcedure("%", Mod, _modLeft, _modRight);
          AddIntrinsicProcedure("abs", Abs, _absValue);
 
          AddIntrinsicProcedure("car", Car, _carList);
@@ -148,6 +149,15 @@ namespace MacroRuntime
          var left = (decimal)GetGenericValue<Constant>(Context, _divLeft).Value;
          var right = (decimal)GetGenericValue<Constant>(Context, _divRight).Value;
          return new Constant(left / right);
+      }
+
+      private readonly Symbol _modLeft = new Symbol("Left");
+      private readonly Symbol _modRight = new Symbol("Right");
+      private Expression Mod(ContextBase Context)
+      {
+         var left = (decimal)GetGenericValue<Constant>(Context, _modLeft).Value;
+         var right = (decimal)GetGenericValue<Constant>(Context, _modRight).Value;
+         return new Constant(left % right);
       }
 
       private readonly Symbol _lessLeft = new Symbol("Left");
