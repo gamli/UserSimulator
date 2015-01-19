@@ -6,7 +6,7 @@ namespace MacroLanguage
 {
    public class IronyLispishGrammar : Grammar
    {
-      public const string EXTRA_SYMBOL_CHARACTERS = "._+-*/=<>:?!" + Strings.DecimalDigits;
+      public const string EXTRA_SYMBOL_CHARACTERS = "._+-*/=<>:?!%" + Strings.DecimalDigits;
 
       public IronyLispishGrammar()
       {
