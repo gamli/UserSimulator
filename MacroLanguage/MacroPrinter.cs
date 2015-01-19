@@ -35,43 +35,51 @@ namespace MacroLanguage
 
       public override void VisitSymbol(Symbol Symbol)
       {
-         Append(Symbol.Value);
+         Append(Symbol.ToString());
       }
 
       public override void VisitNil(List Nil)
       {
-         Append("nil");
+         Append(Nil.ToString());
       }
 
       public override void VisitDefinition(List Definition)
       {
-         PrintList(Definition, 1);
+         PrintSpecialForm(Definition);
       }
 
       public override void VisitIf(List If)
       {
-         PrintList(If, 1);
+         PrintSpecialForm(If);
       }
 
       public override void VisitLambda(List Lambda)
       {
-         PrintList(Lambda, 1);
+         PrintSpecialForm(Lambda);
       }
 
       public override void VisitProcedureCall(List ProcedureCall)
       {
-         PrintList(ProcedureCall, 1);
+         var procedureSymol = ProcedureCall.Expressions[0] as Symbol;
+         if (procedureSymol != null && procedureSymol.Value == "begin")
+            PrintList(ProcedureCall, 0);
+         else
+            PrintList(ProcedureCall, ProcedureCall.Expressions.Count);
       }
 
       public override void VisitQuote(List Quote)
       {
-         Append("'");
-         Quote.Expressions[1].Accept(this);
+         Append("'"); Quote.Expressions[1].Accept(this);
       }
 
       public override void VisitLoop(List Loop)
       {
-         PrintList(Loop, 1);
+         PrintSpecialForm(Loop);
+      }
+
+      public void PrintSpecialForm(List SpecialForm)
+      {
+         PrintList(SpecialForm, 1);
       }
 
       public void PrintList(List List, int LinebreakIndex)
