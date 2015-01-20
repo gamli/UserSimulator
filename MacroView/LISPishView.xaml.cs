@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
+using MacroRuntime;
 
 namespace MacroView
 {
@@ -106,6 +107,14 @@ namespace MacroView
                RepaintEditor(lispishView);
             }));
       public string EvaluationErrorMessage { get { return (string)GetValue(EvaluationErrorMessageProperty); } set { SetValue(EvaluationErrorMessageProperty, value); } }
+
+      public static readonly DependencyProperty REPLProperty = DependencyProperty.Register(
+         "REPL", typeof (REPL), typeof (LISPishView), new PropertyMetadata(default(REPL)));
+      public REPL REPL
+      {
+         get { return (REPL) GetValue(REPLProperty); }
+         set { SetValue(REPLProperty, value); }
+      }
 
       private static void RepaintEditor(LISPishView LISPishView)
       {
@@ -333,6 +342,11 @@ namespace MacroView
                return null;
             }
          }
+      }
+
+      private void ButtonEvaluate_OnClick(object Sender, RoutedEventArgs E)
+      {
+         REPL.ConsumeInput(Text);
       }
    }
 }

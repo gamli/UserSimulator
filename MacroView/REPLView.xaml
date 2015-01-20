@@ -6,7 +6,7 @@
              xmlns:macroView="clr-namespace:MacroView"
              xmlns:macroRuntime="clr-namespace:MacroRuntime;assembly=MacroRuntime"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" x:Name="_this">
 
    <UserControl.Resources>
 
@@ -14,7 +14,7 @@
 
       <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
       <DataTemplate x:Key="inputEchoTemplate" DataType="macroRuntime:REPLOutput">
-        <TextBlock Text="{Binding Text}"/>
+         <TextBlock Text="{Binding Text}"/>
       </DataTemplate>
 
       <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
@@ -33,13 +33,13 @@
       </DataTemplate>
 
    </UserControl.Resources>
-   
+
    <Grid Background="Black" GotFocus="REPLView_OnGotFocus">
       <Grid.RowDefinitions>
          <RowDefinition Height="*"/>
          <RowDefinition Height="25"/>
       </Grid.RowDefinitions>
-      <ScrollViewer x:Name="_replOutput" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+      <ScrollViewer x:Name="_replOutput" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" ScrollChanged="REPLOutput_OnScrollChanged">
          <ItemsControl ItemsSource="{Binding Output}" Foreground="White" FontFamily="Courier New" FontSize="12">
             <ItemsControl.ItemTemplate>
                <DataTemplate>
@@ -49,14 +49,18 @@
          </ItemsControl>
       </ScrollViewer>
       <Grid Grid.Row="1">
-         <Grid>
-            <Grid.ColumnDefinitions>
-               <ColumnDefinition Width="*"/>
-               <ColumnDefinition Width="25"/>
-            </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" x:Name="_replInput" KeyDown="REPLInput_OnKeyDown" Foreground="White" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" CaretBrush="White" FontFamily="Courier New" FontSize="12"/>
-            <Button Grid.Column="1" Content="X" Click="ResetREPL_OnClick"/>
-         </Grid>
+         <Border CornerRadius="3" BorderThickness="3" BorderBrush="White" Margin="0 1 0 0">
+            <Grid>
+               <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="48"/>
+                  <ColumnDefinition Width="25"/>
+               </Grid.ColumnDefinitions>
+               <TextBox Grid.Column="0" x:Name="_replInput" VerticalAlignment="Center" KeyDown="REPLInput_OnKeyDown" Foreground="White" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" CaretBrush="White" FontFamily="Courier New" FontSize="12"/>
+               <Button Grid.Column="1" Content="Reset" Click="ResetREPL_OnClick" FontSize="8"/>
+               <CheckBox IsChecked="{Binding Path=AutoScroll, ElementName=_this}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+         </Border>
       </Grid>
    </Grid>
 </UserControl>

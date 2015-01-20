@@ -14,15 +14,17 @@ namespace MacroView
       public REPLView()
       {
          InitializeComponent();
+
+         AutoScroll = true;
       }
 
       private void REPLInput_OnKeyDown(object Sender, KeyEventArgs E)
       {
          if (E.Key == Key.Enter)
          {
+            AutoScroll = true;
             ((REPL) DataContext).ConsumeInput(_replInput.Text);
             _replInput.Text = "";
-            _replOutput.ScrollToBottom();
          }
       }
 
@@ -34,6 +36,30 @@ namespace MacroView
       private void ResetREPL_OnClick(object Sender, RoutedEventArgs E)
       {
          ((REPL)DataContext).Reset();
+         _replOutput.ScrollToHome();
+      }
+
+      private void REPLOutput_OnScrollChanged(object Sender, ScrollChangedEventArgs E)
+      {
+         // ReSharper disable CompareOfFloatsByEqualityOperator
+         // floating point comparisons should be ok
+
+         var scrolledManually = E.ExtentHeightChange == 0;
+         if (scrolledManually)
+            AutoScroll = _replOutput.VerticalOffset == _replOutput.ScrollableHeight;
+
+         if (AutoScroll && !scrolledManually)
+            _replOutput.ScrollToVerticalOffset(_replOutput.ExtentHeight);
+
+         // ReSharper restore CompareOfFloatsByEqualityOperator
+      }
+
+      public static readonly DependencyProperty AutoScrollProperty = DependencyProperty.Register(
+         "AutoScroll", typeof (bool), typeof (REPLView), new PropertyMetadata(default(bool)));
+      public bool AutoScroll
+      {
+         get { return (bool) GetValue(AutoScrollProperty); }
+         set { SetValue(AutoScrollProperty, value); }
       }
    }
    public class REPLOutputViewTemplateSelector : DataTemplateSelector
