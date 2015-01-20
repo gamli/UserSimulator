@@ -7,7 +7,7 @@
              xmlns:macroview="clr-namespace:MacroView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <Grid Background="Transparent">
+   <Grid Background="Transparent" Margin="1 1 1 1">
       <Grid.Resources>
          <DataTemplate DataType="{x:Type macrovm:ConstantVM}">
             <macroview:ConstantView/>

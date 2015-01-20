@@ -19,7 +19,7 @@
 
       <!-- first row -->
 
-      <Grid Grid.Row="0" Grid.Column="0">
+      <Grid Grid.Row="0" Grid.Column="0" Background="Black">
          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <StackPanel Orientation="Horizontal">
                <macroview:MacroBaseView DataContext="{Binding ExpressionVM}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 48 0"/>

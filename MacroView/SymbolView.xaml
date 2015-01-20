@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-   <Border Background="#FFCCD4FA" BorderBrush="#FF002BFF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+   <Border Background="#78CCD4FA" BorderBrush="#BE002BFF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
       <TextBox Text="{Binding Model.Value}" BorderThickness="0" Background="Transparent"/>
    </Border>
 </UserControl>

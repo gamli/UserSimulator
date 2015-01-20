@@ -22,18 +22,27 @@ namespace MacroView
    {
       public override DataTemplate SelectTemplate(object ConstantVM, DependencyObject Container)
       {
-         FrameworkElement element = Container as FrameworkElement;
+         var dataTemplateResourceKey = "defaultTemplate";
+
+         var element = Container as FrameworkElement;
          if (element != null && ConstantVM is ConstantVM)
          {
             var constantValueType = ((Constant)((ExpressionVM)ConstantVM).Model).Value.GetType();
+
             if (constantValueType == typeof(bool))
-               return element.FindResource("booleanTemplate") as DataTemplate;
-            if (constantValueType == typeof(string))
-               return element.FindResource("stringTemplate") as DataTemplate;
-            if (constantValueType == typeof(decimal))
-               return element.FindResource("decimalTemplate") as DataTemplate;
+               dataTemplateResourceKey = "booleanTemplate";
+            else if (constantValueType == typeof(string))
+               dataTemplateResourceKey = "stringTemplate";
+            else if (constantValueType == typeof (decimal))
+               dataTemplateResourceKey = "decimalTemplate";
          }
-         return null;
+
+         return FindDataTemplate(element, dataTemplateResourceKey);
+      }
+
+      private static DataTemplate FindDataTemplate(FrameworkElement Element, string DataTemplateResourceKey)
+      {
+         return Element.FindResource(DataTemplateResourceKey) as DataTemplate;
       }
    }
 

@@ -4,31 +4,136 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:macroview="clr-namespace:MacroView"
+             xmlns:macroViewModel="clr-namespace:MacroViewModel;assembly=MacroViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
    <UserControl.Resources>
-      <CollectionViewSource x:Key="tail" Filter="FilterTail" Source="{Binding ExpressionsVM}" />
-   </UserControl.Resources>
-   <Border Background="#A1B98CFC" BorderBrush="#FF6700FF" CornerRadius="5" BorderThickness="3">
-      <StackPanel>
+      <macroview:ListViewTemplateSelector x:Key="contentTemplateSelector"/>
 
-
-         <Border Background="#FFAEF2FC" BorderBrush="#FF00DEFF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <macroview:MacroBaseView DataContext="{Binding ExpressionsVM[0]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="defineTemplate" DataType="macroViewModel:ListVM">
+         <Border Background="#83003CFF" BorderBrush="#B1003CFF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+               <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                  <TextBlock Text="define" FontWeight="Bold" Foreground="MediumVioletRed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 5 0"/>
+                  <macroview:MacroBaseView DataContext="{Binding ExpressionsVM[1]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+               </StackPanel>
+               <macroview:MacroBaseView DataContext="{Binding ExpressionsVM[2]}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="41 0 0 0"/>
+            </StackPanel>
          </Border>
+      </DataTemplate>
 
-         <ItemsControl ItemsSource="{Binding Source={StaticResource tail}}" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <ItemsControl.ItemTemplate>
-               <DataTemplate>
-                  <macroview:MacroBaseView HorizontalAlignment="Left" VerticalAlignment="Top"/>
-               </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-               <ItemsPanelTemplate>
-                  <WrapPanel MaxWidth="512" Orientation="Horizontal"/>
-               </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-         </ItemsControl>
-      </StackPanel>
-   </Border>
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="ifTemplate" DataType="macroViewModel:ListVM">
+         <Border Background="#B1003CFF" BorderBrush="#B1003CFF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+               <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                  <TextBlock Text="if" FontWeight="Bold" Foreground="MediumVioletRed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 5 0"/>
+                  <macroview:MacroBaseView DataContext="{Binding ExpressionsVM[1]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+               </StackPanel>
+               <StackPanel Margin="13 0 0 0">
+                  <Border BorderBrush="Green">
+                     <macroview:MacroBaseView DataContext="{Binding ExpressionsVM[2]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                  </Border>
+                  <Border BorderBrush="Red">
+                     <macroview:MacroBaseView DataContext="{Binding ExpressionsVM[3]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                  </Border>
+               </StackPanel>
+            </StackPanel>
+         </Border>
+      </DataTemplate>
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="lambdaTemplate" DataType="macroViewModel:ListVM">
+         <Border Background="#B1003CFF" BorderBrush="#B1003CFF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+               <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                  <TextBlock Text="lambda" FontWeight="Bold" Foreground="MediumVioletRed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 5 0"/>
+                  <Border Background="#669800FF" BorderBrush="#C39800FF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+                     <ItemsControl ItemsSource="{Binding ExpressionsVM[1].ExpressionsVM}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <ItemsControl.ItemsPanel>
+                           <ItemsPanelTemplate>
+                              <StackPanel Orientation="Horizontal"/>
+                           </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                     </ItemsControl>
+                  </Border>
+               </StackPanel>
+               <macroview:MacroBaseView DataContext="{Binding ExpressionsVM[2]}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="47 0 0 0"/>
+            </StackPanel>
+         </Border>
+      </DataTemplate>
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="beginTemplate" DataType="macroViewModel:ListVM">
+         <Border Background="#66FF8200" BorderBrush="#BBFF8200" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <ItemsControl ItemsSource="{Binding ExpressionsVM}" HorizontalAlignment="Left" VerticalAlignment="Top">
+               <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                     <StackPanel/>
+                  </ItemsPanelTemplate>
+               </ItemsControl.ItemsPanel>
+            </ItemsControl>
+         </Border>
+      </DataTemplate>
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="procedureCallTemplate" DataType="macroViewModel:ListVM">
+         <Border Background="#6600EFFF" BorderBrush="#D900EFFF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <ItemsControl ItemsSource="{Binding ExpressionsVM}" HorizontalAlignment="Left" VerticalAlignment="Top">
+               <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                     <StackPanel Orientation="Horizontal"/>
+                  </ItemsPanelTemplate>
+               </ItemsControl.ItemsPanel>
+            </ItemsControl>
+         </Border>
+      </DataTemplate>
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="quoteTemplate" DataType="macroViewModel:ListVM">
+         <Border Background="#B1003CFF" BorderBrush="#B1003CFF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+               <TextBlock Text="quote" FontWeight="Bold" Foreground="MediumVioletRed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 5 0"/>
+               <macroview:MacroBaseView DataContext="{Binding ExpressionsVM[1]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </StackPanel>
+         </Border>
+      </DataTemplate>
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="loopTemplate" DataType="macroViewModel:ListVM">
+         <Border Background="#B1003CFF" BorderBrush="#B1003CFF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+               <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                  <TextBlock Text="loop" FontWeight="Bold" Foreground="MediumVioletRed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 5 0"/>
+                  <macroview:MacroBaseView DataContext="{Binding ExpressionsVM[1]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+               </StackPanel>
+               <macroview:MacroBaseView DataContext="{Binding ExpressionsVM[2]}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </StackPanel>
+         </Border>
+      </DataTemplate>
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="nilTemplate" DataType="macroViewModel:ListVM">
+         <Border Background="#7BFF6347" BorderBrush="#E6FF6347" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock Text="nil" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+         </Border>
+      </DataTemplate>
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="defaultTemplate" DataType="macroViewModel:ListVM">
+         <Border Background="#96FFFFFF" BorderBrush="#C6FFFFFF" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <ItemsControl ItemsSource="{Binding ExpressionsVM}" HorizontalAlignment="Left" VerticalAlignment="Top">
+               <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                     <StackPanel Orientation="Horizontal"/>
+                  </ItemsPanelTemplate>
+               </ItemsControl.ItemsPanel>
+            </ItemsControl>
+         </Border>
+      </DataTemplate>
+
+   </UserControl.Resources>
+
+   <ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource contentTemplateSelector}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 </UserControl>

@@ -32,11 +32,16 @@
       <DataTemplate x:Key="decimalTemplate" DataType="macrovm:ConstantVM">
          <TextBox Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"/>
       </DataTemplate>
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="defaultTemplate" DataType="macrovm:ConstantVM">
+         <TextBox FontSize="48" Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource numericConverter}}" BorderThickness="0" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+      </DataTemplate>
       
    </UserControl.Resources>
 
-   <Border Background="Transparent" BorderBrush="Brown" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
-      <ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource contentTemplateSelector}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+   <Border Background="#A1AEC1AE" BorderBrush="DarkSeaGreen" CornerRadius="5" BorderThickness="3" HorizontalAlignment="Left" VerticalAlignment="Top">
+      <ContentPresenter MaxWidth="128" Content="{Binding}" ContentTemplateSelector="{StaticResource contentTemplateSelector}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
    </Border>
    
 </UserControl>
