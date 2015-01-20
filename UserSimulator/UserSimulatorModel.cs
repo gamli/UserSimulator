@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using System.Text;
-using System.Timers;
 using System.Windows;
 using Common;
 using IO;
-using Macro;
 using MacroLanguage;
 using MacroRuntime;
 using Expression = Macro.Expression;
@@ -17,7 +14,9 @@ namespace UserSimulator
    {
       private bool _disposed;
 
-      private readonly Timer _timer;
+      //private Timer _timer;
+
+      public REPL REPL { get; private set; }
 
       private Image _lastWindowshot;
       public Image LastWindowshot
@@ -76,17 +75,18 @@ namespace UserSimulator
                {
                   ParserErrorPosition = -1;
                   Expression = (Expression)_parser.Parse(_expressionText);
-                  ParserError = "Parsing successfull";
+                  ParserError = Expression == null ? "Unexpected EOF" : "Parsing successfull";
                }
                catch (ParseException e)
                {
                   Expression = null;
                   ParserErrorPosition = e.Position;
-                  ParserError = "(LINE: " + (e.Line + 1) + ", COLOUMN: " + (e.Column + 1) + ") " + e.Message;
+                  ParserError = e.DisplayMessage();
                }
             }
          }
       }
+
       readonly MacroParser _parser = new MacroParser();
 
       private string _parserError;
@@ -106,28 +106,13 @@ namespace UserSimulator
          }
          catch (RuntimeException e)
          {
-            var sb = new StringBuilder();
-            Action<Exception> errorGenerator = null;
-            errorGenerator = 
-               Exception =>
-                  {
-                     if(Exception.InnerException != null)
-                        errorGenerator(Exception.InnerException);
-                     sb.Append(Exception.Message);
-                     var runtimeException = Exception as RuntimeException;
-                     if(runtimeException != null)
-                     {
-                        var macro = runtimeException.Macro;
-                        sb.Append(" at expression >> ").Append(macro != null ? macro.ToString() : "null").Append(" <<");
-                     }
-                     sb.Append("\n");
-                  };
-            errorGenerator(e);
-            EvaluatedExpressionText = sb.ToString();
+            EvaluatedExpressionText = e.MacroStackTrace();
             var innermostRuntimeException = e;
             while (innermostRuntimeException.InnerException is RuntimeException)
                innermostRuntimeException = (RuntimeException) innermostRuntimeException.InnerException;
-            EvaluationErrorPosition = (int)innermostRuntimeException.Macro.Data["TextLocation"];
+            var innermostMacroData = innermostRuntimeException.Macro.Data;
+            if(innermostMacroData.ContainsKey("TextLocation"))
+               EvaluationErrorPosition = (int)innermostMacroData["TextLocation"];
          }
       }
 
@@ -152,11 +137,13 @@ namespace UserSimulator
                screenshotErrorImage.Stream.Dispose();
             }
          UpdateWindowshot();
-         _timer = new Timer(ScreenshotInterval);
-         _timer.Elapsed += (Sender, Args) => UpdateWindowshot();
-         _timer.Start();
+         //_timer = new Timer(ScreenshotInterval);
+         //_timer.Elapsed += (Sender, Args) => UpdateWindowshot();
+         //_timer.Start();
          ExpressionText = "(+ 4700 11)";
          EvaluateExpression();
+
+         REPL = new REPL(true);
       }
 
       private void UpdateWindowshot()
@@ -180,9 +167,9 @@ namespace UserSimulator
       {
          if (Disposing)
          {
-            _timer.Dispose();
-            if (_lastWindowshot != null)
-               _lastWindowshot.Dispose();
+            //_timer.Dispose();
+            //_timer = null;
+            LastWindowshot = null;
          }
       }
    }

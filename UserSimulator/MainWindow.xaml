@@ -12,21 +12,28 @@
          <RowDefinition Height="25"/>
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
-         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="3*"/>
          <ColumnDefinition Width="5"/>
-         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="2*"/>
       </Grid.ColumnDefinitions>
 
       <!-- first row -->
 
       <Grid Grid.Row="0" Grid.Column="0" Background="Black">
-         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <StackPanel Orientation="Horizontal">
-               <macroview:MacroBaseView DataContext="{Binding ExpressionVM}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 48 0"/>
-               <TextBlock Text="=>" FontWeight="Bold" FontSize="48"/>
-               <macroview:MacroBaseView DataContext="{Binding EvaluatedExpressionVM}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="48 0 0 0"/>
-            </StackPanel>
-         </ScrollViewer>
+         <Grid>
+            <Grid.RowDefinitions>
+               <RowDefinition Height="*"/>
+               <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+               <StackPanel Orientation="Horizontal">
+                  <macroview:MacroBaseView DataContext="{Binding ExpressionVM}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 48 0"/>
+                  <TextBlock Text="=>" FontWeight="Bold" FontSize="48"/>
+                  <macroview:MacroBaseView DataContext="{Binding EvaluatedExpressionVM}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="48 0 0 0"/>
+               </StackPanel>
+            </ScrollViewer>
+            <macroview:REPLView Grid.Row="1" DataContext="{Binding Model.REPL}"/>
+         </Grid>
       </Grid>
 
       <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>

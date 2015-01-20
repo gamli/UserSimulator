@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Irony;
 using Irony.Parsing;
 using Macro;
 
@@ -8,27 +9,53 @@ namespace MacroLanguage
 {
    public class MacroParser
    {
+      private readonly Parser _parser;
+
       public MacroParser()
       {
          _parser = CreateParser();
       }
 
+      private static Parser CreateParser()
+      {
+         var ironyGrammar = new IronyLispishGrammar();
+         var ironyParser =
+            new Parser(ironyGrammar)
+            {
+               Context = { Mode = ParseMode.CommandLine }
+            };
+         return ironyParser;
+      }
+
       public MacroBase Parse(string Text)
       {
          var ast = _parser.Parse(Text);
-         if (ast.Status != ParseTreeStatus.Parsed)
+         
+         if (ast.HasErrors())
          {
             var firstMessage = ast.ParserMessages.First();
             throw
-               new ParseException(string.Join("\r\n", ast.ParserMessages.Select(ParserMessage => ParserMessage.Message)))
+               new ParseException(string.Join("\r\n", ast.ParserMessages.Select(ParserMessage => GenerateParserMessage(ParserMessage, Text))))
                   {
                      Line = firstMessage.Location.Line,
                      Column = firstMessage.Location.Column,
                      Position = firstMessage.Location.Position
                   };
          }
+
+         if (_parser.Context.Status == ParserStatus.AcceptedPartial)
+            return null;
+
          var macro = BuildMacroFromAst(ast.Root);
          return macro;
+      }
+
+      private string GenerateParserMessage(LogMessage ParserMessage, string Text)
+      {
+         var position = Math.Max(0, ParserMessage.Location.Position - 20);
+         var length = Math.Min(Text.Length - position, 40);
+         var textContext = Text.Substring(position, length);
+         return ParserMessage.Message + " At ..." + textContext + "...";
       }
 
       [ExcludeFromCodeCoverage]
@@ -77,14 +104,6 @@ namespace MacroLanguage
 
          return macro;
       }
-
-      private readonly Parser _parser;
-
-      private Parser CreateParser()
-      {
-         var ironyGrammar = new IronyLispishGrammar();
-         return new Parser(ironyGrammar);
-      }
    }
 
    public class ParseException : Exception
@@ -97,6 +116,11 @@ namespace MacroLanguage
          : base(Message, InnerException)
       {
          // nothing to do
+      }
+
+      public string DisplayMessage()
+      {
+         return "(LINE: " + (Line + 1) + ", COLOUMN: " + (Column + 1) + ") " + Message;
       }
    }
 }

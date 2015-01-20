@@ -48,6 +48,7 @@
     <Compile Include="Procedure.cs" />
     <Compile Include="ProcedureBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="REPL.cs" />
     <Compile Include="RuntimeContext.cs" />
     <Compile Include="RuntimeException.cs" />
     <Compile Include="TypeConversion.cs" />
