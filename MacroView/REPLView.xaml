@@ -13,6 +13,11 @@
       <macroView:REPLOutputViewTemplateSelector x:Key="contentTemplateSelector"/>
 
       <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
+      <DataTemplate x:Key="infoTemplate" DataType="macroRuntime:REPLOutput">
+         <TextBlock Text="{Binding Text}" Foreground="Green"/>
+      </DataTemplate>
+
+      <!-- ReSharper disable once Xaml.RedundantResource - is used by template selector -->
       <DataTemplate x:Key="inputEchoTemplate" DataType="macroRuntime:REPLOutput">
          <TextBlock Text="{Binding Text}"/>
       </DataTemplate>
@@ -37,7 +42,7 @@
    <Grid Background="Black" GotFocus="REPLView_OnGotFocus">
       <Grid.RowDefinitions>
          <RowDefinition Height="*"/>
-         <RowDefinition Height="25"/>
+         <RowDefinition Height="30"/>
       </Grid.RowDefinitions>
       <ScrollViewer x:Name="_replOutput" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" ScrollChanged="REPLOutput_OnScrollChanged">
          <ItemsControl ItemsSource="{Binding Output}" Foreground="White" FontFamily="Courier New" FontSize="12">
@@ -57,7 +62,7 @@
                   <ColumnDefinition Width="25"/>
                </Grid.ColumnDefinitions>
                <TextBox Grid.Column="0" x:Name="_replInput" VerticalAlignment="Center" KeyDown="REPLInput_OnKeyDown" Foreground="White" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" CaretBrush="White" FontFamily="Courier New" FontSize="12"/>
-               <Button Grid.Column="1" Content="Reset" Click="ResetREPL_OnClick" FontSize="8"/>
+               <Button Grid.Column="1" Content="Reset" Click="ResetREPL_OnClick"/>
                <CheckBox IsChecked="{Binding Path=AutoScroll, ElementName=_this}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
          </Border>

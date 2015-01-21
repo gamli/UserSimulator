@@ -19,11 +19,7 @@ namespace UserSimulator
          var viewModel = new UserSimulatorVM(_model);
          DataContext = viewModel;
 
-         PreviewKeyUp += (Sender, Args) =>
-         {
-            if (Args.Key == Key.Enter && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
-               _model.EvaluateExpression();
-         };
+         _lispishView.Formatter = _model.Format;
 
          InitializeProgram();         
       }
@@ -32,11 +28,6 @@ namespace UserSimulator
       {
          if (File.Exists("data"))
             _model.ExpressionText = File.ReadAllText("data");
-      }
-
-      private void ButtonExecuteClick(object Sender, RoutedEventArgs E)
-      {
-         _model.EvaluateExpression();
       }
 
       private void ButtonSaveClick(object Sender, RoutedEventArgs E)

@@ -74,6 +74,9 @@ namespace MacroView
 
             switch (((REPLOutput)REPLOutput).Type)
             {
+               case REPLOutputType.Info:
+                  dataTemplateResourceKey = "infoTemplate";
+                  break;
                case REPLOutputType.InputEcho:
                   dataTemplateResourceKey = "inputEchoTemplate";
                   break;

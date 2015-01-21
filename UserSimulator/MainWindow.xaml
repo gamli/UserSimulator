@@ -19,26 +19,26 @@
 
       <!-- first row -->
 
-      <ScrollViewer Grid.Row="0" Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="Black">
-         <StackPanel Orientation="Horizontal">
-            <macroview:MacroBaseView DataContext="{Binding ExpressionVM}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 48 0"/>
-            <TextBlock Text="=>" FontWeight="Bold" FontSize="48"/>
-            <macroview:MacroBaseView DataContext="{Binding EvaluatedExpressionVM}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="48 0 0 0"/>
-         </StackPanel>
-      </ScrollViewer>
+      <macroview:LISPishView x:Name="_lispishView" Text="{Binding Model.ExpressionText}" REPL="{Binding Model.REPL}" 
+                             Grid.Row="0" Grid.Column="0" FontSize="14"/>
 
       <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
 
-      <macroview:LISPishView Text="{Binding Model.ExpressionText}" 
-                                ParserErrorPosition="{Binding Model.ParserErrorPosition}"  
-                                EvaluationErrorPosition="{Binding Model.EvaluationErrorPosition}"
-                                REPL="{Binding Model.REPL}"
-                                 Grid.Row="0" Grid.Column="2" FontSize="14"/>
+      <ScrollViewer Grid.Row="0" Grid.Column="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+         <StackPanel>
+            <StackPanel Orientation="Horizontal">
+               <TextBlock Text="Selected Window: "/>
+               <TextBlock Text="{Binding Model.LastWindowTitle}" FontWeight="Bold" Margin="5 0 0 0"/>
+               <TextBlock Text=" ("/>
+               <TextBlock Text="{Binding Model.LastWindowHandle}" FontWeight="Bold"/>
+               <TextBlock Text=")"/>
+            </StackPanel>
+         </StackPanel>
+      </ScrollViewer>
 
       <!-- second row -->
 
-      <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-         <Button Content="Execute" Click="ButtonExecuteClick"/>
+      <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right">
          <Button Content="Save" Click="ButtonSaveClick"/>
       </StackPanel>
    </Grid>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Security.Policy;
 using Irony;
 using Irony.Parsing;
 using Macro;
@@ -9,6 +10,10 @@ namespace MacroLanguage
 {
    public class MacroParser
    {
+      public const string TEXTLINE_DATA = "TextLine";
+      public const string TEXTCOLUMN_DATA = "TextColumn";
+      public const string TEXTPOSITION_DATA = "TextPosition";
+      public const string TEXTLENGTH_DATA = "TextLength";
       private readonly Parser _parser;
 
       public MacroParser()
@@ -50,7 +55,7 @@ namespace MacroLanguage
          return macro;
       }
 
-      private string GenerateParserMessage(LogMessage ParserMessage, string Text)
+      private static string GenerateParserMessage(LogMessage ParserMessage, string Text)
       {
          var position = Math.Max(0, ParserMessage.Location.Position - 20);
          var length = Math.Min(Text.Length - position, 40);
@@ -59,7 +64,7 @@ namespace MacroLanguage
       }
 
       [ExcludeFromCodeCoverage]
-      private MacroBase BuildMacroFromAst(ParseTreeNode AstNode)
+      private static MacroBase BuildMacroFromAst(ParseTreeNode AstNode)
       {
          MacroBase macro;
          switch (AstNode.Term.Name)
@@ -99,10 +104,17 @@ namespace MacroLanguage
                throw new ParseException("Unknown construct in ast node >> " + AstNode + " <<");
          }
 
-         macro.Data.Add("TextLocation", AstNode.Span.Location.Position);
-         macro.Data.Add("TextLength", AstNode.Span.Length);
+         AddMacroData(macro, TEXTLINE_DATA, AstNode.Span.Location.Line);
+         AddMacroData(macro, TEXTCOLUMN_DATA, AstNode.Span.Location.Column);
+         AddMacroData(macro, TEXTPOSITION_DATA, AstNode.Span.Location.Position);
+         AddMacroData(macro, TEXTLENGTH_DATA, AstNode.Span.Length);
 
          return macro;
+      }
+
+      private static void AddMacroData(MacroBase Macro, string DataKey, object DataValue)
+      {
+         Macro.Data.Add(DataKey, DataValue);
       }
    }
 
