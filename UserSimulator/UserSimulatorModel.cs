@@ -107,12 +107,6 @@ namespace UserSimulator
          REPL.ParsePreview(ExpressionText);
       }
 
-      /*public void Evaluate()
-      {
-         REPL.Reset();
-         REPL.ConsumeInput(ExpressionText);
-      }*/
-
       #endregion
 
       #region IDisposable implementation
@@ -129,6 +123,7 @@ namespace UserSimulator
       {
          if (Disposing)
          {
+            _timer.Stop();
             _timer.Dispose();
             _timer = null;
             LastWindowshot = null;

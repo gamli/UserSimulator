@@ -12,9 +12,9 @@
          <RowDefinition Height="25"/>
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
-         <ColumnDefinition Width="3*"/>
+         <ColumnDefinition Width="*"/>
          <ColumnDefinition Width="5"/>
-         <ColumnDefinition Width="2*"/>
+         <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
 
       <!-- first row -->
@@ -33,6 +33,7 @@
                <TextBlock Text="{Binding Model.LastWindowHandle}" FontWeight="Bold"/>
                <TextBlock Text=")"/>
             </StackPanel>
+            <Image Source="{Binding LastWindowshotVM}"/>
          </StackPanel>
       </ScrollViewer>
 
