@@ -1,10 +1,8 @@
-﻿using System.Drawing;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Common;
-using Point = System.Windows.Point;
 
 namespace UserSimulator
 {
@@ -72,13 +70,6 @@ namespace UserSimulator
          var width = (int) windowhotImageMouseUp.X - x;
          var height = (int) windowhotImageMouseUp.Y - y;
          _viewModel.InsertWindowshotIntoCodeEditor(Geometry.NormalizedRectangle(x, y, width, height));
-
-         // TODO: 
-         //
-         // The mouse has been released, check to see if any of the items 
-         // in the other canvas are contained within mouseDownPos and 
-         // mouseUpPos, for any that are, select them!
-         //
       }
 
       private void WindowshotImage_MouseMove(object Sender, MouseEventArgs Args)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Security.Policy;
 using Irony;
 using Irony.Parsing;
 using Macro;

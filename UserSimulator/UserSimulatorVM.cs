@@ -2,12 +2,10 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Common;
-using MacroViewModel;
 
 namespace UserSimulator
 {
@@ -63,7 +61,9 @@ namespace UserSimulator
                var binaryValue = lastWindowshotPartStream.ToArray();
                var hexValue = BitConverter.ToString(binaryValue).Replace("-", string.Empty).ToUpper();
 
-               Model.ExpressionText = Model.ExpressionText.Insert(CodeEditorCursorPosition, "\"" + hexValue + "\"");
+               var codeEditorCursorPosition = CodeEditorCursorPosition;
+               Model.ExpressionText = Model.ExpressionText.Insert(codeEditorCursorPosition, "\"" + hexValue + "\"");
+               CodeEditorCursorPosition = codeEditorCursorPosition + hexValue.Length + 2;
             }
          }
       }

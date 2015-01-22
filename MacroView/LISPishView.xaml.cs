@@ -1,16 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Globalization;
-using System.IO;
-using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Rendering;
 using MacroRuntime;
 
 namespace MacroView

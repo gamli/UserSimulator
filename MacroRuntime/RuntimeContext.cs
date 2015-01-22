@@ -202,11 +202,10 @@ namespace MacroRuntime
       private readonly Symbol _equalRight = new Symbol("Right");
       private Expression Equal(ContextBase Context)
       {
-         return
-            new Constant(
-               Equals(
-                  GetGenericValue<Expression>(Context, _equalLeft),
-                  GetGenericValue<Expression>(Context, _equalRight)));
+         var left = GetGenericValue<Expression>(Context, _equalLeft);
+         var right = GetGenericValue<Expression>(Context, _equalRight);
+         var leftEqualsRight = Equals( left, right);
+         return new Constant(leftEqualsRight);
       }
 
       private readonly Symbol _evalExpression = new Symbol("Expression");

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
 using System.Timers;
 using System.Windows;
 using Common;
 using IO;
 using MacroLanguage;
 using MacroRuntime;
-using Expression = Macro.Expression;
 using Window = IO.Window;
 
 namespace UserSimulator
@@ -60,7 +58,7 @@ namespace UserSimulator
 
       private void UpdateWindowshot()
       {
-         if (Keyboard.IsControlKeyDown())
+         if (Keyboard.IsControlKeyDown() && Keyboard.IsF12KeyDown())
          {
             var mousePosition = Mouse.Position;
             LastWindowHandle = Desktop.WindowHandle(mousePosition.MouseX, mousePosition.MouseY);

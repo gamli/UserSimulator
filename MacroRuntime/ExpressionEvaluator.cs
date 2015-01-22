@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Macro;
@@ -152,7 +150,7 @@ namespace MacroRuntime
             IEnumerable<Symbol> ArgumentSymbols, 
             IEnumerable<Expression> ArgumentValues)
          {
-            foreach (var symbolAndArgumentValue in ArgumentSymbols.Zip(ArgumentValues, Tuple.Create))
+            foreach (var symbolAndArgumentValue in ArgumentSymbols.Zip<Symbol, Expression, Tuple<Symbol, Expression>>(ArgumentValues, Tuple.Create))
                Context.DefineValue(symbolAndArgumentValue.Item1, symbolAndArgumentValue.Item2);
          }
 
@@ -162,7 +160,7 @@ namespace MacroRuntime
             IEnumerable<Expression> FixedArgumentValues,
             IEnumerable<Expression> VariableArgumentValues)
          {
-            foreach (var symbolAndArgumentValue in FixedArgumentValues.Zip(ArgumentSymbols, Tuple.Create))
+            foreach (var symbolAndArgumentValue in FixedArgumentValues.Zip<Expression, Symbol, Tuple<Expression, Symbol>>(ArgumentSymbols, Tuple.Create))
                Context.DefineValue(symbolAndArgumentValue.Item2, symbolAndArgumentValue.Item1);
 
             var variableArgumentsList = new List(VariableArgumentValues.ToArray());
