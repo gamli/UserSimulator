@@ -19,7 +19,7 @@
 
       <!-- first row -->
 
-      <macroview:LISPishView x:Name="_lispishView" Text="{Binding Model.ExpressionText}" REPL="{Binding Model.REPL}" 
+      <macroview:LISPishView x:Name="_lispishView" Text="{Binding Model.ExpressionText}" REPL="{Binding Model.REPL}" CursorPosition="{Binding CodeEditorCursorPosition}"
                              Grid.Row="0" Grid.Column="0" FontSize="14"/>
 
       <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
@@ -33,7 +33,14 @@
                <TextBlock Text="{Binding Model.LastWindowHandle}" FontWeight="Bold"/>
                <TextBlock Text=")"/>
             </StackPanel>
-            <Image Source="{Binding LastWindowshotVM}"/>
+            <Grid Background="Transparent">
+               <Image x:Name="_windowshotImage" Source="{Binding LastWindowshotVM}"
+                      MouseDown="WindowshotImage_MouseDown" MouseUp="WindowshotImage_MouseUp" MouseMove="WindowshotImage_MouseMove"/>
+               <!-- selection box canvas to select part of the image -->
+               <Canvas>
+                  <Rectangle x:Name="_windowshotImageSelectionBox" Visibility="Collapsed" Stroke="#FF1F9AD4" StrokeThickness="1" StrokeDashArray="3 2"/>
+               </Canvas>
+            </Grid>
          </StackPanel>
       </ScrollViewer>
 

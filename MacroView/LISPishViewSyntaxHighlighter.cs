@@ -67,6 +67,11 @@ namespace MacroView
       private void StyleError(DocumentLine Line)
       {
          var lastErrorDisplayPosition = LastErrorPosition == 0 ? 0 : LastErrorPosition - 1;
+         
+         // text has been deleted or changed in some other way - so the error is not longer valid - TODO handle this somewhere else?
+         if(CurrentContext.Document.TextLength <= lastErrorDisplayPosition)
+            return;
+
          if (lastErrorDisplayPosition > -1 && CurrentContext.Document.GetLineByOffset(lastErrorDisplayPosition) == Line)
          {
             var lastErrorLength = LastErrorLength <= 0 ? 5 : LastErrorLength;
