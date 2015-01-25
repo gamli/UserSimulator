@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Macro;
 using MacroLanguage;
 
 namespace MacroRuntime
 {
+   [ExcludeFromCodeCoverage]
    public class RuntimeException : Exception
    {
       public MacroBase Macro { get; set; }

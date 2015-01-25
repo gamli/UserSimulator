@@ -117,6 +117,7 @@ namespace MacroLanguage
       }
    }
 
+   [ExcludeFromCodeCoverage]
    public class ParseException : Exception
    {
       public int Line { get; set; }

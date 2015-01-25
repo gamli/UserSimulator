@@ -58,6 +58,7 @@
     <Compile Include="RuntimeContext_TEST.cs" />
     <Compile Include="ExpressionEvaluator_TEST.cs" />
     <Compile Include="IntrinsicProcedure_TEST.cs" />
+    <Compile Include="REPL_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

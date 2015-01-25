@@ -1,9 +1,11 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 
 namespace Common
 {
    public static class Geometry
    {
+      [ExcludeFromCodeCoverage]
       public static Rectangle NormalizedRectangle(int X, int Y, int Width, int Height)// TODO duplicated code for x and y
       {
          if (Width < 0)

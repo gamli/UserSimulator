@@ -14,6 +14,7 @@ namespace MacroRuntime_TEST
          var hierarchicalContext = new HierarchicalContext(mockContext);
          var someValue = new Constant(true);
          var undefinedVar = new Symbol("undefinedVar");
+         Assert.IsTrue(hierarchicalContext.IsValueDefined(undefinedVar));
          hierarchicalContext.SetValue(undefinedVar, someValue);
          Assert.AreSame(mockContext.SymbolNotFundSetValueValue, someValue);
       }

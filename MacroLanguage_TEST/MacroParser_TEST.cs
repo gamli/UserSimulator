@@ -54,28 +54,11 @@ namespace MacroLanguage_TEST
       [ExcludeFromCodeCoverage]
       public void Fail_TEST()
       {
-         try
-         {
-            _parser.Parse("(");
-            Assert.Fail();
-         }catch(ParseException)
-         {
-            // everything ok
-         }
+         Assert.IsNull(_parser.Parse("("));
 
          try
          {
             _parser.Parse(")");
-            Assert.Fail();
-         }
-         catch (ParseException)
-         {
-            // everything ok
-         }
-
-         try
-         {
-            _parser.Parse("(lambda (arg1 arg2) (+ arg1 arg2)");
             Assert.Fail();
          }
          catch (ParseException)

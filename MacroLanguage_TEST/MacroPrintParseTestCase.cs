@@ -12,8 +12,8 @@ namespace MacroLanguage_TEST
          var text = new StringBuilder();
 
          var macro = new List();
-         macro.Expressions.Add(new Symbol("funTEST"));
-         text.Append("(funTEST");
+         macro.Expressions.Add(new Symbol("begin"));
+         text.Append("(begin");
 
          macro.Expressions.Add(new Symbol("-"));
          text.Append(" -");

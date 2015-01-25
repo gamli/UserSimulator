@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using Common;
 using Macro;
 using MacroLanguage;
@@ -225,6 +226,7 @@ namespace MacroRuntime
       #endregion
    }
 
+   [ExcludeFromCodeCoverage]
    public class REPLOutput : NotifyPropertyChangedBase
    {
       public REPLOutput(string Text, REPLOutputType Type)

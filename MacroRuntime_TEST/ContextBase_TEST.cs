@@ -14,7 +14,9 @@ namespace MacroRuntime_TEST
       {
          var context = new MockContext();
          var symbol = new Symbol("var");
+         Assert.IsTrue(context.IsValueDefined(symbol));
          context.DefineValue(symbol, new Constant(this));
+         Assert.IsTrue(context.IsValueDefined(symbol));
          Assert.AreEqual(new Constant(this), context.GetValue(symbol));
          
          try

@@ -115,7 +115,8 @@ namespace MacroRuntime
       private readonly Symbol _isSymbolExpression = new Symbol("Expression");
       private Expression IsSymbol(ContextBase Context)
       {
-         return new Constant(GetGenericValue<Expression>(Context, _isSymbolExpression).GetType() == typeof(Symbol));
+         var symbolExpression = GetGenericValue<Expression>(Context, _isSymbolExpression);
+         return new Constant(symbolExpression.GetType() == typeof(Symbol));
       }
 
       private readonly Symbol _addLeft = new Symbol("Left");
