@@ -38,7 +38,7 @@
                       MouseDown="WindowshotImage_MouseDown" MouseUp="WindowshotImage_MouseUp" MouseMove="WindowshotImage_MouseMove"/>
                <!-- selection box canvas to select part of the image -->
                <Canvas>
-                  <Rectangle x:Name="_windowshotImageSelectionBox" Visibility="Collapsed" Stroke="#FF1F9AD4" StrokeThickness="1" StrokeDashArray="3 2"/>
+                  <Rectangle x:Name="_windowshotSelectionBox" Visibility="Collapsed" Stroke="#FF1F9AD4" StrokeThickness="1" StrokeDashArray="3 2"/>
                </Canvas>
             </Grid>
          </StackPanel>

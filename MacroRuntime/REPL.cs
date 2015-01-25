@@ -18,6 +18,7 @@ namespace MacroRuntime
       private int _lastErrorColumn;
       private int _lastErrorPosition;
       private int _lastErrorLength;
+      private IntPtr _windowHandle;
 
       public ObservableCollection<REPLOutput> Output { get; private set; }
 
@@ -33,6 +34,20 @@ namespace MacroRuntime
 
       public int LastErrorLength { get { return _lastErrorLength; } private set { SetPropertyValue(ref _lastErrorLength, value); } }
 
+      public IntPtr WindowHandle
+      {
+         get
+         {
+            return _windowHandle;
+         }
+         set
+         {
+            if(SetPropertyValue(ref _windowHandle, value))
+               Reset();
+         }
+      }
+
+
       public REPL(bool FormatOutput)
       {
          _formatOutput = FormatOutput;
@@ -42,11 +57,16 @@ namespace MacroRuntime
 
       public void Reset()
       {
-         ResetError();
-         Output.Clear();
-         ResetIndent();
-         _context = new RuntimeContext(IntPtr.Zero);
-         OutputEmptyInputEcho();
+         // TODO - move to UserSimulatorModel?
+         System.Windows.Application.Current.Dispatcher.Invoke(
+            () =>
+            {
+               ResetError();
+               Output.Clear();
+               ResetIndent();
+               _context = new RuntimeContext(_windowHandle);
+               OutputEmptyInputEcho();
+            });
       }
 
       public void ConsumeInput(string Input)

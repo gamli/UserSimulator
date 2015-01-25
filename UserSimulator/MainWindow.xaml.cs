@@ -24,8 +24,8 @@ namespace UserSimulator
          InitializeProgram();
       }
 
-      bool _windowshotImageMouseDown;
-      Point _windowshotImageLastMouseDownPosition;
+      bool _windowshotMouseDown;
+      Point _windowshotLastMousePos;
       private readonly UserSimulatorModel _model;
       private readonly UserSimulatorVM _viewModel;
 
@@ -44,61 +44,61 @@ namespace UserSimulator
 
       private void WindowshotImage_MouseDown(object Sender, MouseButtonEventArgs Args)
       {
-         _windowshotImageMouseDown = true;
-         _windowshotImageLastMouseDownPosition = Args.GetPosition(_windowshotImage);
+         _windowshotMouseDown = true;
+         _windowshotLastMousePos = Args.GetPosition(_windowshotImage);
          _windowshotImage.CaptureMouse();
 
-         Canvas.SetLeft(_windowshotImageSelectionBox, _windowshotImageLastMouseDownPosition.X);
-         Canvas.SetTop(_windowshotImageSelectionBox, _windowshotImageLastMouseDownPosition.Y);
-         _windowshotImageSelectionBox.Width = 0;
-         _windowshotImageSelectionBox.Height = 0;
+         Canvas.SetLeft(_windowshotSelectionBox, _windowshotLastMousePos.X);
+         Canvas.SetTop(_windowshotSelectionBox, _windowshotLastMousePos.Y);
+         _windowshotSelectionBox.Width = 0;
+         _windowshotSelectionBox.Height = 0;
 
-         _windowshotImageSelectionBox.Visibility = Visibility.Visible;
+         _windowshotSelectionBox.Visibility = Visibility.Visible;
       }
 
       private void WindowshotImage_MouseUp(object Sender, MouseButtonEventArgs Args)
       {
-         _windowshotImageMouseDown = false;
+         _windowshotMouseDown = false;
          _windowshotImage.ReleaseMouseCapture();
 
-         _windowshotImageSelectionBox.Visibility = Visibility.Collapsed;
+         _windowshotSelectionBox.Visibility = Visibility.Collapsed;
 
-         var windowhotImageMouseUp = Args.GetPosition(_windowshotImage);
+         var windowhotMouseUp = Args.GetPosition(_windowshotImage);
 
-         var x = (int) _windowshotImageLastMouseDownPosition.X;
-         var y = (int) _windowshotImageLastMouseDownPosition.Y;
-         var width = (int) windowhotImageMouseUp.X - x;
-         var height = (int) windowhotImageMouseUp.Y - y;
+         var x = (int) _windowshotLastMousePos.X;
+         var y = (int) _windowshotLastMousePos.Y;
+         var width = (int) windowhotMouseUp.X - x;
+         var height = (int) windowhotMouseUp.Y - y;
          _viewModel.InsertWindowshotIntoCodeEditor(Geometry.NormalizedRectangle(x, y, width, height));
       }
 
       private void WindowshotImage_MouseMove(object Sender, MouseEventArgs Args)
       {
-         if (!_windowshotImageMouseDown) 
+         if (!_windowshotMouseDown) 
             return;
 
          var mousePos = Args.GetPosition(_windowshotImage);
 
-         if (_windowshotImageLastMouseDownPosition.X < mousePos.X)
+         if (_windowshotLastMousePos.X < mousePos.X)
          {
-            Canvas.SetLeft(_windowshotImageSelectionBox, _windowshotImageLastMouseDownPosition.X);
-            _windowshotImageSelectionBox.Width = mousePos.X - _windowshotImageLastMouseDownPosition.X;
+            Canvas.SetLeft(_windowshotSelectionBox, _windowshotLastMousePos.X);
+            _windowshotSelectionBox.Width = mousePos.X - _windowshotLastMousePos.X;
          }
          else
          {
-            Canvas.SetLeft(_windowshotImageSelectionBox, mousePos.X);
-            _windowshotImageSelectionBox.Width = _windowshotImageLastMouseDownPosition.X - mousePos.X;
+            Canvas.SetLeft(_windowshotSelectionBox, mousePos.X);
+            _windowshotSelectionBox.Width = _windowshotLastMousePos.X - mousePos.X;
          }
 
-         if (_windowshotImageLastMouseDownPosition.Y < mousePos.Y)
+         if (_windowshotLastMousePos.Y < mousePos.Y)
          {
-            Canvas.SetTop(_windowshotImageSelectionBox, _windowshotImageLastMouseDownPosition.Y);
-            _windowshotImageSelectionBox.Height = mousePos.Y - _windowshotImageLastMouseDownPosition.Y;
+            Canvas.SetTop(_windowshotSelectionBox, _windowshotLastMousePos.Y);
+            _windowshotSelectionBox.Height = mousePos.Y - _windowshotLastMousePos.Y;
          }
          else
          {
-            Canvas.SetTop(_windowshotImageSelectionBox, mousePos.Y);
-            _windowshotImageSelectionBox.Height = _windowshotImageLastMouseDownPosition.Y - mousePos.Y;
+            Canvas.SetTop(_windowshotSelectionBox, mousePos.Y);
+            _windowshotSelectionBox.Height = _windowshotLastMousePos.Y - mousePos.Y;
          }
       }
 

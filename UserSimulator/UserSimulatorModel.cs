@@ -63,7 +63,10 @@ namespace UserSimulator
             var mousePosition = Mouse.Position;
             LastWindowHandle = Desktop.WindowHandle(mousePosition.MouseX, mousePosition.MouseY);
             if (IsLastWindowHandleValid())
+            {
+               REPL.WindowHandle = LastWindowHandle;
                LastWindowTitle = Window.Text(LastWindowHandle);
+            }
          }
          if (IsLastWindowHandleValid())
             LastWindowshot = Window.Capture(LastWindowHandle);

@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="DisposableBase.cs" />
     <Compile Include="Geometry.cs" />
+    <Compile Include="Imaging.cs" />
     <Compile Include="NotifyingTransformedProperty.cs" />
     <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

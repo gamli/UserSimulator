@@ -53,16 +53,17 @@ namespace UserSimulator
                WindowshotRect,
                GraphicsUnit.Pixel);
 
-            using (var lastWindowshotPartStream = new MemoryStream())
-            {
-               lastWindowhotPart.Save(lastWindowshotPartStream, ImageFormat.Png);
-               var binaryValue = lastWindowshotPartStream.ToArray();
-               var hexValue = BitConverter.ToString(binaryValue).Replace("-", string.Empty).ToUpper();
 
-               var codeEditorCursorPosition = CodeEditorCursorPosition;
-               Model.ExpressionText = Model.ExpressionText.Insert(codeEditorCursorPosition, "\"" + hexValue + "\"");
-               CodeEditorCursorPosition = codeEditorCursorPosition + hexValue.Length + 2;
-            }
+            var imageExpression = "\"" + Imaging.Image2PngHexString(lastWindowhotPart) + "\"";
+            var windowshotExpression =
+               string.Format(
+                  "(windowshot {0} {1} {2} {3})",
+                  WindowshotRect.Left, WindowshotRect.Top, WindowshotRect.Width, WindowshotRect.Height);
+            var equalsExpression = "(= " + imageExpression + " " + windowshotExpression + ")";
+
+            var codeEditorCursorPosition = CodeEditorCursorPosition;
+            Model.ExpressionText = Model.ExpressionText.Insert(codeEditorCursorPosition, equalsExpression);
+            CodeEditorCursorPosition = codeEditorCursorPosition + equalsExpression.Length;
          }
       }
    }

@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
+using Common;
 using IO;
 using Macro;
 using MacroLanguage;
@@ -12,12 +13,12 @@ namespace MacroRuntime
 {
    public class RuntimeContext : ContextBase
    {
-      private readonly IntPtr _targetWindow;
+      private readonly IntPtr _windowHandle;
       private readonly MacroParser _parser = new MacroParser();
 
-      public RuntimeContext(IntPtr TargetWindow)
+      public RuntimeContext(IntPtr WindowHandle)
       {
-         _targetWindow = TargetWindow;
+         _windowHandle = WindowHandle;
 
          AddIntrinsicProcedure("eval", Eval, _evalExpression);
 
@@ -47,7 +48,7 @@ namespace MacroRuntime
          AddIntrinsicProcedure("position", MousePosition, _mousePositionX, _mousePositionY);
          AddIntrinsicProcedure("pause", Pause, _pauseDuration);
          AddIntrinsicProcedure("click", LeftClick);
-         AddIntrinsicProcedure("windowshot", Windowshot, _windowshotX, _windowshotY, _windowshotImageUrl);
+         AddIntrinsicProcedure("windowshot", Windowshot, _windowshotX, _windowshotY, _windowshotWidth, _windowshotHeight);
 
          AddDerivedProcedure("first", "lst", "(car lst)");
          AddDerivedProcedure("rest", "lst", "(cdr lst)");
@@ -266,7 +267,7 @@ namespace MacroRuntime
       {
          int screenX, screenY;
          Window.ClientToScreen(
-            _targetWindow,
+            _windowHandle,
             (int)GetConstantValue<decimal>(Context, _mousePositionX), (int)GetConstantValue<decimal>(Context, _mousePositionY),
             out screenX, out screenY);
          Mouse.Position = new Mouse.MousePoint(screenX, screenY);
@@ -295,35 +296,30 @@ namespace MacroRuntime
 
       private readonly Symbol _windowshotX = new Symbol("X");
       private readonly Symbol _windowshotY = new Symbol("Y");
-      private readonly Symbol _windowshotImageUrl = new Symbol("ImageUrl");
+      private readonly Symbol _windowshotWidth = new Symbol("Width");
+      private readonly Symbol _windowshotHeight = new Symbol("Height");
       [ExcludeFromCodeCoverage]
       private Constant Windowshot(ContextBase Context)
       {
-         using (var image = new Bitmap(GetConstantValue<string>(Context, _windowshotImageUrl)))
-         using (var windowContent = Window.Capture(_targetWindow))
-         using (var clippedWindowContent = new Bitmap(image.Width, image.Height))
-         using (var clippedWindowContentGraphics = Graphics.FromImage(clippedWindowContent))
+         var x = (int)GetConstantValue<decimal>(Context, _windowshotX);
+         var y = (int)GetConstantValue<decimal>(Context, _windowshotY);
+         var width = (int)GetConstantValue<decimal>(Context, _windowshotWidth);
+         var height = (int)GetConstantValue<decimal>(Context, _windowshotHeight);
+
+         using (var windowCapture = Window.Capture(_windowHandle))
          {
-            var windowshotX = (int)GetConstantValue<decimal>(Context, _windowshotX);
-            var windowshotY = (int)GetConstantValue<decimal>(Context, _windowshotY);
-
-            clippedWindowContentGraphics.DrawImage(
-               windowContent,
-               0, 0,
-               new Rectangle(
-                  windowshotX - image.Width / 2, windowshotY - image.Width / 2,
-                  image.Width, image.Height),
-               GraphicsUnit.Pixel
-               );
-
-            for (var x = 0; x < image.Width; x++)
-               for (var y = 0; y < image.Height; y++)
-                  if (image.GetPixel(x, y) != clippedWindowContent.GetPixel(x, y))
-                  {
-                     return new Constant(false);
-                  }
+            var windowshot = new Bitmap(width, height);
+            using (var windowshotGraphics = Graphics.FromImage(windowshot))
+            {
+               windowshotGraphics.DrawImage(
+                  windowCapture,
+                  0, 0,
+                  new Rectangle(x, y, width, height),
+                  GraphicsUnit.Pixel
+                  );
+               return new Constant(Imaging.Image2PngHexString(windowshot));
+            }
          }
-         return new Constant(true);
       }
 
       private T GetConstantValue<T>(ContextBase Context, Symbol Symbol)
