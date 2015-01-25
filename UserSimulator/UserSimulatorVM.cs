@@ -53,8 +53,6 @@ namespace UserSimulator
                WindowshotRect,
                GraphicsUnit.Pixel);
 
-            lastWindowhotPart.Save(@"C:\temp\test.png", ImageFormat.Png);
-
             using (var lastWindowshotPartStream = new MemoryStream())
             {
                lastWindowhotPart.Save(lastWindowshotPartStream, ImageFormat.Png);
