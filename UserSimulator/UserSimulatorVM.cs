@@ -19,10 +19,13 @@ namespace UserSimulator
                new[] { "LastWindowshot" }, "LastWindowshotVM",
                Model, this,
                () => Application.Current.Dispatcher.Invoke(() => DrawingImage2WpfImageSource(Model.LastWindowshot)));
+
+         WindowshotSnippetFormat = "(= {0} (windowshot {1} {2} {3} {4}))";
       }
 
       private readonly NotifyingTransformedProperty<ImageSource> _lastWindowshotVM;
       private int _codeEditorCursorPosition;
+      private string _windowshotSnippetFormat;
 
       public ImageSource LastWindowshotVM { get { return _lastWindowshotVM.Value; } }
       private static ImageSource DrawingImage2WpfImageSource(Image Image)
@@ -42,8 +45,14 @@ namespace UserSimulator
 
       public int CodeEditorCursorPosition { get { return _codeEditorCursorPosition; } set { SetPropertyValue(ref _codeEditorCursorPosition, value); } }
 
-      public void InsertWindowshotIntoCodeEditor(Rectangle WindowshotRect) // TODO width/height zero - what to do?
+      public string WindowshotSnippetFormat { get { return _windowshotSnippetFormat; } set { SetPropertyValue(ref _windowshotSnippetFormat, value); } }
+
+      public void InsertWindowshotSnippetIntoCodeEditor(Rectangle WindowshotRect)
       {
+         // empty selection
+         if(WindowshotRect.Width <= 0 || WindowshotRect.Height <= 0)
+            return;
+
          using (var lastWindowhotPart = new Bitmap(WindowshotRect.Width, WindowshotRect.Height))
          using (var lastWindowshotPartGraphics = Graphics.FromImage(lastWindowhotPart))
          {
@@ -55,15 +64,15 @@ namespace UserSimulator
 
 
             var imageExpression = "\"" + Imaging.Image2PngHexString(lastWindowhotPart) + "\"";
-            var windowshotExpression =
+            var windowshotSnippet = 
                string.Format(
-                  "(windowshot {0} {1} {2} {3})",
+                  WindowshotSnippetFormat, 
+                  imageExpression, 
                   WindowshotRect.Left, WindowshotRect.Top, WindowshotRect.Width, WindowshotRect.Height);
-            var equalsExpression = "(= " + imageExpression + " " + windowshotExpression + ")";
 
             var codeEditorCursorPosition = CodeEditorCursorPosition;
-            Model.ExpressionText = Model.ExpressionText.Insert(codeEditorCursorPosition, equalsExpression);
-            CodeEditorCursorPosition = codeEditorCursorPosition + equalsExpression.Length;
+            Model.ExpressionText = Model.ExpressionText.Insert(codeEditorCursorPosition, windowshotSnippet);
+            CodeEditorCursorPosition = codeEditorCursorPosition + windowshotSnippet.Length;
          }
       }
    }

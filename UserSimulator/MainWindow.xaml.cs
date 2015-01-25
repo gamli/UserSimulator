@@ -69,7 +69,7 @@ namespace UserSimulator
          var y = (int) _windowshotLastMousePos.Y;
          var width = (int) windowhotMouseUp.X - x;
          var height = (int) windowhotMouseUp.Y - y;
-         _viewModel.InsertWindowshotIntoCodeEditor(Geometry.NormalizedRectangle(x, y, width, height));
+         _viewModel.InsertWindowshotSnippetIntoCodeEditor(Geometry.NormalizedRectangle(x, y, width, height));
       }
 
       private void WindowshotImage_MouseMove(object Sender, MouseEventArgs Args)

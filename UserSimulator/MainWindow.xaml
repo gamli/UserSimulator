@@ -33,6 +33,7 @@
                <TextBlock Text="{Binding Model.LastWindowHandle}" FontWeight="Bold"/>
                <TextBlock Text=")"/>
             </StackPanel>
+            <TextBox Text="{Binding WindowshotSnippetFormat}"/>
             <Grid Background="Transparent">
                <Image x:Name="_windowshotImage" Source="{Binding LastWindowshotVM}"
                       MouseDown="WindowshotImage_MouseDown" MouseUp="WindowshotImage_MouseUp" MouseMove="WindowshotImage_MouseMove"/>
