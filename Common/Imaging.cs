@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using Tesseract;
+using ImageFormat = System.Drawing.Imaging.ImageFormat;
 
 namespace Common
 {
@@ -55,6 +57,32 @@ namespace Common
                );
          }
          return croppedImage;
+      }
+
+      public static object ReadText(Image Image)
+      {
+         using (var bitmap = ToBitmap(Image))
+         {
+            using (var engine = new TesseractEngine("./Tessdata", "eng"))
+            {
+               using (var pix = PixConverter.ToPix(bitmap))
+               {
+                  using (var page = engine.Process(pix))
+                  {
+                     var text = page.GetText();
+                     decimal textDecimal;
+                     if (decimal.TryParse(text, out textDecimal))
+                        return textDecimal;
+                     return text;
+                  }
+               }
+            }
+         }
+      }
+
+      private static Bitmap ToBitmap(Image Image)
+      {
+         return ((Bitmap) Image).Clone(new Rectangle(0, 0, Image.Width, Image.Height), PixelFormat.Format24bppRgb);
       }
    }
 }
