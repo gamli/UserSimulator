@@ -12,6 +12,8 @@ namespace Common
    [ExcludeFromCodeCoverage]
    public static class Imaging
    {
+      private static readonly TesseractEngine TESSERACT_ENGINE = new TesseractEngine("./Tessdata", "eng");
+
       public static string Image2PngHexString(Image Image)
       {
          return Image2HexString(Image, ImageFormat.Png);
@@ -63,18 +65,15 @@ namespace Common
       {
          using (var bitmap = ToBitmap(Image))
          {
-            using (var engine = new TesseractEngine("./Tessdata", "eng"))
+            using (var pix = PixConverter.ToPix(bitmap))
             {
-               using (var pix = PixConverter.ToPix(bitmap))
+               using (var page = TESSERACT_ENGINE.Process(pix))
                {
-                  using (var page = engine.Process(pix))
-                  {
-                     var text = page.GetText();
-                     decimal textDecimal;
-                     if (decimal.TryParse(text, out textDecimal))
-                        return textDecimal;
-                     return text;
-                  }
+                  var text = page.GetText();
+                  decimal textDecimal;
+                  if (decimal.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out textDecimal))
+                     return textDecimal;
+                  return text;
                }
             }
          }

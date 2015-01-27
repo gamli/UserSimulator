@@ -47,6 +47,7 @@
     <Compile Include="ContextBase.cs" />
     <Compile Include="ExpressionEvaluator.cs" />
     <Compile Include="IntrinsicProcedure.cs" />
+    <Compile Include="IOutput.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Procedure.cs" />
     <Compile Include="ProcedureBase.cs" />

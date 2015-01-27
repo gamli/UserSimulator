@@ -8,7 +8,7 @@ using MacroLanguage;
 
 namespace MacroRuntime
 {
-   public class REPL : NotifyPropertyChangedBase
+   public class REPL : NotifyPropertyChangedBase, IOutput
    {
       private readonly MacroParser _parser = new MacroParser();
       private RuntimeContext _context;
@@ -62,8 +62,8 @@ namespace MacroRuntime
          ResetError();
          Output.Clear();
          ResetIndent();
-         _context = new RuntimeContext(_windowHandle);
-         OutputEmptyInputEcho();
+         _context = new RuntimeContext(_windowHandle, this);
+         OutputEmptyEcho();
       }
 
       public void ConsumeInput(string Input)
@@ -71,7 +71,7 @@ namespace MacroRuntime
          AppendInputEcho(Input);
 
          ParseLastInput();
-         
+
          EvaluateLastParsedExpression();
       }
 
@@ -80,7 +80,7 @@ namespace MacroRuntime
          if (IsInWaitingForMoreInputState())
             AppendInputEcho("...parse preview requested - canceling input...");
 
-         OutputEmptyInputEcho();
+         OutputEmptyEcho();
 
          AppendInputEcho(Input);
 
@@ -102,7 +102,12 @@ namespace MacroRuntime
             Indent();
             GetLastInputEcho().AppendText("\n" + Indentation());
          }
-         GetLastInputEcho().AppendText(Input);
+         AppendEcho(Input);
+      }
+
+      private void AppendEcho(string Echo)
+      {
+         GetLastInputEcho().AppendText(Echo);
       }
 
       private bool IsInWaitingForMoreInputState()
@@ -125,7 +130,7 @@ namespace MacroRuntime
          {
             LastParsedExpression = (Expression)_parser.Parse(GetLastInputEcho().Text);
             OutputInfo("Parsing successfull");
-            OutputEmptyInputEcho();
+            OutputEmptyEcho();
          }
          catch (ParseException e)
          {
@@ -134,7 +139,7 @@ namespace MacroRuntime
             LastErrorPosition = e.Position;
             LastParsedExpression = null;
             OutputParseError(e);
-            OutputEmptyInputEcho();
+            OutputEmptyEcho();
          }
       }
 
@@ -171,7 +176,7 @@ namespace MacroRuntime
             var printed = MacroPrinter.Print(LastEvaluatedExpression, _formatOutput);
             ResetIndent();
             OutputEvaluatedExpression(printed);
-            OutputEmptyInputEcho();
+            OutputEmptyEcho();
          }
          else
          {
@@ -182,8 +187,22 @@ namespace MacroRuntime
             LastParsedExpression = null;
             LastEvaluatedExpression = null;
             OutputRuntimeError(exception);
-            OutputEmptyInputEcho();
+            OutputEmptyEcho();
          }
+      }
+
+      #endregion
+
+      #region implementation of IOutput for RuntimeContext
+
+      public void Print(string Text)
+      {
+         AppendEcho(Text);// TODO naming
+      }
+
+      public void PrintLine(string Text = "")
+      {
+         Print(Text + "\n");
       }
 
       #endregion
@@ -210,7 +229,7 @@ namespace MacroRuntime
          AddOutput(Text, REPLOutputType.Info);
       }
 
-      private void OutputEmptyInputEcho()
+      private void OutputEmptyEcho()
       {
          AddOutput("", REPLOutputType.InputEcho);
       }
@@ -253,6 +272,7 @@ namespace MacroRuntime
       internal void AppendText(string Txt)
       {
          Text += Txt;
+         RaisePropertyChanged("Text");
       }
    }
 

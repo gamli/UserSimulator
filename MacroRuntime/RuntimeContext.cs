@@ -14,11 +14,13 @@ namespace MacroRuntime
    public class RuntimeContext : ContextBase
    {
       private readonly IntPtr _windowHandle;
+      private readonly IOutput _output;
       private readonly MacroParser _parser = new MacroParser();
 
-      public RuntimeContext(IntPtr WindowHandle)
+      public RuntimeContext(IntPtr WindowHandle, IOutput Output = null)
       {
          _windowHandle = WindowHandle;
+         _output = Output;
 
          AddIntrinsicProcedure("eval", Eval, _evalExpression);
 
@@ -43,6 +45,9 @@ namespace MacroRuntime
          AddIntrinsicProcedure("car", Car, _carList);
          AddIntrinsicProcedure("cdr", Cdr, _cdrList);
          AddIntrinsicProcedure("append", Append, _appendListLeft, _appendListRight);
+
+         AddIntrinsicProcedure("print", Print, _printExpression);
+         AddIntrinsicProcedure("read-text", ReadText, _readTextImage);
 
          AddIntrinsicProcedure("move", MouseMove, _mouseMoveDeltaX, _mouseMoveDeltaY);
          AddIntrinsicProcedure("position", MousePosition, _mousePositionX, _mousePositionY);
@@ -246,6 +251,24 @@ namespace MacroRuntime
          var listLeft = GetGenericValue<List>(Context, _appendListLeft);
          var listRight = GetGenericValue<List>(Context, _appendListRight);
          return new List(listLeft.Expressions.Concat(listRight.Expressions));
+      }
+
+      private readonly Symbol _printExpression = new Symbol("Expression");
+      private Expression Print(ContextBase Context)
+      {
+         var expression = GetGenericValue<Expression>(Context, _printExpression);
+         var printedExpression = MacroPrinter.Print(expression, true);
+         if(_output != null)
+            _output.PrintLine(printedExpression);
+         return new Constant(printedExpression);
+      }
+
+      private readonly Symbol _readTextImage = new Symbol("Image");
+      private Expression ReadText(ContextBase Context)
+      {
+         var image = GetGenericValue<Constant>(Context, _readTextImage);
+         var text = Imaging.ReadText(Imaging.HexString2Image((string)image.Value));
+         return new Constant(text);
       }
 
 
