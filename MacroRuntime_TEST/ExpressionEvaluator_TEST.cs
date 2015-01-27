@@ -93,6 +93,9 @@ namespace MacroRuntime_TEST
          AssertExpressionEvaluatesTo(new Constant(10), "(loop (loopTestCondition) (loopTestBody))", context);
          Assert.AreEqual(-1, counter);
          Assert.AreEqual(10, result);
+
+         // loop is not executed => nil return
+         AssertExpressionEvaluatesTo(new List(), "(loop (loopTestCondition) (loopTestBody))", context);
       }
 
       [TestMethod]
