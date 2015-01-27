@@ -76,6 +76,9 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(SpecialForms.Lambda(new List(symbolX), SpecialForms.ProcedureCall(new Symbol("mult"), symbolX, symbolX)));
          text.Append(" (lambda (x) (mult x x))");
 
+         macro.Expressions.Add(SpecialForms.SetValue(new Symbol("var"), new Constant(4711m)));
+         text.Append(" (set! var 4711)");
+
          text.Append(")");
 
          return Tuple.Create(text.ToString(), (MacroBase)macro);

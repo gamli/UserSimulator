@@ -7,6 +7,7 @@
       public static readonly Symbol LambdaSymbol = new Symbol("lambda");
       public static readonly Symbol QuoteSymbol = new Symbol("quote");
       public static readonly Symbol LoopSymbol = new Symbol("loop");
+      public static readonly Symbol SetValueSymbol = new Symbol("set!");
 
 
       public static List Define(Symbol Symbol, Expression Expression)
@@ -42,6 +43,11 @@
       public static List Loop(Expression Condition, Expression Body)
       {
          return new List(LoopSymbol, Condition, Body);
+      }
+
+      public static List SetValue(Symbol Symbol, Expression Value)
+      {
+         return new List(SetValueSymbol, Symbol, Value);
       }
    }
 }

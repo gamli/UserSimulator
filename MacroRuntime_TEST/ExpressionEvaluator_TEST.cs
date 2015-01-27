@@ -118,6 +118,15 @@ namespace MacroRuntime_TEST
       }
 
       [TestMethod]
+      public void SetValue_TEST()
+      {
+         var context = new RuntimeContext(IntPtr.Zero);
+         var expectedValue = new Constant(4711m);
+         AssertExpressionEvaluatesTo(expectedValue, "(begin (define var 4712) (set! var (- var 1)))", context);
+         Assert.AreEqual(expectedValue, context.GetValue(new Symbol("var")));
+      }
+
+      [TestMethod]
       public void Symbol_TEST()
       {
          var context = new RuntimeContext(IntPtr.Zero);

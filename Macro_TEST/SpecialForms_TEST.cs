@@ -43,6 +43,11 @@ namespace Macro_TEST
          Assert.AreEqual(loopForm.Expressions[0], SpecialForms.LoopSymbol);
          Assert.AreEqual(loopForm.Expressions[1], condition);
          Assert.AreEqual(loopForm.Expressions[2], symbol);
+
+         var setValueForm = SpecialForms.SetValue(symbol, one);
+         Assert.AreEqual(setValueForm.Expressions[0], SpecialForms.SetValueSymbol);
+         Assert.AreEqual(setValueForm.Expressions[1], symbol);
+         Assert.AreEqual(setValueForm.Expressions[2], one);
       }
    }
 }

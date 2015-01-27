@@ -44,10 +44,10 @@ namespace Macro
 
          OnMacroChanged();
       }
-      private void HandleItemMacroChanged(object Sender, EventArgs Args)
+      /*private void HandleItemMacroChanged(object Sender, EventArgs Args)
       {
          OnMacroChanged();
-      }
+      }*/
 
       public override void Accept(IVisitor Visitor)
       {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using IO;
@@ -26,8 +27,7 @@ namespace MacroRuntime
          var visitor = new ExpressionVisitor();
          try
          {
-            if(!Keyboard.IsControlKeyDown() && Keyboard.IsF12KeyDown())
-               throw new RuntimeException("Aborted by User", Expression, _context);
+            CheckAbortedException(Expression);
             return visitor.EvaluateExpression(Expression, _context);
          }
          catch (Exception e)
@@ -35,6 +35,13 @@ namespace MacroRuntime
             Logger.Instance.Log("ExpressionEvaluator.Evaluate: " + e.Message);
             throw new RuntimeException("Exception during evaluation", Expression, _context, e);
          }
+      }
+
+      [ExcludeFromCodeCoverage]
+      private void CheckAbortedException(Expression Expression)
+      {
+         if (!Keyboard.IsControlKeyDown() && Keyboard.IsF12KeyDown())
+            throw new RuntimeException("Aborted by User", Expression, _context);
       }
 
       private class ExpressionVisitor : SpecialFormAwareVisitor
