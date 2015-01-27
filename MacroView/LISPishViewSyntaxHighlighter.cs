@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Common;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
 
@@ -63,15 +64,15 @@ namespace MacroView
       private void StyleError(DocumentLine Line)
       {
          var lastErrorDisplayPosition = LastErrorPosition == 0 ? 0 : LastErrorPosition - 1;
-         
+
          // text has been deleted or changed in some other way - so the error is not longer valid - TODO handle this somewhere else?
-         if(CurrentContext.Document.TextLength <= lastErrorDisplayPosition)
+         if (CurrentContext.Document.TextLength <= lastErrorDisplayPosition)
             return;
 
          if (lastErrorDisplayPosition > -1 && CurrentContext.Document.GetLineByOffset(lastErrorDisplayPosition) == Line)
          {
             var lastErrorLength = LastErrorLength <= 0 ? 5 : LastErrorLength;
-            
+
             var positionInLine = lastErrorDisplayPosition - Line.Offset;
             Contract.Assert(positionInLine >= 0);
 
@@ -206,13 +207,8 @@ namespace MacroView
       {
          try
          {
-            var binaryValue = new byte[HexValue.Length / 2];
-            for (var i = 0; i < HexValue.Length; i += 2)
-               binaryValue[i / 2] = byte.Parse(HexValue.Substring(i, 2), NumberStyles.AllowHexSpecifier);
-
-            using (var stream = new MemoryStream())
+            using (var stream = Imaging.HexString2Stream(HexValue))
             {
-               stream.Write(binaryValue, 0, binaryValue.Length);
                var bitmap = new BitmapImage();
                bitmap.BeginInit();
                bitmap.CacheOption = BitmapCacheOption.OnLoad;

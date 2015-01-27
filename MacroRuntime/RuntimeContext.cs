@@ -79,20 +79,18 @@ namespace MacroRuntime
          DefineValue(new Symbol(Symbol), ExpressionEvaluator.Evaluate(lambda, this));
       }
 
-      protected override bool SymbolNotFoundIsValueDefined(Symbol Symbol)
+      protected override bool SymbolNotFoundIsValueDefined(Symbol Symbol) // TODO BUG?
       {
          return false;
       }
 
-      [ExcludeFromCodeCoverage]
-      protected override void SymbolNotFoundSetValue(Symbol Symbol, Expression Value)
+      protected override void SymbolNotFoundSetValue(Symbol Symbol, Expression Value) // TODO BUG?
       {
          var exceptionMessage = "SetValue: Symbol >>" + Symbol.Value + "<< is not defined (did you forget to define first?)";
          throw new RuntimeException(exceptionMessage, Symbol, this);
       }
 
-      [ExcludeFromCodeCoverage]
-      protected override Expression SymbolNotFoundGetValue(Symbol Symbol)
+      protected override Expression SymbolNotFoundGetValue(Symbol Symbol) // TODO BUG?
       {
          var exceptionMessage = "GetValue: Symbol >>" + Symbol.Value + "<< is not defined (did you forget to define first?)";
          throw new RuntimeException(exceptionMessage, Symbol, this);
@@ -309,16 +307,9 @@ namespace MacroRuntime
 
          using (var windowCapture = Window.Capture(_windowHandle))
          {
-            var windowshot = new Bitmap(width, height);
-            using (var windowshotGraphics = Graphics.FromImage(windowshot))
+            using (var croppedImage = Imaging.CropImage(windowCapture, x, y, width, height))
             {
-               windowshotGraphics.DrawImage(
-                  windowCapture,
-                  0, 0,
-                  new Rectangle(x, y, width, height),
-                  GraphicsUnit.Pixel
-                  );
-               return new Constant(Imaging.Image2PngHexString(windowshot));
+               return new Constant(Imaging.Image2PngHexString(croppedImage));  
             }
          }
       }
