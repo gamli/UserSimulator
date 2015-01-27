@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 using Common;
-using Macro;
 using MacroLanguage;
+using Expression = Macro.Expression;
 
 namespace MacroRuntime
 {
@@ -58,16 +61,11 @@ namespace MacroRuntime
 
       public void Reset()
       {
-         // TODO - move to UserSimulatorModel?
-         System.Windows.Application.Current.Dispatcher.Invoke(
-            () =>
-            {
-               ResetError();
-               Output.Clear();
-               ResetIndent();
-               _context = new RuntimeContext(_windowHandle);
-               OutputEmptyInputEcho();
-            });
+         ResetError();
+         Output.Clear();
+         ResetIndent();
+         _context = new RuntimeContext(_windowHandle);
+         OutputEmptyInputEcho();
       }
 
       public void ConsumeInput(string Input)
@@ -142,7 +140,7 @@ namespace MacroRuntime
          }
       }
 
-      private void EvaluateLastParsedExpression()
+      private async void EvaluateLastParsedExpression()
       {
          if (LastParsedExpression == null)
          {
@@ -152,24 +150,40 @@ namespace MacroRuntime
 
          ResetError();
 
-         try
-         {
-            LastEvaluatedExpression = new ExpressionEvaluator(_context).Evaluate(LastParsedExpression);
+         RuntimeException exception = null;
+         Expression lastEvaluatedExpression = null;
 
+         await Task.Run(
+            () =>
+            {
+               try
+               {
+                  lastEvaluatedExpression = new ExpressionEvaluator(_context).Evaluate(LastParsedExpression);
+               }
+               catch (RuntimeException e)
+               {
+                  exception = e;
+               }
+            });
+
+
+         if (exception == null)
+         {
+            LastEvaluatedExpression = lastEvaluatedExpression;
             var printed = MacroPrinter.Print(LastEvaluatedExpression, _formatOutput);
             ResetIndent();
             OutputEvaluatedExpression(printed);
             OutputEmptyInputEcho();
          }
-         catch (RuntimeException e)
+         else
          {
-            LastErrorLine = e.InnermostTextLine();
-            LastErrorColumn = e.InnermostTextColumn();
-            LastErrorPosition = e.InnermostTextPosition();
-            LastErrorLength = e.InnermostTextLength();
+            LastErrorLine = exception.InnermostTextLine();
+            LastErrorColumn = exception.InnermostTextColumn();
+            LastErrorPosition = exception.InnermostTextPosition();
+            LastErrorLength = exception.InnermostTextLength();
             LastParsedExpression = null;
             LastEvaluatedExpression = null;
-            OutputRuntimeError(e);
+            OutputRuntimeError(exception);
             OutputEmptyInputEcho();
          }
       }

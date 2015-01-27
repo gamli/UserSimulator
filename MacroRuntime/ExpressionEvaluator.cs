@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using IO;
 using Macro;
 
 namespace MacroRuntime
@@ -25,6 +26,8 @@ namespace MacroRuntime
          var visitor = new ExpressionVisitor();
          try
          {
+            if(!Keyboard.IsControlKeyDown() && Keyboard.IsF12KeyDown())
+               throw new RuntimeException("Aborted by User", Expression, _context);
             return visitor.EvaluateExpression(Expression, _context);
          }
          catch (Exception e)
@@ -179,6 +182,7 @@ namespace MacroRuntime
 
          public override void VisitLoop(List Loop)
          {
+            _value = new List();
             var currentContext = CurrentContext();
             while (TypeConversion.ConvertToBoolean(EvaluateGeneric<Expression>(Loop.Expressions[1], currentContext), currentContext))
                _value = EvaluateGeneric<Expression>(Loop.Expressions[2], currentContext);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Net.WebSockets;
 using System.Timers;
 using System.Windows;
 using Common;
@@ -23,9 +24,9 @@ namespace UserSimulator
                LastWindowshot = Image.FromStream(screenshotImageStream);
                screenshotErrorImage.Stream.Dispose();
             }
-         UpdateWindowshot();
+         UpdateWindowshotTimer_OnElapsed();
          _timer = new Timer(1000);
-         _timer.Elapsed += (Sender, Args) => UpdateWindowshot();
+         _timer.Elapsed += (Sender, Args) => UpdateWindowshotTimer_OnElapsed();
          _timer.Start();
 
          REPL = new REPL(true);
@@ -56,23 +57,28 @@ namespace UserSimulator
 
       #region Windowshot update
 
-      private void UpdateWindowshot()
+      private void UpdateWindowshotTimer_OnElapsed()
       {
          if (Keyboard.IsControlKeyDown() && Keyboard.IsF12KeyDown())
          {
             var mousePosition = Mouse.Position;
             LastWindowHandle = Desktop.WindowHandle(mousePosition.MouseX, mousePosition.MouseY);
-            if (IsLastWindowHandleValid())
+            if (IsWindowHandleValid())
             {
-               REPL.WindowHandle = LastWindowHandle;
-               LastWindowTitle = Window.Text(LastWindowHandle);
+               // TODO move to view model?
+               Application.Current.Dispatcher.Invoke(
+                  () =>
+                  {
+                     REPL.WindowHandle = LastWindowHandle;
+                     LastWindowTitle = Window.Text(LastWindowHandle);
+                  });
             }
          }
-         if (IsLastWindowHandleValid())
+         if (IsWindowHandleValid())
             LastWindowshot = Window.Capture(LastWindowHandle);
       }
 
-      private bool IsLastWindowHandleValid()
+      private bool IsWindowHandleValid()
       {
          return LastWindowHandle != IntPtr.Zero;
       }
