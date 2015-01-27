@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using Macro;
 
@@ -31,11 +32,6 @@ namespace MacroLanguage
       public override void VisitConstant(Constant Constant)
       {
          Append(Constant.ToString());
-      }
-
-      public override void VisitSymbol(Symbol Symbol)
-      {
-         Append(Symbol.ToString());
       }
 
       public override void VisitNil(List Nil)
@@ -77,9 +73,14 @@ namespace MacroLanguage
          PrintSpecialForm(Loop);
       }
 
-      public void PrintSpecialForm(List SpecialForm)
+      public override void VisitSetValue(List SetValue)
       {
-         PrintList(SpecialForm, 1);
+         PrintSpecialForm(SetValue, SetValue.Expressions.Count);
+      }
+
+      public void PrintSpecialForm(List SpecialForm, int LinebreakIndex = 1)
+      {
+         PrintList(SpecialForm, LinebreakIndex);
       }
 
       public void PrintList(List List, int LinebreakIndex)
@@ -124,6 +125,11 @@ namespace MacroLanguage
       private void DecreaseIndent()
       {
          _indent--;
+      }
+
+      public override void VisitSymbol(Symbol Symbol)
+      {
+         Append(Symbol.ToString());
       }
 
       private void Append(string Text)

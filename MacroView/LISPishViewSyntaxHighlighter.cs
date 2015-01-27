@@ -22,7 +22,7 @@ namespace MacroView
       private readonly Regex
          _procedureCall = new Regex(@"\(\s*([^\(\)\s""']*)\b", RegexOptions.Compiled),
 
-         _specialForms = new Regex(@"define|if|lambda|quote|\.", RegexOptions.Compiled),
+         _specialForms = new Regex(@"define|if|lambda|quote|set!|\.", RegexOptions.Compiled),
          _quoteSyntax = new Regex(@"'", RegexOptions.Compiled),
          _lambdaFormalArgs = new Regex(@"lambda\s*\([^\(\)""']*\)", RegexOptions.Compiled),
 

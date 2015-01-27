@@ -188,6 +188,12 @@ namespace MacroRuntime
                _value = EvaluateGeneric<Expression>(Loop.Expressions[2], currentContext);
          }
 
+         public override void VisitSetValue(List SetValue)
+         {
+            var currentContext = CurrentContext();
+            currentContext.SetValue((Symbol)SetValue.Expressions[1], EvaluateExpression(SetValue.Expressions[2], currentContext));
+         }
+
          public override void VisitSymbol(Symbol Symbol)
          {
             _value = CurrentContext().GetValue(Symbol);

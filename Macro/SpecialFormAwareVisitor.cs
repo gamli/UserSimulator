@@ -32,6 +32,9 @@ namespace Macro
                   case "loop":
                      VisitLoop(List);
                      break;
+                  case "set!":
+                     VisitSetValue(List);
+                     break;
                   default:
                      VisitProcedureCall(List);
                      break;
@@ -43,7 +46,7 @@ namespace Macro
          else
             VisitNil(List);
       }
-
+      
       public abstract void VisitNil(List Nil);
       public abstract void VisitDefinition(List Definition);
       public abstract void VisitIf(List If);
@@ -51,6 +54,7 @@ namespace Macro
       public abstract void VisitProcedureCall(List ProcedureCall);
       public abstract void VisitQuote(List Quote);
       public abstract void VisitLoop(List Loop);
+      public abstract void VisitSetValue(List SetValue);
 
       public abstract void VisitSymbol(Symbol Symbol);
    }
