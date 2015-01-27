@@ -34,7 +34,8 @@ namespace MacroRuntime
       {
          if (_values.ContainsKey(Symbol.Value))
             _values[Symbol.Value] = Value;
-         SymbolNotFoundSetValue(Symbol, Value);
+         else
+            SymbolNotFoundSetValue(Symbol, Value);
       }
 
       protected abstract void SymbolNotFoundSetValue(Symbol Symbol, Expression Value);

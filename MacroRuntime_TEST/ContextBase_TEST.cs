@@ -42,6 +42,7 @@ namespace MacroRuntime_TEST
 
          context.SetValue(symbol, new Constant(this));
          Assert.AreEqual(new Constant(this), context.GetValue(symbol));
+         Assert.AreNotEqual(new Constant(this), context.SymbolNotFundSetValueValue);
 
          context.SetValue(new Symbol("undefinedVar"), new Constant(this));
          Assert.AreEqual(new Constant(this), context.SymbolNotFundSetValueValue);
