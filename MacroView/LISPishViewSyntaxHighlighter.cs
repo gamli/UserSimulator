@@ -36,7 +36,7 @@ namespace MacroView
 
          _number = new Regex(@"\d+(\.[0-9]+)?|\.[0-9]+", RegexOptions.Compiled),
 
-         _string = new Regex(@"""([^""]|\"")*""", RegexOptions.Compiled),
+         _string = new Regex(@"""([^""]|\\"")*""", RegexOptions.Compiled),
          _escapedCharacter = new Regex(@"\\.", RegexOptions.Compiled);
 
       protected override void ColorizeLine(DocumentLine Line)
