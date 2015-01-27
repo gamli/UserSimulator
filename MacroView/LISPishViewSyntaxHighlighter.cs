@@ -23,13 +23,13 @@ namespace MacroView
       private readonly Regex
          _procedureCall = new Regex(@"\(\s*([^\(\)\s""']*)\b", RegexOptions.Compiled),
 
-         _specialForms = new Regex(@"define|if|lambda|quote|set!|\.", RegexOptions.Compiled),
+         _specialForms = new Regex(@"define|if|lambda|quote|loop|set!|\.", RegexOptions.Compiled),
          _quoteSyntax = new Regex(@"'", RegexOptions.Compiled),
          _lambdaFormalArgs = new Regex(@"lambda\s*\([^\(\)""']*\)", RegexOptions.Compiled),
 
          _specialFunctions =
             new Regex(
-               @"eval|=|constant\?|list\?|symbol\?|<=|>=|<|>|or|and|\+|-|\*|/|abs|car|cdr|append|move|position|pause|click|windowshot|list|last|begin",
+               @"eval|=|constant\?|list\?|symbol\?|<=|>=|<|>|or|and|\+|-|\*|/|abs|car|cdr|append|move|position|pause|click|windowshot|list|last|begin|print|read-text",
                RegexOptions.Compiled),
 
          _booleanTrue = new Regex(@"true", RegexOptions.Compiled),
