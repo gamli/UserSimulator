@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -15,14 +16,21 @@ namespace Macro
          Expressions.CollectionChanged += HandleItemsCollecionChanged;
       }
 
-      public List(params Expression[] Expressions) 
+      public List(IEnumerable<Expression> Expressions)
          : this()
       {
          foreach (var expression in Expressions)
             this.Expressions.Add(expression);
       }
+
+      public List(params Expression[] Expressions)
+         : this((IEnumerable<Expression>)Expressions)
+      {
+      }
+
       private void HandleItemsCollecionChanged(object Sender, NotifyCollectionChangedEventArgs Args)
       {
+         /*
          if (Args.OldItems != null)
             foreach (MacroBase oldItem in Args.OldItems)
                if (oldItem != null)
@@ -32,6 +40,7 @@ namespace Macro
             foreach (MacroBase newItem in Args.NewItems)
                if (newItem != null)
                   newItem.MacroChanged += HandleItemMacroChanged;
+          */
 
          OnMacroChanged();
       }
@@ -59,6 +68,8 @@ namespace Macro
 
       public override string ToString()
       {
+         if (Expressions.Count == 0)
+            return "nil";
          return "(" + string.Join(" ", Expressions) + ")";
       }
    }

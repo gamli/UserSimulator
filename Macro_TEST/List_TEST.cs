@@ -79,7 +79,7 @@ namespace Macro_TEST
          test = false;
 
          ((List)list.Expressions.Last()).Expressions.Add(new Constant("elementInNestedList"));
-         Assert.IsTrue(test);
+         Assert.IsFalse(test); // changed events are NOT bubbled up
          test = false;
       }
    }
