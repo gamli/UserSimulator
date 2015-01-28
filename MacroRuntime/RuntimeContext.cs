@@ -47,7 +47,7 @@ namespace MacroRuntime
          AddIntrinsicProcedure("append", Append, _appendListLeft, _appendListRight);
 
          AddIntrinsicProcedure("print", Print, _printExpression);
-         AddIntrinsicProcedure("read-text", ReadText, _readTextImage);
+         AddIntrinsicProcedure("ocr", Ocr, _ocrImage);
 
          AddIntrinsicProcedure("move", MouseMove, _mouseMoveDeltaX, _mouseMoveDeltaY);
          AddIntrinsicProcedure("position", MousePosition, _mousePositionX, _mousePositionY);
@@ -263,10 +263,10 @@ namespace MacroRuntime
          return new Constant(printedExpression);
       }
 
-      private readonly Symbol _readTextImage = new Symbol("Image");
-      private Expression ReadText(ContextBase Context)
+      private readonly Symbol _ocrImage = new Symbol("Image");
+      private Expression Ocr(ContextBase Context)
       {
-         var image = GetGenericValue<Constant>(Context, _readTextImage);
+         var image = GetGenericValue<Constant>(Context, _ocrImage);
          var text = Imaging.ReadText(Imaging.HexString2Image((string)image.Value));
          return new Constant(text);
       }
