@@ -29,7 +29,7 @@ namespace MacroView
 
          _specialFunctions =
             new Regex(
-               @"eval|=|constant\?|list\?|symbol\?|<=|>=|<|>|or|and|\+|-|\*|/|abs|car|cdr|append|move|position|pause|click|windowshot|list|last|begin|print|read-text",
+               @"eval|=|constant\?|list\?|symbol\?|<=|>=|<|>|or|and|\+|-|\*|/|abs|car|cdr|append|move|position|pause|click|windowshot|list|last|begin|print|ocr|regex-replace|regex-match",
                RegexOptions.Compiled),
 
          _booleanTrue = new Regex(@"true", RegexOptions.Compiled),

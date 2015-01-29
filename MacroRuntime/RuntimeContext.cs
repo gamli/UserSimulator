@@ -2,7 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Common;
 using IO;
@@ -48,6 +50,8 @@ namespace MacroRuntime
 
          AddIntrinsicProcedure("print", Print, _printExpression);
          AddIntrinsicProcedure("ocr", Ocr, _ocrImage);
+         AddIntrinsicProcedure("regex-replace", RegexReplace, _regexReplaceString, _regexReplaceRegexToReplace, _regexReplaceReplacement);
+         AddIntrinsicProcedure("regex-match", RegexMatch, _regexMatchString, _regexMatchRegex);
 
          AddIntrinsicProcedure("move", MouseMove, _mouseMoveDeltaX, _mouseMoveDeltaY);
          AddIntrinsicProcedure("position", MousePosition, _mousePositionX, _mousePositionY);
@@ -61,7 +65,7 @@ namespace MacroRuntime
          AddDerivedProcedure("list", ".", ".");
 
          AddDerivedProcedure("begin", "(last .)", ".");
-         
+
          AddDerivedProcedure("<=", "(or (< left right) (= left right))", "left", "right");
          AddDerivedProcedure(">=", "(or (> left right) (= left right))", "left", "right");
       }
@@ -126,8 +130,8 @@ namespace MacroRuntime
       private readonly Symbol _addRight = new Symbol("Right");
       private Expression Add(ContextBase Context)
       {
-         var left = (decimal) GetGenericValue<Constant>(Context, _addLeft).Value;
-         var right = (decimal) GetGenericValue<Constant>(Context, _addRight).Value;
+         var left = GetNumber(Context, _addLeft);
+         var right = GetNumber(Context, _addRight);
          return new Constant(left + right);
       }
 
@@ -135,8 +139,8 @@ namespace MacroRuntime
       private readonly Symbol _subRight = new Symbol("Right");
       private Expression Sub(ContextBase Context)
       {
-         var left = (decimal)GetGenericValue<Constant>(Context, _subLeft).Value;
-         var right = (decimal)GetGenericValue<Constant>(Context, _subRight).Value;
+         var left = GetNumber(Context, _subLeft);
+         var right = GetNumber(Context, _subRight);
          return new Constant(left - right);
       }
 
@@ -144,8 +148,8 @@ namespace MacroRuntime
       private readonly Symbol _mulRight = new Symbol("Right");
       private Expression Mul(ContextBase Context)
       {
-         var left = (decimal)GetGenericValue<Constant>(Context, _mulLeft).Value;
-         var right = (decimal)GetGenericValue<Constant>(Context, _mulRight).Value;
+         var left = GetNumber(Context, _mulLeft);
+         var right = GetNumber(Context, _mulRight);
          return new Constant(left * right);
       }
 
@@ -153,8 +157,8 @@ namespace MacroRuntime
       private readonly Symbol _divRight = new Symbol("Right");
       private Expression Div(ContextBase Context)
       {
-         var left = (decimal)GetGenericValue<Constant>(Context, _divLeft).Value;
-         var right = (decimal)GetGenericValue<Constant>(Context, _divRight).Value;
+         var left = GetNumber(Context, _divLeft);
+         var right = GetNumber(Context, _divRight);
          return new Constant(left / right);
       }
 
@@ -162,8 +166,8 @@ namespace MacroRuntime
       private readonly Symbol _modRight = new Symbol("Right");
       private Expression Mod(ContextBase Context)
       {
-         var left = (decimal)GetGenericValue<Constant>(Context, _modLeft).Value;
-         var right = (decimal)GetGenericValue<Constant>(Context, _modRight).Value;
+         var left = GetNumber(Context, _modLeft);
+         var right = GetNumber(Context, _modRight);
          return new Constant(left % right);
       }
 
@@ -171,8 +175,8 @@ namespace MacroRuntime
       private readonly Symbol _lessRight = new Symbol("Right");
       private Expression Less(ContextBase Context)
       {
-         var left = (decimal)GetGenericValue<Constant>(Context, _lessLeft).Value;
-         var right = (decimal)GetGenericValue<Constant>(Context, _lessRight).Value;
+         var left = GetNumber(Context, _lessLeft);
+         var right = GetNumber(Context, _lessRight);
          return new Constant(left < right);
       }
 
@@ -180,8 +184,8 @@ namespace MacroRuntime
       private readonly Symbol _greaterRight = new Symbol("Right");
       private Expression Greater(ContextBase Context)
       {
-         var left = (decimal)GetGenericValue<Constant>(Context, _greaterLeft).Value;
-         var right = (decimal)GetGenericValue<Constant>(Context, _greaterRight).Value;
+         var left = GetNumber(Context, _greaterLeft);
+         var right = GetNumber(Context, _greaterRight);
          return new Constant(left > right);
       }
 
@@ -209,7 +213,7 @@ namespace MacroRuntime
       {
          var left = GetGenericValue<Expression>(Context, _equalLeft);
          var right = GetGenericValue<Expression>(Context, _equalRight);
-         var leftEqualsRight = Equals( left, right);
+         var leftEqualsRight = Equals(left, right);
          return new Constant(leftEqualsRight);
       }
 
@@ -222,8 +226,8 @@ namespace MacroRuntime
       private readonly Symbol _absValue = new Symbol("Value");
       private Expression Abs(ContextBase Context)
       {
-         var numeric = (decimal)GetGenericValue<Constant>(Context, _absValue).Value;
-         return new Constant(Math.Abs(numeric));
+         var number = GetNumber(Context, _absValue);
+         return new Constant(Math.Abs(number));
       }
 
       private readonly Symbol _carList = new Symbol("List");
@@ -258,7 +262,7 @@ namespace MacroRuntime
       {
          var expression = GetGenericValue<Expression>(Context, _printExpression);
          var printedExpression = MacroPrinter.Print(expression, true);
-         if(_output != null)
+         if (_output != null)
             _output.PrintLine(printedExpression);
          return new Constant(printedExpression);
       }
@@ -266,18 +270,42 @@ namespace MacroRuntime
       private readonly Symbol _ocrImage = new Symbol("Image");
       private Expression Ocr(ContextBase Context)
       {
-         var image = GetGenericValue<Constant>(Context, _ocrImage);
-         var text = Imaging.ReadText(Imaging.HexString2Image((string)image.Value));
-         return new Constant(text);
+         var imageHexString = GetString(Context, _ocrImage);
+         var image = Imaging.HexString2Image(imageHexString);
+         var recognizedText = Imaging.ReadText(image);
+         return new Constant(recognizedText);
       }
 
+      private readonly Symbol _regexReplaceString = new Symbol("String");
+      private readonly Symbol _regexReplaceRegexToReplace = new Symbol("RegexToReplace");
+      private readonly Symbol _regexReplaceReplacement = new Symbol("Replacement");
+      private Expression RegexReplace(ContextBase Context)
+      {
+         var str = GetString(Context, _regexReplaceString);
+         var regexToReplace = GetString(Context, _regexReplaceRegexToReplace);
+         var replacement = GetString(Context, _regexReplaceReplacement);
+         var replaced = Regex.Replace(str, regexToReplace, replacement);
+         return new Constant(replaced);
+      }
+
+      private readonly Symbol _regexMatchString = new Symbol("String");
+      private readonly Symbol _regexMatchRegex = new Symbol("Regex");
+      private Expression RegexMatch(ContextBase Context)
+      {
+         var str = GetString(Context, _regexMatchString);
+         var regex = GetString(Context, _regexMatchRegex);
+
+         var match = Regex.Match(str, regex);
+
+         return match.Captures.Count > 0 ? new Constant(match.Captures[0].Value) : new Constant("");
+      }
 
       private readonly Symbol _mouseMoveDeltaX = new Symbol("DeltaX");
       private readonly Symbol _mouseMoveDeltaY = new Symbol("DeltaY");
       private Constant MouseMove(ContextBase Context)
       {
-         Mouse.X += (int)GetConstantValue<decimal>(Context, _mouseMoveDeltaX);
-         Mouse.Y += (int)GetConstantValue<decimal>(Context, _mouseMoveDeltaY);
+         Mouse.X += (int)GetNumber(Context, _mouseMoveDeltaX);
+         Mouse.Y += (int)GetNumber(Context, _mouseMoveDeltaY);
 
          return new Constant(true);
       }
@@ -290,7 +318,7 @@ namespace MacroRuntime
          int screenX, screenY;
          Window.ClientToScreen(
             _windowHandle,
-            (int)GetConstantValue<decimal>(Context, _mousePositionX), (int)GetConstantValue<decimal>(Context, _mousePositionY),
+            (int)GetNumber(Context, _mousePositionX), (int)GetNumber(Context, _mousePositionY),
             out screenX, out screenY);
          Mouse.Position = new Mouse.MousePoint(screenX, screenY);
 
@@ -301,8 +329,8 @@ namespace MacroRuntime
       private readonly Symbol _pauseDuration = new Symbol("Duration");
       private Constant Pause(ContextBase Context)
       {
-         var milliseconds = GetConstantValue<decimal>(Context, _pauseDuration);
-         Thread.Sleep((int) milliseconds);
+         var milliseconds = GetNumber(Context, _pauseDuration);
+         Thread.Sleep((int)milliseconds);
 
          return new Constant(milliseconds);
       }
@@ -323,17 +351,74 @@ namespace MacroRuntime
       [ExcludeFromCodeCoverage]
       private Constant Windowshot(ContextBase Context)
       {
-         var x = (int)GetConstantValue<decimal>(Context, _windowshotX);
-         var y = (int)GetConstantValue<decimal>(Context, _windowshotY);
-         var width = (int)GetConstantValue<decimal>(Context, _windowshotWidth);
-         var height = (int)GetConstantValue<decimal>(Context, _windowshotHeight);
+         var x = (int)GetNumber(Context, _windowshotX);
+         var y = (int)GetNumber(Context, _windowshotY);
+         var width = (int)GetNumber(Context, _windowshotWidth);
+         var height = (int)GetNumber(Context, _windowshotHeight);
 
          using (var windowCapture = Window.Capture(_windowHandle))
          {
             using (var croppedImage = Imaging.CropImage(windowCapture, x, y, width, height))
             {
-               return new Constant(Imaging.Image2PngHexString(croppedImage));  
+               return new Constant(Imaging.Image2PngHexString(croppedImage));
             }
+         }
+      }
+
+      private bool GetBoolean(ContextBase Context, Symbol Symbol)
+      {
+         try
+         {
+            return GetConstantValue<bool>(Context, Symbol);
+         }
+         catch (InvalidCastException)
+         {
+            var constantValue = GetGenericValue<Constant>(Context, Symbol).Value;
+            var stringValue = constantValue as string;
+            if (stringValue != null)
+            {
+               bool parsedValue;
+               if (bool.TryParse(stringValue, out parsedValue))
+                  return parsedValue;
+            }
+            throw;
+         }
+      }
+
+      private string GetString(ContextBase Context, Symbol Symbol)
+      {
+         try
+         {
+            return GetConstantValue<string>(Context, Symbol);
+         }
+         catch (InvalidCastException)
+         {
+            var toStringValue = GetGenericValue<Constant>(Context, Symbol).Value.ToString();
+            return toStringValue;
+         }
+      }
+
+      private decimal GetNumber(ContextBase Context, Symbol Symbol)
+      {
+         try
+         {
+            return GetConstantValue<decimal>(Context, Symbol);
+         }
+         catch (RuntimeException e)
+         {
+            var constantValue = GetGenericValue<Constant>(Context, Symbol).Value;
+            var stringValue = constantValue as string;
+            if (stringValue != null)
+            {
+               decimal parsedValue;
+               if (decimal.TryParse(stringValue, NumberStyles.Number, CultureInfo.InvariantCulture, out parsedValue))
+                  return parsedValue;
+            }
+            throw new RuntimeException(
+               string.Format("Symbol >> {0} <<: could not parse {1} to decimal", Symbol, constantValue),
+               Symbol,
+               Context,
+               e);
          }
       }
 
