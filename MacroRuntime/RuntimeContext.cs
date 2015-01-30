@@ -50,6 +50,8 @@ namespace MacroRuntime
 
          AddIntrinsicProcedure("print", Print, _printExpression);
          AddIntrinsicProcedure("ocr", Ocr, _ocrImage);
+         AddIntrinsicProcedure("substr", Substring, _substringStartIndex, _substringLength);
+         AddIntrinsicProcedure("strlen", StringLength, _stringLengthString);
          AddIntrinsicProcedure("regex-replace", RegexReplace, _regexReplaceString, _regexReplaceRegexToReplace, _regexReplaceReplacement);
          AddIntrinsicProcedure("regex-match", RegexMatch, _regexMatchString, _regexMatchRegex);
 
@@ -59,8 +61,11 @@ namespace MacroRuntime
          AddIntrinsicProcedure("click", LeftClick);
          AddIntrinsicProcedure("windowshot", Windowshot, _windowshotX, _windowshotY, _windowshotWidth, _windowshotHeight);
 
-         AddDerivedProcedure("first", "lst", "(car lst)");
-         AddDerivedProcedure("rest", "lst", "(cdr lst)");
+         AddDerivedProcedure("suffix", "(substr str start-index (- (strlen str) start-index))", "str", "start-index");
+         AddDerivedProcedure("prefix", "(substr str 0 length)", "str", "length");
+
+         AddDerivedProcedure("first", "(car lst)", "lst");
+         AddDerivedProcedure("rest", "(cdr lst)", "lst");
          AddDerivedProcedure("last", "(if (and list (cdr list)) (last (cdr list)) (car list))", "list");
          AddDerivedProcedure("list", ".", ".");
 
@@ -274,6 +279,26 @@ namespace MacroRuntime
          var image = Imaging.HexString2Image(imageHexString);
          var recognizedText = Imaging.ReadText(image);
          return new Constant(recognizedText);
+      }
+
+      private readonly Symbol _substringString = new Symbol("String");
+      private readonly Symbol _substringStartIndex = new Symbol("StartIndex");
+      private readonly Symbol _substringLength = new Symbol("Length");
+      private Expression Substring(ContextBase Context)
+      {
+         var str = GetString(Context, _substringString);
+         var startIndex = (int)GetNumber(Context, _substringStartIndex);
+         var length = (int)GetNumber(Context, _substringLength);
+         var substring = str.Substring(startIndex, length);
+         return new Constant(substring);
+      }
+
+      private readonly Symbol _stringLengthString = new Symbol("String");
+      private Expression StringLength(ContextBase Context)
+      {
+         var str = GetString(Context, _stringLengthString);
+         var strLength = str.Length;
+         return new Constant(strLength);
       }
 
       private readonly Symbol _regexReplaceString = new Symbol("String");
