@@ -40,8 +40,8 @@ namespace Macro
          return 
             Value == null 
                ? "null" 
-               : Value is string 
-                  ? "\"" + ((string)Value).Replace("\"", "\\\"") + "\"" 
+               : Value is string
+                  ? "\"" + ((string)Value).Replace(@"\", @"\\").Replace(@"""", @"\""") + "\"" 
                   : Value is decimal 
                      ? ((decimal)Value).ToString(CultureInfo.InvariantCulture) 
                      : Value is bool
