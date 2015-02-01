@@ -80,6 +80,8 @@ namespace MacroRuntime
          AddDerivedProcedure("<=", "(or (< left right) (= left right))", "left", "right");
          AddDerivedProcedure(">=", "(or (> left right) (= left right))", "left", "right");
 
+         AddDerivedProcedure("map", "(begin (define mapped nil) (loop lst (begin (set! mapped (append mapped (list (fun (first lst))))) (set! lst (rest lst)))) mapped)", "lst", "fun");
+
          AddDerivedVarArgProcedure("max", "(begin (define max-value (first lst)) (loop lst (begin (if (> (first lst) max-value) (set! max-value (first lst)) nil) (set! lst (rest lst)))) max-value)", "lst");
          AddDerivedVarArgProcedure("min", "(begin (define min-value (first lst)) (loop lst (begin (if (< (first lst) min-value) (set! min-value (first lst)) nil) (set! lst (rest lst)))) min-value)", "lst");
 

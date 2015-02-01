@@ -138,6 +138,8 @@ namespace MacroRuntime_TEST
             // everything ok
          }
 
+         Assert.AreEqual(new List(Constant.Number(8), Constant.Number(16)), EvaluateExpression(evaluator, "(map '(2 4) (lambda (num) (* 4 num)))"));
+
          Assert.AreEqual(Constant.Number(4711), EvaluateExpression(evaluator, "(max -4711 4711)"));
          Assert.AreEqual(Constant.Number(4711), EvaluateExpression(evaluator, "(max (list -4711 4711))"));
 
