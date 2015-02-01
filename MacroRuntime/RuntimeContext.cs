@@ -283,6 +283,7 @@ namespace MacroRuntime
       }
 
       private readonly Symbol _printExpression = new Symbol("Expression");
+      [ExcludeFromCodeCoverage]
       private Expression Print(IContext Context)
       {
          var expression = GetGenericValue<Expression>(Context, _printExpression);
@@ -313,6 +314,7 @@ namespace MacroRuntime
       private readonly Symbol _substringString = new Symbol("String");
       private readonly Symbol _substringStartIndex = new Symbol("StartIndex");
       private readonly Symbol _substringLength = new Symbol("Length");
+      [ExcludeFromCodeCoverage]
       private Expression Substring(IContext Context)
       {
          var str = GetString(Context, _substringString);
@@ -323,6 +325,7 @@ namespace MacroRuntime
       }
 
       private readonly Symbol _stringLengthString = new Symbol("String");
+      [ExcludeFromCodeCoverage]
       private Expression StringLength(IContext Context)
       {
          var str = GetString(Context, _stringLengthString);
@@ -333,6 +336,7 @@ namespace MacroRuntime
       private readonly Symbol _regexReplaceString = new Symbol("String");
       private readonly Symbol _regexReplaceRegexToReplace = new Symbol("RegexToReplace");
       private readonly Symbol _regexReplaceReplacement = new Symbol("Replacement");
+      [ExcludeFromCodeCoverage]
       private Expression RegexReplace(IContext Context)
       {
          var str = GetString(Context, _regexReplaceString);
@@ -344,6 +348,7 @@ namespace MacroRuntime
 
       private readonly Symbol _regexMatchString = new Symbol("String");
       private readonly Symbol _regexMatchRegex = new Symbol("Regex");
+      [ExcludeFromCodeCoverage]
       private Expression RegexMatch(IContext Context)
       {
          var str = GetString(Context, _regexMatchString);
@@ -474,7 +479,7 @@ namespace MacroRuntime
             var stringValue = constantValue as string;
             if (stringValue != null)
             {
-               if (stringValue == "")
+               if (stringValue == "") // TODO bug?
                   return 0;
                decimal parsedValue;
                if (decimal.TryParse(stringValue, NumberStyles.Number, CultureInfo.InvariantCulture, out parsedValue))

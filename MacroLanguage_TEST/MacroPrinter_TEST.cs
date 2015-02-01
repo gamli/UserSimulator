@@ -1,4 +1,5 @@
-﻿using Macro;
+﻿using System.Diagnostics.CodeAnalysis;
+using Macro;
 using MacroLanguage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,6 +14,16 @@ namespace MacroLanguage_TEST
          var testCase = MacroPrintParseTestCase.TestCase();
 
          AssertOutput(testCase.Item2, testCase.Item1, false);
+
+         Assert.AreEqual("[:PROCEDURE:]", MacroPrinter.Print(new FakeProcedure(), false));
+      }
+      [ExcludeFromCodeCoverage]
+      private class FakeProcedure : ProcedureBase
+      {
+         protected override int MacroGetHashCode()
+         {
+            throw new System.NotImplementedException();
+         }
       }
 
       [TestMethod]

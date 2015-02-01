@@ -2,6 +2,7 @@
 
 namespace Macro
 {
+   // TODO: class is only used for tests
    public class MacroCloner
    {
       public static TMacro Clone<TMacro>(TMacro Macro)

@@ -25,6 +25,18 @@ namespace MacroRuntime_TEST
 
          AssertExpressionEvaluatesTo(new Constant(-4711.1174m), "-4711.1174");
          AssertExpressionEvaluatesTo(new Constant(4711.1174m), "4711.1174");
+
+         var fakeProcedure = new FakeProcedure();
+         var evaluatedFakeProcedure = new ExpressionEvaluator(new RuntimeContext(IntPtr.Zero)).Evaluate(fakeProcedure);
+         Assert.AreSame(fakeProcedure, evaluatedFakeProcedure);
+      }
+      [ExcludeFromCodeCoverage]
+      private class FakeProcedure : ProcedureBase
+      {
+         protected override int MacroGetHashCode()
+         {
+            throw new System.NotImplementedException();
+         }
       }
 
       [TestMethod]

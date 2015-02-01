@@ -57,6 +57,7 @@
     <Compile Include="List_TEST.cs" />
     <Compile Include="Symbol_TEST.cs" />
     <Compile Include="MacroBase_TEST.cs" />
+    <Compile Include="Procedure_TEST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

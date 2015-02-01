@@ -54,7 +54,10 @@ namespace MacroRuntime_TEST
          Assert.AreEqual(new Constant(4711m), EvaluateExpression(evaluator, "(eval '(+ 4700 11))"));
 
          Assert.AreEqual(new Constant(true), EvaluateExpression(evaluator, "(= '(a b c) '(a b c))"));
-         Assert.AreNotEqual(new Constant(true), EvaluateExpression(evaluator, "(= '(a b c) '(a b c d))"));
+         Assert.AreEqual(new Constant(false), EvaluateExpression(evaluator, "(= '(a b c) '(a b c d))"));
+
+         Assert.AreEqual(new Constant(false), EvaluateExpression(evaluator, "(! true)"));
+         Assert.AreEqual(new Constant(true), EvaluateExpression(evaluator, "(! false)"));
 
          Assert.AreEqual(new Constant(true), EvaluateExpression(evaluator, "(constant? 4711)"));
          Assert.AreEqual(new Constant(false), EvaluateExpression(evaluator, "(constant? '(a b c))"));
