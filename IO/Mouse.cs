@@ -55,14 +55,19 @@ namespace IO
          RaiseEvent(MouseEventFlags.LeftDown | MouseEventFlags.LeftUp);
       }
 
-      public static void RaiseEvent(MouseEventFlags MouseEventFlags)
+      public static void Wheel(int Delta)
+      {
+         RaiseEvent(MouseEventFlags.Wheel, Delta);
+      }
+
+      public static void RaiseEvent(MouseEventFlags MouseEventFlags, int DwData = 0)
       {
          var position = Position;
          mouse_event(
             (int)MouseEventFlags,
             position.MouseX,
             position.MouseY,
-            0,
+            DwData,
             0);
       }
 
@@ -98,7 +103,9 @@ namespace IO
          Move = 0x00000001,
          Absolute = 0x00008000,
          RightDown = 0x00000008,
-         RightUp = 0x00000010
+         RightUp = 0x00000010,
+
+         Wheel = 0x00000800
       }
    }
 }
