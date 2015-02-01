@@ -42,19 +42,19 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(new Constant("Some \" String"));
          text.Append(" \"Some \\\" String\"");
 
-         macro.Expressions.Add(new Constant(4711m));
+         macro.Expressions.Add(Constant.Number(4711));
          text.Append(" 4711");
 
-         macro.Expressions.Add(new Constant(4711.1174m));
+         macro.Expressions.Add(Constant.Number(4711.1174));
          text.Append(" 4711.1174");
 
-         macro.Expressions.Add(new Constant(-4711m));
+         macro.Expressions.Add(Constant.Number(-4711));
          text.Append(" -4711");
 
-         macro.Expressions.Add(new Constant(-4711.1174m));
+         macro.Expressions.Add(Constant.Number(-4711.1174));
          text.Append(" -4711.1174");
 
-         macro.Expressions.Add(new List(new Constant(4711m), new Symbol("some-symbol")));
+         macro.Expressions.Add(new List(Constant.Number(4711), new Symbol("some-symbol")));
          text.Append(" (4711 some-symbol)");
 
          macro.Expressions.Add(SpecialForms.If(new Constant(true), new Constant("Consequent"),new Constant("Alternative")));
@@ -69,14 +69,14 @@ namespace MacroLanguage_TEST
          macro.Expressions.Add(SpecialForms.Quote(SpecialForms.ProcedureCall(new Symbol("fun"))));
          text.Append(" '(fun)");
 
-         macro.Expressions.Add(SpecialForms.Define(new Symbol("var"), new Constant(4711m)));
+         macro.Expressions.Add(SpecialForms.Define(new Symbol("var"), Constant.Number(4711)));
          text.Append(" (define var 4711)");
 
          var symbolX = new Symbol("x");
          macro.Expressions.Add(SpecialForms.Lambda(new List(symbolX), SpecialForms.ProcedureCall(new Symbol("mult"), symbolX, symbolX)));
          text.Append(" (lambda (x) (mult x x))");
 
-         macro.Expressions.Add(SpecialForms.SetValue(new Symbol("var"), new Constant(4711m)));
+         macro.Expressions.Add(SpecialForms.SetValue(new Symbol("var"), Constant.Number(4711)));
          text.Append(" (set! var 4711)");
 
          text.Append(")");

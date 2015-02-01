@@ -29,7 +29,7 @@ namespace MacroRuntime
          AddIntrinsicProcedure("eval", Eval, _evalExpression);
 
          AddIntrinsicProcedure("=", Equal, _equalLeft, _equalRight);
-         AddIntrinsicProcedure("!", Not, _notBooleanExpression);
+         AddIntrinsicProcedure("not", Not, _notBooleanExpression);
 
          AddIntrinsicProcedure("constant?", IsConstant, _isConstantExpression);
          AddIntrinsicProcedure("list?", IsList, _isListExpression);
@@ -37,8 +37,6 @@ namespace MacroRuntime
 
          AddIntrinsicProcedure("<", Less, _lessLeft, _lessRight);
          AddIntrinsicProcedure(">", Greater, _greaterLeft, _greaterRight);
-         AddIntrinsicProcedure("or", Or, _orLeft, _orRight);
-         AddIntrinsicProcedure("and", And, _andLeft, _andRight);
 
          AddIntrinsicProcedure("+", Add, _addLeft, _addRight);
          AddIntrinsicProcedure("-", Sub, _subLeft, _subRight);
@@ -71,12 +69,14 @@ namespace MacroRuntime
 
          AddDerivedProcedure("first", "(car lst)", "lst");
          AddDerivedProcedure("rest", "(cdr lst)", "lst");
-         AddDerivedProcedure("last", "(if (and list (cdr list)) (last (cdr list)) (car list))", "list");
+         AddDerivedProcedure("last", "(if (cdr list) (last (cdr list)) (car list))", "list");
          AddDerivedVarArgProcedure("list", "args", "args");
 
          AddDerivedVarArgProcedure("begin", "(last args)", "args");
          
-         AddDerivedProcedure("!=", "(! (= left right))", "left", "right");
+         AddDerivedProcedure("!=", "(not (= left right))", "left", "right");
+         AddDerivedVarArgProcedure("or", "(if args (if (first args) true (or (rest args))) true)", "args");
+         AddDerivedVarArgProcedure("and", "(if args (if (first args) (and (rest args)) false) true)", "args");
          AddDerivedProcedure("<=", "(or (< left right) (= left right))", "left", "right");
          AddDerivedProcedure(">=", "(or (> left right) (= left right))", "left", "right");
       }
@@ -207,24 +207,6 @@ namespace MacroRuntime
          var left = GetNumber(Context, _greaterLeft);
          var right = GetNumber(Context, _greaterRight);
          return new Constant(left > right);
-      }
-
-      private readonly Symbol _orLeft = new Symbol("Left");
-      private readonly Symbol _orRight = new Symbol("Right");
-      private Expression Or(IContext Context)
-      {
-         var left = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _orLeft), Context);
-         var right = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _orRight), Context);
-         return new Constant(left || right);
-      }
-
-      private readonly Symbol _andLeft = new Symbol("Left");
-      private readonly Symbol _andRight = new Symbol("Right");
-      private Expression And(IContext Context)
-      {
-         var left = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _andLeft), Context);
-         var right = TypeConversion.ConvertToBoolean(GetGenericValue<Expression>(Context, _andRight), Context);
-         return new Constant(left && right);
       }
 
       private readonly Symbol _equalLeft = new Symbol("Left");

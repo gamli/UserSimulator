@@ -20,13 +20,13 @@ namespace MacroLanguage
          var stringConstant = TerminalFactory.CreateCSharpString("string");
 
          var decimalNumberConstant =
-            new RegexBasedTerminal("-?\\d*\\.?\\d+")
+            new RegexBasedTerminal("-?\\d*\\.?\\d+\\b")
             {
                Name = "decimal-number", 
                Priority = 1 // to resolve conflict with symbol
             };
          var rationalNumberConstant =
-            new RegexBasedTerminal("-?\\d+/\\d+")
+            new RegexBasedTerminal("-?\\d+/\\d+\\b")
             {
                Name = "rational-number",
                Priority = 1 // to resolve conflict with symbol

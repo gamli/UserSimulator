@@ -62,5 +62,20 @@ namespace Macro
             return Rational.ToString();
          }
       }
+
+      public static Constant Number(decimal Value)
+      {
+         return new Constant(new BigRational(Value));
+      }
+
+      public static Expression Number(double Value)
+      {
+         return Number((decimal)Value);
+      }
+
+      public static Expression Number(int Value)
+      {
+         return Number((decimal)Value);
+      }
    }
 }

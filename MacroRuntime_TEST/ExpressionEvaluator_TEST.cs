@@ -4,6 +4,7 @@ using Macro;
 using MacroLanguage;
 using MacroRuntime;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Numerics;
 
 namespace MacroRuntime_TEST
 {
@@ -20,11 +21,11 @@ namespace MacroRuntime_TEST
 
          AssertExpressionEvaluatesTo(new Constant("test with >> \" <<"), "\"test with >> \\\" <<\"");
 
-         AssertExpressionEvaluatesTo(new Constant(4711m), "4711");
-         AssertExpressionEvaluatesTo(new Constant(-4711m), "-4711");
+         AssertExpressionEvaluatesTo(Constant.Number(4711), "4711");
+         AssertExpressionEvaluatesTo(Constant.Number(-4711), "-4711");
 
-         AssertExpressionEvaluatesTo(new Constant(-4711.1174m), "-4711.1174");
-         AssertExpressionEvaluatesTo(new Constant(4711.1174m), "4711.1174");
+         AssertExpressionEvaluatesTo(Constant.Number(-4711.1174), "-4711.1174");
+         AssertExpressionEvaluatesTo(Constant.Number(4711.1174), "4711.1174");
 
          var fakeProcedure = new FakeProcedure();
          var evaluatedFakeProcedure = new ExpressionEvaluator(new RuntimeContext(IntPtr.Zero)).Evaluate(fakeProcedure);
@@ -58,8 +59,8 @@ namespace MacroRuntime_TEST
       [TestMethod]
       public void If_TEST()
       {
-         AssertExpressionEvaluatesTo(new Constant(1m), "(if true (pause 1) (pause 2))");
-         AssertExpressionEvaluatesTo(new Constant(2m), "(if false (pause 1) (pause 2))");
+         AssertExpressionEvaluatesTo(Constant.Number(1), "(if true (pause 1) (pause 2))");
+         AssertExpressionEvaluatesTo(Constant.Number(2), "(if false (pause 1) (pause 2))");
       }
 
       [TestMethod]
@@ -114,10 +115,10 @@ namespace MacroRuntime_TEST
       public void ProcedureCall_TEST()
       {
          var context = new RuntimeContext(IntPtr.Zero);
-         AssertExpressionEvaluatesTo(new Constant(10m), "(define var1 (pause 10))", context);
-         Assert.AreEqual(new Constant(10m), context.GetValue(new Symbol("var1")));
-         AssertExpressionEvaluatesTo(new Constant(10m), "(define var2 ((lambda (duration) (pause duration)) 10))", context);
-         Assert.AreEqual(new Constant(10m), context.GetValue(new Symbol("var2")));
+         AssertExpressionEvaluatesTo(Constant.Number(10), "(define var1 (pause 10))", context);
+         Assert.AreEqual(Constant.Number(10), context.GetValue(new Symbol("var1")));
+         AssertExpressionEvaluatesTo(Constant.Number(10), "(define var2 ((lambda (duration) (pause duration)) 10))", context);
+         Assert.AreEqual(Constant.Number(10), context.GetValue(new Symbol("var2")));
       }
 
       [TestMethod]
@@ -133,7 +134,7 @@ namespace MacroRuntime_TEST
       public void SetValue_TEST()
       {
          var context = new RuntimeContext(IntPtr.Zero);
-         var expectedValue = new Constant(4711m);
+         var expectedValue = Constant.Number(4711);
          AssertExpressionEvaluatesTo(expectedValue, "(begin (define var 4712) (set! var (- var 1)))", context);
          Assert.AreEqual(expectedValue, context.GetValue(new Symbol("var")));
       }
@@ -151,9 +152,9 @@ namespace MacroRuntime_TEST
       [TestMethod]
       public void BooleanConversion_TEST()
       {
-         AssertExpressionEvaluatesTo(new Constant(2m), "(if nil 1 2)");
-         AssertExpressionEvaluatesTo(new Constant(2m), "(if () 1 2)");
-         AssertExpressionEvaluatesTo(new Constant(1m), "(if (quote (any valid list)) 1 2)");
+         AssertExpressionEvaluatesTo(Constant.Number(2), "(if nil 1 2)");
+         AssertExpressionEvaluatesTo(Constant.Number(2), "(if () 1 2)");
+         AssertExpressionEvaluatesTo(Constant.Number(1), "(if (quote (any valid list)) 1 2)");
       }
 
       [TestMethod]
