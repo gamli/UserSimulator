@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Macro;
@@ -136,6 +137,56 @@ namespace MacroRuntime_TEST
          {
             // everything ok
          }
+
+         Assert.AreEqual(Constant.Number(4711), EvaluateExpression(evaluator, "(max -4711 4711)"));
+         Assert.AreEqual(Constant.Number(4711), EvaluateExpression(evaluator, "(max (list -4711 4711))"));
+
+         try
+         {
+            evaluator.Evaluate(ParseExpression("(max nil)"));
+            Assert.Fail();
+         }
+         catch (RuntimeException)
+         {
+            // everything ok
+         }
+
+         try
+         {
+            evaluator.Evaluate(ParseExpression("(max)"));
+            Assert.Fail();
+         }
+         catch (RuntimeException)
+         {
+            // everything ok
+         }
+
+         Assert.AreEqual(Constant.Number(-4711), EvaluateExpression(evaluator, "(min -4711 4711)"));
+         Assert.AreEqual(Constant.Number(-4711), EvaluateExpression(evaluator, "(min (list -4711 4711))"));
+
+         try
+         {
+            evaluator.Evaluate(ParseExpression("(min nil)"));
+            Assert.Fail();
+         }
+         catch (RuntimeException)
+         {
+            // everything ok
+         }
+
+         try
+         {
+            evaluator.Evaluate(ParseExpression("(min)"));
+            Assert.Fail();
+         }
+         catch (RuntimeException)
+         {
+            // everything ok
+         }
+
+         Assert.AreEqual(new List(Constant.Number(4711)), EvaluateExpression(evaluator, "(filter '(-4711 4711) (lambda (num) (> num 0)))"));
+         Assert.AreEqual(new List(), EvaluateExpression(evaluator, "(filter '(-4711 -4812) (lambda (num) (> num 0)))"));
+         Assert.AreEqual(new List(), EvaluateExpression(evaluator, "(filter nil (lambda (num) (> num 0)))"));
       }
 
       private static Expression EvaluateExpression(ExpressionEvaluator Evaluator, string Expression)

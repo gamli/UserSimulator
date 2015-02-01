@@ -79,6 +79,11 @@ namespace MacroRuntime
          AddDerivedVarArgProcedure("and", "(if args (if (first args) (and (rest args)) false) true)", "args");
          AddDerivedProcedure("<=", "(or (< left right) (= left right))", "left", "right");
          AddDerivedProcedure(">=", "(or (> left right) (= left right))", "left", "right");
+
+         AddDerivedVarArgProcedure("max", "(begin (define max-value (first lst)) (loop lst (begin (if (> (first lst) max-value) (set! max-value (first lst)) nil) (set! lst (rest lst)))) max-value)", "lst");
+         AddDerivedVarArgProcedure("min", "(begin (define min-value (first lst)) (loop lst (begin (if (< (first lst) min-value) (set! min-value (first lst)) nil) (set! lst (rest lst)))) min-value)", "lst");
+
+         AddDerivedProcedure("filter", "(begin (define filtered nil) (loop lst (begin (if (predicate (first lst)) (set! filtered (append filtered (list (first lst)))) nil) (set! lst (rest lst)))) filtered)", "lst", "predicate");
       }
 
       private void AddIntrinsicProcedure(string Symbol, Func<IContext, Expression> Procedure, params Symbol[] FormalArguments)
