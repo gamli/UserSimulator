@@ -186,6 +186,19 @@ namespace MacroRuntime_TEST
             // everything ok
          }
 
+         Assert.AreEqual(Constant.Number(1), EvaluateExpression(evaluator, "(arg-max '(1 2 3 4 5) (lambda (num) (* -1 num)))"));
+         Assert.AreEqual(Constant.Number(1), EvaluateExpression(evaluator, "(arg-max '(1 2 1 1 3 4 5) (lambda (num) (* -1 num)))"));
+
+         try
+         {
+            Assert.AreEqual(Constant.Number(1), EvaluateExpression(evaluator, "(arg-max nil (lambda (num) (* -1 num)))"));
+            Assert.Fail();
+         }
+         catch (RuntimeException)
+         {
+            // everything ok
+         }
+         
          Assert.AreEqual(new List(Constant.Number(4711)), EvaluateExpression(evaluator, "(filter '(-4711 4711) (lambda (num) (> num 0)))"));
          Assert.AreEqual(new List(), EvaluateExpression(evaluator, "(filter '(-4711 -4812) (lambda (num) (> num 0)))"));
          Assert.AreEqual(new List(), EvaluateExpression(evaluator, "(filter nil (lambda (num) (> num 0)))"));

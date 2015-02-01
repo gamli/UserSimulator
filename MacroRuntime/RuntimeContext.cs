@@ -85,6 +85,8 @@ namespace MacroRuntime
          AddDerivedVarArgProcedure("max", "(begin (define max-value (first lst)) (loop lst (begin (if (> (first lst) max-value) (set! max-value (first lst)) nil) (set! lst (rest lst)))) max-value)", "lst");
          AddDerivedVarArgProcedure("min", "(begin (define min-value (first lst)) (loop lst (begin (if (< (first lst) min-value) (set! min-value (first lst)) nil) (set! lst (rest lst)))) min-value)", "lst");
 
+         AddDerivedProcedure("arg-max", "(begin (define mapped (map lst fun)) (define max-val (max mapped)) (first (filter lst (lambda (arg) (= (fun arg) max-val)))))", "lst", "fun");
+
          AddDerivedProcedure("filter", "(begin (define filtered nil) (loop lst (begin (if (predicate (first lst)) (set! filtered (append filtered (list (first lst)))) nil) (set! lst (rest lst)))) filtered)", "lst", "predicate");
       }
 
