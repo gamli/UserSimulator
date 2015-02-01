@@ -122,8 +122,11 @@ namespace MacroRuntime
 
             if (symbol != null)
             {
-
-               var variableArgumentsList = new List(argumentValues.ToArray());
+               List variableArgumentsList;
+               if (argumentValues.Count == 1 && argumentValues[0].GetType() == typeof (List))
+                  variableArgumentsList = (List) argumentValues[0];
+               else
+                  variableArgumentsList = new List(argumentValues.ToArray());
                procedureCallContext.DefineValue(symbol, variableArgumentsList);
             }
             else
