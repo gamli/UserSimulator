@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using Irony;
 using Irony.Parsing;
 using Macro;
+using Numerics;
 
 namespace MacroLanguage
 {
@@ -87,8 +90,16 @@ namespace MacroLanguage
                macro = new Constant(AstNode.ChildNodes.Single().Token.Text == "true");
                break;
             case "string":
-            case "number":
                macro = new Constant(AstNode.Token.Value);
+               break;
+            case "decimal-number":
+               macro = new Constant(new BigRational(decimal.Parse((string) AstNode.Token.Value, CultureInfo.InvariantCulture)));
+               break;
+            case "rational-number":
+               var numeratorAndDenominator = ((string) AstNode.Token.Value).Split('/');
+               var numerator = BigInteger.Parse(numeratorAndDenominator[0]);
+               var denominator = BigInteger.Parse(numeratorAndDenominator[1]);
+               macro = new Constant(new BigRational(numerator, denominator));
                break;
             case "list":
                macro = new List(AstNode.ChildNodes[1].ChildNodes.Select(BuildMacroFromAst).Cast<Expression>().ToArray());

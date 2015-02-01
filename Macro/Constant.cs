@@ -1,5 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Numerics;
 
 namespace Macro
 {
@@ -35,18 +37,30 @@ namespace Macro
       }
 
       [ExcludeFromCodeCoverage]
-      public override string ToString()
+      public override string ToString() // TODO - move logic to printer?
       {
          return 
             Value == null 
                ? "null" 
                : Value is string
                   ? "\"" + ((string)Value).Replace(@"\", @"\\").Replace(@"""", @"\""") + "\"" 
-                  : Value is decimal 
-                     ? ((decimal)Value).ToString(CultureInfo.InvariantCulture) 
+                  : Value is BigRational 
+                     ?  PrintRational((BigRational)Value)
                      : Value is bool
                         ? (bool)Value ? "true" : "false"
                         :Value.ToString();
+      }
+
+      private static string PrintRational(BigRational Rational)
+      {
+         try
+         {
+            return ((decimal) Rational).ToString(CultureInfo.InvariantCulture);
+         }
+         catch (OverflowException)
+         {
+            return Rational.ToString();
+         }
       }
    }
 }

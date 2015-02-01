@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using Macro;
 using MacroViewModel;
+using Numerics;
 
 namespace MacroView
 {
@@ -33,7 +34,7 @@ namespace MacroView
                dataTemplateResourceKey = "booleanTemplate";
             else if (constantValueType == typeof(string))
                dataTemplateResourceKey = "stringTemplate";
-            else if (constantValueType == typeof (decimal))
+            else if (constantValueType == typeof (BigRational))
                dataTemplateResourceKey = "decimalTemplate";
          }
 

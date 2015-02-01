@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Irony;
 using Irony.Parsing;
 
@@ -18,11 +19,18 @@ namespace MacroLanguage
 
          var stringConstant = TerminalFactory.CreateCSharpString("string");
 
-         var numberConstant = TerminalFactory.CreateCSharpNumber("number");
-         numberConstant.DefaultIntTypes = new[] { TypeCode.Decimal };
-         numberConstant.DefaultFloatType = TypeCode.Decimal;
-         numberConstant.Options |= NumberOptions.AllowSign;
-         numberConstant.Priority = 1; // to solve conflict with symbol
+         var decimalNumberConstant =
+            new RegexBasedTerminal("-?\\d*\\.?\\d+")
+            {
+               Name = "decimal-number", 
+               Priority = 1 // to resolve conflict with symbol
+            };
+         var rationalNumberConstant =
+            new RegexBasedTerminal("-?\\d+/\\d+")
+            {
+               Name = "rational-number",
+               Priority = 1 // to resolve conflict with symbol
+            };
 
          var sequence = new NonTerminal("sequence");
          sequence.Rule = MakeStarRule(sequence, expression);
@@ -32,7 +40,14 @@ namespace MacroLanguage
 
          var quotedExpressionAlias = new NonTerminal("quoted-expression-alias") { Rule = ToTerm("'") + expression };
 
-         expression.Rule = constant | booleanConstant | stringConstant | numberConstant | list | symbol | quotedExpressionAlias;
+         expression.Rule = 
+            constant | 
+            booleanConstant | 
+            stringConstant | 
+            decimalNumberConstant | rationalNumberConstant | 
+            list | 
+            symbol | 
+            quotedExpressionAlias;
 
          Root = expression;
       }

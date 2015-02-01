@@ -4,12 +4,14 @@ using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Common;
 using IO;
 using Macro;
 using MacroLanguage;
+using Numerics;
 
 namespace MacroRuntime
 {
@@ -252,7 +254,7 @@ namespace MacroRuntime
       private Expression Abs(IContext Context)
       {
          var number = GetNumber(Context, _absValue);
-         return new Constant(Math.Abs(number));
+         return new Constant(BigRational.Abs(number));
       }
 
       private readonly Symbol _carList = new Symbol("List");
@@ -467,29 +469,32 @@ namespace MacroRuntime
          }
       }
 
-      private decimal GetNumber(IContext Context, Symbol Symbol)
+      private BigRational GetNumber(IContext Context, Symbol Symbol)
       {
          try
          {
-            return GetConstantValue<decimal>(Context, Symbol);
+            return GetConstantValue<BigRational>(Context, Symbol);
          }
-         catch (RuntimeException e)
+         catch (RuntimeException)
          {
             var constantValue = GetGenericValue<Constant>(Context, Symbol).Value;
             var stringValue = constantValue as string;
-            if (stringValue != null)
+            
+            if (stringValue == null) 
+               throw;
+
+            try
             {
-               if (stringValue == "") // TODO bug?
-                  return 0;
-               decimal parsedValue;
-               if (decimal.TryParse(stringValue, NumberStyles.Number, CultureInfo.InvariantCulture, out parsedValue))
-                  return parsedValue;
+               return (BigRational)((Constant)_parser.Parse(stringValue)).Value;
             }
-            throw new RuntimeException(
-               string.Format("Symbol >> {0} <<: could not parse {1} to decimal", Symbol, constantValue),
-               Symbol,
-               Context,
-               e);
+            catch (Exception parseException)
+            {
+               throw new RuntimeException(
+                  string.Format("Symbol >> {0} <<: could not parse {1} to BigRational", Symbol, constantValue),
+                  Symbol,
+                  Context,
+                  parseException);
+            }
          }
       }
 
