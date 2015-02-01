@@ -70,9 +70,6 @@ namespace Common
                using (var page = TESSERACT_ENGINE.Process(pix))
                {
                   var text = page.GetText();
-                  decimal textDecimal;
-                  if (decimal.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out textDecimal))
-                     return textDecimal;
                   return text;
                }
             }
