@@ -23,12 +23,17 @@ namespace Macro
 
          public void VisitList(List List)
          {
-            ClonedMacro = new List(List.Expressions.Select<Expression, Expression>(Clone).ToArray());
+            ClonedMacro = new List(List.Expressions.Select(Clone).ToArray());
          }
 
          public void VisitSymbol(Symbol Symbol)
          {
             ClonedMacro = new Symbol(Symbol.Value);
+         }
+
+         public void VisitProcedure(ProcedureBase Procedure)
+         {
+            ClonedMacro = Procedure;
          }
       }
    }

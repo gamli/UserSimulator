@@ -5,8 +5,8 @@ namespace MacroRuntime
 {
    public class IntrinsicProcedure : ProcedureBase
    {
-      private Func<ContextBase, Expression> _function;
-      public Func<ContextBase, Expression> Function { get { return _function; } set { SetPropertyValue(ref _function, value); } }
+      private Func<IContext, Expression> _function;
+      public Func<IContext, Expression> Function { get { return _function; } set { SetPropertyValue(ref _function, value); } }
 
       protected override bool MacroEquals(MacroBase OtherMacro)
       {

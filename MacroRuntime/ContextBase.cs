@@ -4,7 +4,7 @@ using Macro;
 
 namespace MacroRuntime
 {
-   public abstract class ContextBase
+   public abstract class ContextBase : IContext
    {
       private readonly Dictionary<string, Expression> _values = new Dictionary<string, Expression>();
 

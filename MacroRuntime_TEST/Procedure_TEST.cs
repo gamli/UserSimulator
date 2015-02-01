@@ -112,27 +112,10 @@ namespace MacroRuntime_TEST
       {
          var context = new RuntimeContext(IntPtr.Zero);
 
-         var xy = (List)new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("((lambda (.) .) 'x 'y)"));
+         var xy = (List)new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("((lambda args args) 'x 'y)"));
          Assert.AreEqual(2, xy.Expressions.Count);
          Assert.AreEqual(new Symbol("x"), xy.Expressions[0]);
          Assert.AreEqual(new Symbol("y"), xy.Expressions[1]);
-
-         var y = (List)new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("((lambda (arg .) .) 'x 'y)"));
-         Assert.AreEqual(1, y.Expressions.Count);
-         Assert.AreEqual(new Symbol("y"), y.Expressions[0]);
-
-         var empty = (List)new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("((lambda (arg .) .) 'x)"));
-         Assert.AreEqual(0, empty.Expressions.Count);
-
-         try
-         {
-            new ExpressionEvaluator(context).Evaluate((Expression)new MacroParser().Parse("((lambda (arg1 arg2 .) .) 'x)"));
-            Assert.Fail();
-         }
-         catch (RuntimeException)
-         {
-            // everything ok - not enough arguments
-         }
       }
    }
 }

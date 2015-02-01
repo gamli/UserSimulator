@@ -4,9 +4,9 @@ namespace MacroRuntime
 {
    public class HierarchicalContext : ContextBase
    {
-      private readonly ContextBase _parentContext;
+      private readonly IContext _parentContext;
 
-      public HierarchicalContext(ContextBase ParentContext)
+      public HierarchicalContext(IContext ParentContext)
       {
          _parentContext = ParentContext;
       }

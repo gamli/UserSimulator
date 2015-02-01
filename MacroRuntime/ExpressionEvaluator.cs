@@ -10,14 +10,14 @@ namespace MacroRuntime
 {
    public class ExpressionEvaluator
    {
-      private readonly ContextBase _context;
+      private readonly IContext _context;
 
-      public static Expression Evaluate(Expression Expression, ContextBase Context)
+      public static Expression Evaluate(Expression Expression, IContext Context)
       {
          return new ExpressionEvaluator(Context).Evaluate(Expression);
       }
 
-      public ExpressionEvaluator(ContextBase Context)
+      public ExpressionEvaluator(IContext Context)
       {
          _context = Context;
       }
@@ -51,7 +51,7 @@ namespace MacroRuntime
          private class Continuation
          {
             public Expression Expression { get; set; }
-            public ContextBase Context { get; set; }
+            public IContext Context { get; set; }
          }
 
          public override void VisitConstant(Constant Constant)
@@ -90,7 +90,7 @@ namespace MacroRuntime
                {
                   DefiningContext = CurrentContext(),
                   Lambda = Lambda,
-                  FormalArguments = (List)Lambda.Expressions[1]
+                  FormalArguments = Lambda.Expressions[1]
                };
          }
 
@@ -114,72 +114,34 @@ namespace MacroRuntime
          private ContextBase CreateProcedureCallContext(List ProcedureCall, ProcedureBase Procedure, IEnumerable<Expression> EvaluatedArguments)
          {
             var procedureCallContext = new HierarchicalContext(Procedure.DefiningContext);
-
-            var argumentSymbols = Procedure.FormalArguments.Expressions.Cast<Symbol>().ToList();
+            
             var argumentValues = EvaluatedArguments.ToList();
 
-            if (IsVarargProcedure(argumentSymbols))
-            {
-               if (argumentValues.Count < argumentSymbols.Count - 1)
-                  throw
-                     new RuntimeException(
-                        string.Format("Expected minimum of {0} argument(s) but got {1}", argumentSymbols.Count - 1,
-                           argumentValues.Count),
-                        ProcedureCall,
-                        CurrentContext());
+            var formalArguments = Procedure.FormalArguments;
+            var symbol = formalArguments as Symbol;
 
-               var fixedArgumentCount = Procedure.FormalArguments.Expressions.Count - 1;
-               SetVarargProcedureArguments(
-                  procedureCallContext,
-                  argumentSymbols, 
-                  argumentValues.Take(fixedArgumentCount),
-                  argumentValues.Skip(fixedArgumentCount));
+            if (symbol != null)
+            {
+
+               var variableArgumentsList = new List(argumentValues.ToArray());
+               procedureCallContext.DefineValue(symbol, variableArgumentsList);
             }
             else
             {
+               var argumentSymbols = ((List)Procedure.FormalArguments).Expressions.Cast<Symbol>().ToList();
 
-               if (argumentValues.Count != argumentSymbols.Count && !IsVarargProcedure(argumentSymbols))
+               if (argumentValues.Count != argumentSymbols.Count)
                   throw
                      new RuntimeException(
-                        string.Format("Expected {0} argument(s) but got {1}",
-                           Procedure.FormalArguments.Expressions.Count, argumentValues.Count),
+                        string.Format("Expected {0} argument(s) but got {1}", argumentSymbols.Count, argumentValues.Count),
                         ProcedureCall,
                         CurrentContext());
 
-               SetFixedargProcedureArguments(
-                  procedureCallContext, 
-                  argumentSymbols, 
-                  argumentValues);
+               foreach (var symbolAndArgumentValue in argumentSymbols.Zip(argumentValues, Tuple.Create))
+                  procedureCallContext.DefineValue(symbolAndArgumentValue.Item1, symbolAndArgumentValue.Item2);
             }
 
             return procedureCallContext;
-         }
-
-         private static void SetFixedargProcedureArguments(
-            ContextBase Context,
-            IEnumerable<Symbol> ArgumentSymbols, 
-            IEnumerable<Expression> ArgumentValues)
-         {
-            foreach (var symbolAndArgumentValue in ArgumentSymbols.Zip<Symbol, Expression, Tuple<Symbol, Expression>>(ArgumentValues, Tuple.Create))
-               Context.DefineValue(symbolAndArgumentValue.Item1, symbolAndArgumentValue.Item2);
-         }
-
-         private static void SetVarargProcedureArguments(
-            ContextBase Context,
-            IEnumerable<Symbol> ArgumentSymbols, 
-            IEnumerable<Expression> FixedArgumentValues,
-            IEnumerable<Expression> VariableArgumentValues)
-         {
-            foreach (var symbolAndArgumentValue in FixedArgumentValues.Zip<Expression, Symbol, Tuple<Expression, Symbol>>(ArgumentSymbols, Tuple.Create))
-               Context.DefineValue(symbolAndArgumentValue.Item2, symbolAndArgumentValue.Item1);
-
-            var variableArgumentsList = new List(VariableArgumentValues.ToArray());
-            Context.DefineValue(new Symbol("."), variableArgumentsList);
-         }
-
-         private static bool IsVarargProcedure(List<Symbol> ArgumentSymbols)
-         {
-            return (ArgumentSymbols.Count != 0 && ArgumentSymbols.Last().Value == ".");
          }
 
          public override void VisitQuote(List Quote)
@@ -206,20 +168,25 @@ namespace MacroRuntime
             _value = CurrentContext().GetValue(Symbol);
          }
 
-         private ContextBase CurrentContext()
+         public override void VisitProcedure(ProcedureBase Procedure)
+         {
+            _value = Procedure;
+         }
+
+         private IContext CurrentContext()
          {
             return _currentContext;
          }
-         private ContextBase _currentContext;
+         private IContext _currentContext;
 
 
-         private T EvaluateGeneric<T>(Expression Expression, ContextBase Ctxt)
+         private T EvaluateGeneric<T>(Expression Expression, IContext Ctxt)
             where T : Expression
          {
             return (T)Evaluate(Expression, Ctxt);
          }
 
-         public Expression EvaluateExpression(Expression Expression, ContextBase Context)
+         public Expression EvaluateExpression(Expression Expression, IContext Context)
          {
             Contract.Assert(_continuationStack.Count == 0);
 

@@ -170,15 +170,7 @@ namespace MacroRuntime_TEST
             // everything ok
          }
 
-         try
-         {
-            evaluator.Evaluate((Expression)new MacroParser().Parse("(pause \"10\")"));
-            Assert.Fail();
-         }
-         catch (RuntimeException)
-         {
-            // everything ok
-         }
+         Assert.AreEqual(new Constant(30m), evaluator.Evaluate((Expression)new MacroParser().Parse("(* 3 \"10\")")));
       }
    }
 }

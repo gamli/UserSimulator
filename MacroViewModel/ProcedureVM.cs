@@ -1,4 +1,4 @@
-﻿using MacroRuntime;
+﻿using Macro;
 
 namespace MacroViewModel
 {

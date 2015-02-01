@@ -57,5 +57,7 @@ namespace Macro
       public abstract void VisitSetValue(List SetValue);
 
       public abstract void VisitSymbol(Symbol Symbol);
+
+      public abstract void VisitProcedure(ProcedureBase Procedure);
    }
 }

@@ -5,7 +5,7 @@ namespace MacroRuntime
 {
    public static class TypeConversion
    {
-      public static bool ConvertToBoolean(Expression Expression, ContextBase Context)
+      public static bool ConvertToBoolean(Expression Expression, IContext Context)
       {
          var constant = Expression as Constant;
          if (constant != null)

@@ -187,7 +187,7 @@ namespace MacroRuntime_TEST
       }
 
       [ExcludeFromCodeCoverage]
-      private Expression SomeFun(ContextBase Context)
+      private Expression SomeFun(IContext Context)
       {
          throw new NotImplementedException("SomeFun");
       }

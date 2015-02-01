@@ -7,5 +7,7 @@
       void VisitList(List List);
 
       void VisitSymbol(Symbol Symbol);
+
+      void VisitProcedure(ProcedureBase Procedure);
    }
 }

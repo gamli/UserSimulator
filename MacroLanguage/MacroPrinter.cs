@@ -132,6 +132,11 @@ namespace MacroLanguage
          Append(Symbol.ToString());
       }
 
+      public override void VisitProcedure(ProcedureBase Procedure)
+      {
+         Append("[:PROCEDURE:]");
+      }
+
       private void Append(string Text)
       {
          _sb.Append(Text);
