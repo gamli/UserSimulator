@@ -39,23 +39,23 @@ namespace Macro
       [ExcludeFromCodeCoverage]
       public override string ToString() // TODO - move logic to printer?
       {
-         return 
-            Value == null 
-               ? "null" 
+         return
+            Value == null
+               ? "null"
                : Value is string
-                  ? "\"" + ((string)Value).Replace(@"\", @"\\").Replace(@"""", @"\""") + "\"" 
-                  : Value is BigRational 
-                     ?  PrintRational((BigRational)Value)
+                  ? "\"" + ((string)Value).Replace(@"\", @"\\").Replace(@"""", @"\""") + "\""
+                  : Value is BigRational
+                     ? PrintRational((BigRational)Value)
                      : Value is bool
                         ? (bool)Value ? "true" : "false"
-                        :Value.ToString();
+                        : Value.ToString();
       }
 
       private static string PrintRational(BigRational Rational)
       {
          try
          {
-            return ((decimal) Rational).ToString(CultureInfo.InvariantCulture);
+            return ((decimal)Rational).ToString(CultureInfo.InvariantCulture);
          }
          catch (OverflowException)
          {
@@ -74,6 +74,11 @@ namespace Macro
       }
 
       public static Expression Number(int Value)
+      {
+         return Number((decimal)Value);
+      }
+
+      public static Expression Number(long Value)
       {
          return Number((decimal)Value);
       }

@@ -50,6 +50,9 @@ namespace MacroRuntime
          AddIntrinsicProcedure("append", Append, _appendListLeft, _appendListRight);
 
          AddIntrinsicVarArgProcedure("print", Print, _printExpressions);
+         AddDerivedVarArgProcedure("log", "(print (append (list (time-str (time))) args))", "args");
+         AddIntrinsicProcedure("time", Time);
+         AddIntrinsicProcedure("time-str", TimeString, _timeStringTime);
          AddIntrinsicProcedure("ocr", Ocr, _ocrImage);
          AddIntrinsicProcedure("edit-distance", EditDistance, _editDistanceLeft, _editDistanceRight);
          AddIntrinsicProcedure("substr", Substring, _substringStartIndex, _substringLength);
@@ -290,6 +293,20 @@ namespace MacroRuntime
          if (_output != null)
             _output.PrintLine(printedExpressions);
          return new Constant(printedExpressions);
+      }
+
+      [ExcludeFromCodeCoverage]
+      private Expression Time(IContext Context)
+      {
+         return Constant.Number(DateTime.Now.Ticks);
+      }
+
+      private readonly Symbol _timeStringTime = new Symbol("Time");
+      [ExcludeFromCodeCoverage]
+      private Expression TimeString(IContext Context)
+      {
+         var time = GetNumber(Context, _timeStringTime);
+         return new Constant(new DateTime((long) time).ToString(CultureInfo.InvariantCulture));
       }
 
       private readonly Symbol _ocrImage = new Symbol("Image");
