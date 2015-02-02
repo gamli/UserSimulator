@@ -49,7 +49,7 @@ namespace MacroRuntime
          AddIntrinsicProcedure("cdr", Cdr, _cdrList);
          AddIntrinsicProcedure("append", Append, _appendListLeft, _appendListRight);
 
-         AddIntrinsicProcedure("print", Print, _printExpression);
+         AddIntrinsicVarArgProcedure("print", Print, _printExpressions);
          AddIntrinsicProcedure("ocr", Ocr, _ocrImage);
          AddIntrinsicProcedure("edit-distance", EditDistance, _editDistanceLeft, _editDistanceRight);
          AddIntrinsicProcedure("substr", Substring, _substringStartIndex, _substringLength);
@@ -97,6 +97,11 @@ namespace MacroRuntime
          foreach (var argument in FormalArguments)
             formalArguments.Expressions.Add(argument);
          DefineValue(new Symbol(Symbol), new IntrinsicProcedure { DefiningContext = this, FormalArguments = formalArguments, Function = Procedure });
+      }
+
+      private void AddIntrinsicVarArgProcedure(string Symbol, Func<IContext, Expression> Procedure, Symbol VarArgArgument)
+      {
+         DefineValue(new Symbol(Symbol), new IntrinsicProcedure { DefiningContext = this, FormalArguments = VarArgArgument, Function = Procedure });
       }
 
       private void AddDerivedProcedure(string Symbol, string Body, params string[] FormalArguments)
@@ -276,15 +281,15 @@ namespace MacroRuntime
          return new List(listLeft.Expressions.Concat(listRight.Expressions));
       }
 
-      private readonly Symbol _printExpression = new Symbol("Expression");
+      private readonly Symbol _printExpressions = new Symbol("Expressions");
       [ExcludeFromCodeCoverage]
       private Expression Print(IContext Context)
       {
-         var expression = GetGenericValue<Expression>(Context, _printExpression);
-         var printedExpression = MacroPrinter.Print(expression, true);
+         var expressions = GetGenericValue<List>(Context, _printExpressions);
+         var printedExpressions = MacroPrinter.Print(expressions, true);
          if (_output != null)
-            _output.PrintLine(printedExpression);
-         return new Constant(printedExpression);
+            _output.PrintLine(printedExpressions);
+         return new Constant(printedExpressions);
       }
 
       private readonly Symbol _ocrImage = new Symbol("Image");
