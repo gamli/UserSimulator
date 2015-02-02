@@ -51,7 +51,7 @@ namespace MacroRuntime
 
          AddIntrinsicProcedure("print", Print, _printExpression);
          AddIntrinsicProcedure("ocr", Ocr, _ocrImage);
-         AddIntrinsicProcedure("edit-distance", EditDistance, _editDistanceString);
+         AddIntrinsicProcedure("edit-distance", EditDistance, _editDistanceLeft, _editDistanceRight);
          AddIntrinsicProcedure("substr", Substring, _substringStartIndex, _substringLength);
          AddIntrinsicProcedure("strlen", StringLength, _stringLengthString);
          AddIntrinsicProcedure("regex-replace", RegexReplace, _regexReplaceString, _regexReplaceRegexToReplace, _regexReplaceReplacement);
@@ -69,7 +69,7 @@ namespace MacroRuntime
 
          AddDerivedProcedure("first", "(car lst)", "lst");
          AddDerivedProcedure("rest", "(cdr lst)", "lst");
-         AddDerivedProcedure("last", "(if (cdr list) (last (cdr list)) (car list))", "list");
+         AddDerivedProcedure("last", "(if (cdr lst) (last (cdr lst)) (car lst))", "lst");
          AddDerivedVarArgProcedure("list", "args", "args");
 
          AddDerivedVarArgProcedure("begin", "(last args)", "args");
@@ -85,7 +85,8 @@ namespace MacroRuntime
          AddDerivedVarArgProcedure("max", "(begin (define max-value (first lst)) (loop lst (begin (if (> (first lst) max-value) (set! max-value (first lst)) nil) (set! lst (rest lst)))) max-value)", "lst");
          AddDerivedVarArgProcedure("min", "(begin (define min-value (first lst)) (loop lst (begin (if (< (first lst) min-value) (set! min-value (first lst)) nil) (set! lst (rest lst)))) min-value)", "lst");
 
-         AddDerivedProcedure("arg-max", "(begin (define mapped (map lst fun)) (define max-val (max mapped)) (first (filter lst (lambda (arg) (= (fun arg) max-val)))))", "lst", "fun");
+         AddDerivedProcedure("arg-max", "(first (args-max lst fun))", "lst", "fun");
+         AddDerivedProcedure("args-max", "(begin (define mapped (map lst fun)) (define max-val (max mapped)) (filter lst (lambda (arg) (= (fun arg) max-val))))", "lst", "fun");
 
          AddDerivedProcedure("filter", "(begin (define filtered nil) (loop lst (begin (if (predicate (first lst)) (set! filtered (append filtered (list (first lst)))) nil) (set! lst (rest lst)))) filtered)", "lst", "predicate");
       }
@@ -295,13 +296,14 @@ namespace MacroRuntime
          return new Constant(recognizedText);
       }
 
-      private readonly Symbol _editDistanceString = new Symbol("String");
+      private readonly Symbol _editDistanceLeft = new Symbol("Left");
+      private readonly Symbol _editDistanceRight = new Symbol("Right");
       private Expression EditDistance(IContext Context)
       {
-         throw new NotImplementedException();
-         var str = GetString(Context, _editDistanceString);
-         var similarity = 0;
-         return new Constant(similarity);
+         var left = GetString(Context, _editDistanceLeft);
+         var right = GetString(Context, _editDistanceRight);
+         var editDistance = ComputeEditDistance(left, right);
+         return Constant.Number(editDistance);
       }
 
       private readonly Symbol _substringString = new Symbol("String");
@@ -526,6 +528,53 @@ namespace MacroRuntime
                Context,
                e);
          }
+      }
+
+
+      // TODO - do not commit this code - testing purpuse only
+      public static int ComputeEditDistance(string s, string t)
+      {
+         int n = s.Length;
+         int m = t.Length;
+         int[,] d = new int[n + 1, m + 1];
+
+         // Step 1
+         if (n == 0)
+         {
+            return m;
+         }
+
+         if (m == 0)
+         {
+            return n;
+         }
+
+         // Step 2
+         for (int i = 0; i <= n; d[i, 0] = i++)
+         {
+         }
+
+         for (int j = 0; j <= m; d[0, j] = j++)
+         {
+         }
+
+         // Step 3
+         for (int i = 1; i <= n; i++)
+         {
+            //Step 4
+            for (int j = 1; j <= m; j++)
+            {
+               // Step 5
+               int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
+
+               // Step 6
+               d[i, j] = Math.Min(
+                   Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
+                   d[i - 1, j - 1] + cost);
+            }
+         }
+         // Step 7
+         return d[n, m];
       }
    }
 }

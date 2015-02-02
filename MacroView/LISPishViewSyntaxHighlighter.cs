@@ -23,13 +23,13 @@ namespace MacroView
       private readonly Regex
          _procedureCall = new Regex(@"\(\s*([^\(\)\s""']*)\b", RegexOptions.Compiled),
 
-         _specialForms = new Regex(@"define|if|lambda|quote|loop|set!|\.", RegexOptions.Compiled),
+         _specialForms = new Regex(@"nil|define|if|lambda|quote|loop|set!|\.", RegexOptions.Compiled),
          _quoteSyntax = new Regex(@"'", RegexOptions.Compiled),
          _lambdaFormalArgs = new Regex(@"lambda\s*\([^\(\)""']*\)", RegexOptions.Compiled),
-
+         
          _specialFunctions =
             new Regex(
-               @"eval|=|constant\?|list\?|symbol\?|<=|>=|<|>|or|and|\+|-|\*|/|abs|car|cdr|append|move|position|pause|click|windowshot|list|last|begin|print|ocr|regex-replace|regex-match",
+               @"eval|=|constant\?|list\?|symbol\?|<=|>=|<|>|or|and|\+|-|\*|/|abs|car|cdr|append|move|position|pause|click|wheel|windowshot|list|first|last|begin|print|ocr|regex-replace|regex-match|edit-distance|arg-max|args-max",
                RegexOptions.Compiled),
 
          _booleanTrue = new Regex(@"true", RegexOptions.Compiled),
@@ -163,7 +163,7 @@ namespace MacroView
 
    public class ImageConstant : VisualLineElementGenerator
    {
-      readonly static Regex IMAGE_REGEX = new Regex(@"""([0-9A-F]*)""");
+      readonly static Regex IMAGE_REGEX = new Regex(@"""(([0-9A-F][0-9A-F])+)""");
 
       Match FindMatch(int StartOffset)
       {
